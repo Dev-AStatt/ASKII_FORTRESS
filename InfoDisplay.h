@@ -20,6 +20,9 @@ private:
     std::vector<std::string> confirmMenuChoices = {"Yes: Save",
                                                    "No:  Do Not Save"};
 
+    std::vector<std::string> WorldSizeMenuChoices = {"Pocket [3x3]",
+                                                     "Tiny   [9x9]"};
+
     std::vector<std::string> mapViewHotkeys = {"Arrow Keys: Move Camera",
                                                "+SHIFT:     Move x10",
                                                "SHIFT+<>:   Change Z Level",
@@ -50,7 +53,21 @@ public:
         return DrawMenu(confirmMenuChoices,{mapViewMenuX,2});
     }
     int newGameMenu() {
-        return 0;
+        int menuChoice = DrawMenu(WorldSizeMenuChoices, {PACK_SIZE * 16,10});
+        //Return values
+        // 0: Tiny World Size:  3x3
+        // 1: Small World Size: 9x9
+        if(menuChoice == 0) {
+            return 3;
+        }
+        if(menuChoice == 1) {
+            return 9;
+        }
+        //else fall out
+        return -1;
     }
 };
+
+
+
 

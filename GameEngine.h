@@ -15,6 +15,7 @@ private:
 		mapview,
 		menu,
 		title,
+        worldCreator,
         mapinspection,
         confirm,
 	};

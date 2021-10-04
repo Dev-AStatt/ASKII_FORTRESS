@@ -69,6 +69,7 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
     case title:
         if (TextDisplay->DrawTitleScreen()) {
             DrawScreenBoarder();
+
             //this is the title menu and case is the
             //return options for
             //0: New Game
@@ -77,11 +78,7 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
             //3: Exit
             switch (TextDisplay->mainMenu()) {
             case 0:
-                chunkMap.newMap(3);
-                if(chunkMap.mapLoaded) {
-                    CURRENT_GAMEMODE = mapview;
-                }
-
+                CURRENT_GAMEMODE = worldCreator;
                 break;
             case 3:
                 //closes the program
@@ -89,6 +86,20 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
                 break;
             default:
                 break;
+            }
+        }
+        break;
+
+//
+//  World Creation Screen with options for world settings
+//
+    case worldCreator:
+        worldSize = TextDisplay->newGameMenu();
+        if (worldSize > 0) {
+            chunkMap.newMap(worldSize);
+            if(chunkMap.mapLoaded) {
+
+                CURRENT_GAMEMODE = mapview;
             }
         }
         break;
