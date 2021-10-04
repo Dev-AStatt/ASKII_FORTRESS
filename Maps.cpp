@@ -1,28 +1,46 @@
 #include "Maps.h"
 
 
-Maps::Maps(olc::vi2d& packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p) {
+Maps::Maps(olc::vi2d& packSizeAtStart,int atStartWorldSize, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p) {
     PACK_SIZE = packSizeAtStart;
 	pge = p;
 
     mapTL = atStartMapTL;
     mapBR = atStartMapBR;
 
-	mapCreateStartingChunks();
+    mapCreateStartingChunks(atStartWorldSize);
 	activeZLayer = 11;
 }
 
 
 //Creates the first 3x3 chunk area
-void Maps::mapCreateStartingChunks() {
+void Maps::mapCreateStartingChunks(int worldsize) {
+    //
+    //Chunks in x---->
+    //          y
+    //          |
+    //          V
 
-    vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, 0x0));
-    vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, 0x0000000000000001));
-    vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, 0x0000000100000000));
-    vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, 0x0000000100000001));
-    vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, 0x0000000000000002));
-    vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, 0x0000000100000002));
+    for (int x = 0; x < worldsize; ++x) {
+        for (int y = 0; y < worldsize; ++y) {
+            //new chunk location {x,y}
+            makeNewChunk({x,y});
+        }
+    }
 	mapLoaded = true;
+}
+
+//creates a new chunk at passed location {x,y}
+void Maps::makeNewChunk(olc::vi2d newChunkLocation) {
+    uint64_t locationHex = olcTo64Hex(newChunkLocation);
+    vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, locationHex));
+}
+
+uint64_t Maps::olcTo64Hex (olc::vi2d olcvi2d) {
+    uint64_t bitshiftedIDtmp = (uint64_t)olcvi2d.y;
+    uint64_t olcTo64Hex = bitshiftedIDtmp << 32;
+    olcTo64Hex = olcTo64Hex + olcvi2d.x;
+    return olcTo64Hex;
 }
 
 void Maps::DrawActiveChunks() {

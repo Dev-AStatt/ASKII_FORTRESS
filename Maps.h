@@ -1,6 +1,7 @@
 #pragma once
 #include "olcPixelGameEngine.h"
 #include "cChunk.h"
+//#include "memory"
 
 
 //
@@ -22,7 +23,10 @@ private:
 	
 
 
-	void mapCreateStartingChunks();
+    void mapCreateStartingChunks(int worldsize);
+    void makeNewChunk(olc::vi2d newChunkLocation);
+    //used for the creation of a new chunk.
+    uint64_t olcTo64Hex (olc::vi2d olcvi2d);
 public:
 	Maps() {};
 	bool mapLoaded = false;
@@ -31,7 +35,8 @@ public:
 	
 
 	void changeZLayer(int i);
-    Maps(olc::vi2d& packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p);
+    //   Size of Texture pack,      world size to make,   Top left x,y of map,    Bottom Right of map,      pixel game engine
+    Maps(olc::vi2d& packSizeAtStart,int atStartWorldSize, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p);
 	void DrawActiveChunks();
 	void changeMapViewOffset(olc::vi2d i);
 	void resetMapViewOffset() { moveViewOffset = { 0,0 }; };

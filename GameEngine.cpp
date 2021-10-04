@@ -19,10 +19,11 @@ bool GameEngine::OnUserCreate()
 
     mapAreaBottomRight = {chunkSize * 3, chunkSize * 2};
 
-	//Map Class
-    //chunkMap = std::make_unique<Maps>(PACK_SIZE,this);
-    chunkMap = Maps(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight, this);
+    //Map Class
+    chunkMap = Maps(PACK_SIZE,3,mapAreaTopLeft,mapAreaBottomRight, this);
+    //Onscreen Text Class
     TextDisplay = std::make_unique<InfoDisplay>(PSIZEint,mapAreaBottomRight, this);
+    //Inspector Cursor class
     insp = std::make_unique<InspectionCursor>(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight,this);
 
 
