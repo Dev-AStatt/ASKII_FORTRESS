@@ -1,15 +1,19 @@
 #include "Maps.h"
 
 
-Maps::Maps(olc::vi2d& packSizeAtStart,int atStartWorldSize, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p) {
+Maps::Maps(olc::vi2d& packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p) {
     PACK_SIZE = packSizeAtStart;
 	pge = p;
 
     mapTL = atStartMapTL;
     mapBR = atStartMapBR;
 
+
+}
+
+void Maps::newMap(int atStartWorldSize) {
     mapCreateStartingChunks(atStartWorldSize);
-	activeZLayer = 11;
+    activeZLayer = 11;
 }
 
 
@@ -32,6 +36,7 @@ void Maps::mapCreateStartingChunks(int worldsize) {
 
 //creates a new chunk at passed location {x,y}
 void Maps::makeNewChunk(olc::vi2d newChunkLocation) {
+    // get the hex value for cChunk for an id
     uint64_t locationHex = olcTo64Hex(newChunkLocation);
     vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, locationHex));
 }

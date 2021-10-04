@@ -20,7 +20,7 @@ bool GameEngine::OnUserCreate()
     mapAreaBottomRight = {chunkSize * 3, chunkSize * 2};
 
     //Map Class
-    chunkMap = Maps(PACK_SIZE,3,mapAreaTopLeft,mapAreaBottomRight, this);
+    chunkMap = Maps(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight, this);
     //Onscreen Text Class
     TextDisplay = std::make_unique<InfoDisplay>(PSIZEint,mapAreaBottomRight, this);
     //Inspector Cursor class
@@ -77,7 +77,11 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
             //3: Exit
             switch (TextDisplay->mainMenu()) {
             case 0:
-                CURRENT_GAMEMODE = mapview;
+                chunkMap.newMap(3);
+                if(chunkMap.mapLoaded) {
+                    CURRENT_GAMEMODE = mapview;
+                }
+
                 break;
             case 3:
                 //closes the program

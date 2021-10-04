@@ -46,6 +46,7 @@ private:
 
     //playable map size
     int chunkSize = 16;
+    int worldSize;
     olc::vi2d mapAreaTopLeft = {1,1};
     olc::vi2d mapAreaBottomRight;
 

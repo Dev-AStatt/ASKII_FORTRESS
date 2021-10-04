@@ -49,5 +49,8 @@ public:
     int confirmMenu() {
         return DrawMenu(confirmMenuChoices,{mapViewMenuX,2});
     }
+    int newGameMenu() {
+        return 0;
+    }
 };
 

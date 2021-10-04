@@ -35,12 +35,13 @@ public:
 	
 
 	void changeZLayer(int i);
-    //   Size of Texture pack,      world size to make,   Top left x,y of map,    Bottom Right of map,      pixel game engine
-    Maps(olc::vi2d& packSizeAtStart,int atStartWorldSize, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p);
+    //   Size of Texture pack,       Top left x,y of map,    Bottom Right of map,      pixel game engine
+    Maps(olc::vi2d& packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p);
 	void DrawActiveChunks();
 	void changeMapViewOffset(olc::vi2d i);
 	void resetMapViewOffset() { moveViewOffset = { 0,0 }; };
     void flipTileOnMap(olc::vi2d& insplocXY);
+    void newMap(int atStartWorldSize);
 
 
 };
