@@ -117,6 +117,9 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
         switch (TextDisplay->confirmMenu()) {
         case 0:
             //save game
+            if (utilSaveLoad->SaveConfig(worldSize) > 0) {
+                CURRENT_GAMEMODE = mapinspection;
+            }
             break;
         case 1:
             CURRENT_GAMEMODE = mapview;

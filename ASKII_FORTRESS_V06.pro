@@ -5,6 +5,7 @@ CONFIG -= qt
 LIBS += -lX11 -lGL -lpthread -lpng -lstdc++fs -std=c++17
 
 SOURCES += \
+    EngineUtilSaveLoad.cpp \
     GameEngine.cpp \
     InfoDisplay.cpp \
     Main.cpp \
@@ -14,6 +15,7 @@ SOURCES += \
     olcPixelGameEngine.cpp
 
 HEADERS += \
+    EngineUtilSaveLoad.h \
     Ent.h \
     GameEngine.h \
     InfoDisplay.h \

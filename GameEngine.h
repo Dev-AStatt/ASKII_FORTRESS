@@ -3,6 +3,7 @@
 #include "Maps.h"
 #include "InfoDisplay.h"
 #include "InspectionCursor.h"
+#include "EngineUtilSaveLoad.h"
 
 
 //
@@ -21,9 +22,11 @@ private:
 	};
 
 
-
+//Classes
 	Maps chunkMap;
 	std::unique_ptr<InfoDisplay> TextDisplay;
+    std::unique_ptr<EngineUtilSaveLoad> utilSaveLoad;
+
 	int nLayerBackground = 0;
 	
 	//30 ticks per second. 
