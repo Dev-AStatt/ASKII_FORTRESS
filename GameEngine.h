@@ -25,7 +25,7 @@ private:
 //Classes
 	Maps chunkMap;
 	std::unique_ptr<InfoDisplay> TextDisplay;
-    std::unique_ptr<EngineUtilSaveLoad> utilSaveLoad;
+    std::unique_ptr<EngineUtilSaveLoad> utilSL;
 
 	int nLayerBackground = 0;
 	

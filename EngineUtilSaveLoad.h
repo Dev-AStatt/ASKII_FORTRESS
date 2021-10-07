@@ -9,8 +9,8 @@
 class EngineUtilSaveLoad
 {
 private:
-    bool bConfigSaved = false;
 
+    bool bConfigSaved = false;
 public:
     EngineUtilSaveLoad();
 
@@ -21,7 +21,7 @@ public:
     //returns 1 if save was sucsessful
     //returns -1 if save failed
     //returns -2 if saveconfig flag was not set
-    int saveChunks(int worldSize);
+    int saveChunks(int worldSize, Maps* chunkMapToSave);
 };
 
 

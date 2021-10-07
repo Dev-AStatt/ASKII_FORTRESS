@@ -11,7 +11,7 @@
 //
 class Maps {
 private:
-	std::vector<std::unique_ptr<cChunk>> vptrActiveChunks;
+
 	
 	olc::vi2d PACK_SIZE;
     olc::vi2d mapTL;
@@ -28,6 +28,9 @@ private:
     //used for the creation of a new chunk.
     uint64_t olcTo64Hex (olc::vi2d olcvi2d);
 public:
+
+    std::vector<std::unique_ptr<cChunk>> vptrActiveChunks;
+
 	Maps() {};
 	bool mapLoaded = false;
 	int activeZLayer;

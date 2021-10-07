@@ -1,4 +1,4 @@
-#include "EngineUtilSaveLoad.h"
+﻿#include "EngineUtilSaveLoad.h"
 
 EngineUtilSaveLoad::EngineUtilSaveLoad()
 {
@@ -20,8 +20,13 @@ int EngineUtilSaveLoad::SaveConfig(int worldSize) {
 }
 
 
-int EngineUtilSaveLoad::saveChunks(int worldSize) {
+int EngineUtilSaveLoad::saveChunks(int worldSize, Maps* chunkMapToSave) {
     if(bConfigSaved) {
+        for (int c = 0; c < (worldSize*worldSize); ++c) {
+
+        }
+
+
         return 1;
     }
     else {

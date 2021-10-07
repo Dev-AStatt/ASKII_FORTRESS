@@ -25,7 +25,8 @@ bool GameEngine::OnUserCreate()
     TextDisplay = std::make_unique<InfoDisplay>(PSIZEint,mapAreaBottomRight, this);
     //Inspector Cursor class
     insp = std::make_unique<InspectionCursor>(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight,this);
-
+    //save load calass
+    utilSL = std::make_unique<EngineUtilSaveLoad>();
 
 
     return true;
@@ -117,8 +118,11 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
         switch (TextDisplay->confirmMenu()) {
         case 0:
             //save game
-            if (utilSaveLoad->SaveConfig(worldSize) > 0) {
+            if (utilSL->SaveConfig(worldSize) > 0) {
+                int x = utilSL->saveChunks(worldSize, &chunkMap);
                 CURRENT_GAMEMODE = mapinspection;
+
+
             }
             break;
         case 1:
