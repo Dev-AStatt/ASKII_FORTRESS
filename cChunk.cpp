@@ -88,7 +88,18 @@ void cChunk::tileReplacement(TileID::TileIDList newTile, int x, int y, int z) {
     vChunk = MUCG.editchunkSingleTile(vChunk,x,y,z,newTile);
 }
 
+std::string cChunk::compileChunkToString(int i) {
 
+
+
+    if (i < (int)vChunk.size()) {
+        std::string s = std::to_string(vChunk[i]);
+        return s;
+    }
+    else {return "NULLVAL";}
+
+
+}
 
 
 

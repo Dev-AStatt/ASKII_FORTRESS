@@ -22,9 +22,17 @@ int EngineUtilSaveLoad::SaveConfig(int worldSize) {
 
 int EngineUtilSaveLoad::saveChunks(int worldSize, Maps* chunkMapToSave) {
     if(bConfigSaved) {
-        for (int c = 0; c < (worldSize*worldSize); ++c) {
-
+        std::ofstream fileChunkSave ("saves/savedchunks.csv");
+        if (fileChunkSave.is_open()) {
+            for (int c = 0; c < (worldSize*worldSize); ++c) {
+                for (int i = 0; i < 511; ++i) {
+                    std::string s = chunkMapToSave->vptrActiveChunks[c]->compileChunkToString(i);
+                    fileChunkSave << s + ",";
+                }
+                fileChunkSave << "\n";
+            }
         }
+
 
 
         return 1;

@@ -53,6 +53,7 @@ public:
     long returnChunkPosY() {return chunkPositionY;};
     //takes input of tile and position and edits the chunk
     void tileReplacement(TileID::TileIDList newTile, int x, int y, int z);
+    std::string compileChunkToString(int i);
 
 };
 
