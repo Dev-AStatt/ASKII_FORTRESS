@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <fstream>
+
 #include "olcPixelGameEngine.h"
 #include "Maps.h"
 
@@ -10,6 +11,8 @@ class EngineUtilSaveLoad
 {
 private:
 
+    std::string saveConfigLocation = "saves/saveconfig.txt";
+    std::string saveChunksLocation = "saves/savedchunks.csv";
     bool bConfigSaved = false;
 public:
     EngineUtilSaveLoad();
@@ -22,6 +25,22 @@ public:
     //returns -1 if save failed
     //returns -2 if saveconfig flag was not set
     int saveChunks(int worldSize, Maps* chunkMapToSave);
+
+    int loadchunks(Maps* unloadedMap);
+
+    void stringChunkToActiveChunk(std::string sWholeChunk, Maps* unloadedMap);
+
+    //takes a whole string of comma deliminated values, and returns
+    //a vector of strings that were seperated.
+    std::vector<std::string> wholeChunkToPieces(std::string my_str);
+
+    //function will open saveconfig and read the first line and retur
+    //the intager saved there. When more config is added this will need
+    //to be fixed.
+    int loadWorldSize();
+    //takes in a string, and returns the intager it finds in it.
+    //used for returning config intager entries.
+    int extractIntegerWords(std::string str);
 };
 
 

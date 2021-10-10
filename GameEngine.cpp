@@ -81,6 +81,9 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
             case 0:
                 CURRENT_GAMEMODE = worldCreator;
                 break;
+            case 1:
+                utilSL->loadchunks(&chunkMap);
+                break;
             case 3:
                 //closes the program
                 return false;
