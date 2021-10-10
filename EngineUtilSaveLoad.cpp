@@ -62,11 +62,22 @@ int EngineUtilSaveLoad::loadchunks(Maps* unloadedMap) {
 
 void EngineUtilSaveLoad::stringChunkToActiveChunk(std::string sWholeChunk, Maps* unloadedMap) {
     //start with an empty chunk
-    std::vector<uint64_t> vSingleLoadedChunk = std::vector<uint64_t>(511,0);
+
     //seperate whole chunk string to pieces
     std::vector<std::string> vChunkPieces = wholeChunkToPieces(sWholeChunk);
-    std::cout << "length: " << vChunkPieces.size();
+    std::vector<uint64_t> vSingleLoadedChunk = intToUint(vChunkPieces);
+    //std::cout << "length: " << vChunkPieces.size();
 
+}
+
+std::vector<uint64_t> EngineUtilSaveLoad::intToUint(std::vector<std::string> vect_s) {
+    std::vector<uint64_t> vSingleLoadedChunk = std::vector<uint64_t>(511,0);
+
+    //ulli1 = strtoull (szNumbers, &pEnd, 10);
+    for(int i = 0; i <= (int)vect_s.size(); ++i) {
+        vSingleLoadedChunk[i] = std::stoull(vect_s[i]);
+    }
+    return vSingleLoadedChunk;
 }
 
 std::vector<std::string> EngineUtilSaveLoad::wholeChunkToPieces(std::string my_str) {

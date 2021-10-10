@@ -30,6 +30,8 @@ public:
 
     void stringChunkToActiveChunk(std::string sWholeChunk, Maps* unloadedMap);
 
+    std::vector<uint64_t> intToUint(std::vector<std::string> vect_s);
+
     //takes a whole string of comma deliminated values, and returns
     //a vector of strings that were seperated.
     std::vector<std::string> wholeChunkToPieces(std::string my_str);
