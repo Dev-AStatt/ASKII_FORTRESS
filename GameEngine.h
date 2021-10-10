@@ -1,6 +1,6 @@
 #pragma once
 #include "olcPixelGameEngine.h"
-#include "Maps.h"
+#include "mapFunctions/Maps.h"
 #include "InfoDisplay.h"
 #include "InspectionCursor.h"
 #include "EngineUtilSaveLoad.h"

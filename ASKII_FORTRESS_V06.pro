@@ -9,10 +9,11 @@ SOURCES += \
     GameEngine.cpp \
     InfoDisplay.cpp \
     Main.cpp \
-    MapUtilChunkGen.cpp \
-    Maps.cpp \
-    cChunk.cpp \
-    olcPixelGameEngine.cpp
+	entityFunctions/entitieshandler.cpp \
+    mapFunctions/MapUtilChunkGen.cpp \
+    mapFunctions/Maps.cpp \
+    mapFunctions/cChunk.cpp \
+    olcPixelGameEngine.cpp \
 
 HEADERS += \
     EngineUtilSaveLoad.h \
@@ -20,12 +21,15 @@ HEADERS += \
     GameEngine.h \
     InfoDisplay.h \
     InspectionCursor.h \
-    MapUtilChunkGen.h \
-    MapUtilTileIDList.h \
-    Maps.h \
-    Tiles.h \
-    cChunk.h \
-    olcPixelGameEngine.h
+	entityFunctions/Ent.h \
+	entityFunctions/entitieshandler.h \
+    mapFunctions/MapUtilChunkGen.h \
+    mapFunctions/MapUtilTileIDList.h \
+    mapFunctions/Maps.h \
+    mapFunctions/Tiles.h \
+    mapFunctions/cChunk.h \
+    mapsFunctions/cChunk.h \
+    olcPixelGameEngine.h \
 
 DISTFILES += \
     art/Phoebus_16x16_Next.png
