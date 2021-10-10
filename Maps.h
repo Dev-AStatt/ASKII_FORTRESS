@@ -45,7 +45,7 @@ public:
 	void resetMapViewOffset() { moveViewOffset = { 0,0 }; };
     void flipTileOnMap(olc::vi2d& insplocXY);
     void newMap(int atStartWorldSize);
-    void continueMap(int atStartWorldSize, std::vector<uint64_t> newChunk);
+    void continueMap(int chunkNum,int worldSize, std::vector<uint64_t> newChunk);
 
 };
 

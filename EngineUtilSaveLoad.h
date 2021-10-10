@@ -24,11 +24,11 @@ public:
     //returns 1 if save was sucsessful
     //returns -1 if save failed
     //returns -2 if saveconfig flag was not set
-    int saveChunks(int worldSize, Maps* chunkMapToSave);
+    bool saveChunks(int worldSize, Maps* chunkMapToSave);
 
-    int loadchunks(Maps* unloadedMap);
+    bool loadchunks(Maps* unloadedMap);
 
-    void stringChunkToActiveChunk(std::string sWholeChunk, Maps* unloadedMap);
+    void stringChunkToActiveChunk(int chunkNum, int worldsize, std::string sWholeChunk, Maps* unloadedMap);
 
     std::vector<uint64_t> intToUint(std::vector<std::string> vect_s);
 

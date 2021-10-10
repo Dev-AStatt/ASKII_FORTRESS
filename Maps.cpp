@@ -16,6 +16,23 @@ void Maps::newMap(int atStartWorldSize) {
     activeZLayer = 11;
 }
 
+void Maps::continueMap(int chunkNum, int worldSize, std::vector<uint64_t> newChunk) {
+    if (chunkNum < worldSize*worldSize) {
+        olc::vi2d newChunkLocation;
+        newChunkLocation = {chunkNum % worldSize, chunkNum/worldSize};
+        uint64_t locationHex = olcTo64Hex(newChunkLocation);
+        //
+        //Right here call cChunk and make new chunk with id and vect
+        //
+        vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, locationHex, newChunk));
+
+        if(chunkNum == (worldSize*worldSize) -1) {
+            mapLoaded = true;
+            activeZLayer = 11;
+        }
+    }
+}
+
 
 //Creates the first 3x3 chunk area
 void Maps::mapCreateStartingChunks(int worldsize) {
@@ -60,7 +77,7 @@ void Maps::DrawActiveChunks() {
 void Maps::changeZLayer(int i) {
 	if (mapLoaded) {
 
-		if (0 <= activeZLayer + i && activeZLayer + i < 16) {
+        if (0 <= activeZLayer + i && activeZLayer + i < 15) {
 			activeZLayer = activeZLayer + i;
 		}
 	}

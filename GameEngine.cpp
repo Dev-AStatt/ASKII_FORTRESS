@@ -82,7 +82,9 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
                 CURRENT_GAMEMODE = worldCreator;
                 break;
             case 1:
-                utilSL->loadchunks(&chunkMap);
+                if(utilSL->loadchunks(&chunkMap)) {
+                    CURRENT_GAMEMODE = mapview;
+                }
                 break;
             case 3:
                 //closes the program
@@ -122,10 +124,9 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
         case 0:
             //save game
             if (utilSL->SaveConfig(worldSize) > 0) {
-                int x = utilSL->saveChunks(worldSize, &chunkMap);
-                CURRENT_GAMEMODE = mapinspection;
-
-
+                if(utilSL->saveChunks(worldSize, &chunkMap)) {
+                    CURRENT_GAMEMODE = mapinspection;
+                }
             }
             break;
         case 1:

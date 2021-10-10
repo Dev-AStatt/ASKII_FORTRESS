@@ -32,7 +32,11 @@ private:
 	olc::vi2d vTileFinalPosition;
 	olc::PixelGameEngine* pge;
 
-	//VectorID takes in the z and y coordinate that is understood
+    //loads typical data that is needed no mater how class is created
+    void loadTypicalData(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id);
+
+    void fillvptrTiles();
+    //VectorID takes in the z and y coordinate that is understood
 	//for a 3d object and translates that into the 1d Vector
 	int vectorID(int z, int y) { return (z * 32 + y); };
 	//returns the int of MapUtilTileIDList enum for the tile at
@@ -45,7 +49,10 @@ private:
 	//is contained in the window. false if it lays outside map view.
 	bool checkIfOnScreen(olc::vi2d& newPos);
 public:
+    //Creating New Chunk, will call chunk generator for new
     cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id);
+    //Will load passed in chunk by being given tileset
+    cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::vector<uint64_t> chunkToLoad);
 	void DrawChunk(int zLayer, olc::vi2d& moveViewOffset);
 	//Returns the pointer of the tile at location z, olc(y,x)
 	std::unique_ptr<Tile>& TilePtrAtLocation(int zLayer, olc::vi2d yx);

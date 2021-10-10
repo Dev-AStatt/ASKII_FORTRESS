@@ -20,7 +20,7 @@ int EngineUtilSaveLoad::SaveConfig(int worldSize) {
 }
 
 
-int EngineUtilSaveLoad::saveChunks(int worldSize, Maps* chunkMapToSave) {
+bool EngineUtilSaveLoad::saveChunks(int worldSize, Maps* chunkMapToSave) {
     if(bConfigSaved) {
         std::ofstream fileChunkSave (saveChunksLocation);
         if (fileChunkSave.is_open()) {
@@ -33,15 +33,15 @@ int EngineUtilSaveLoad::saveChunks(int worldSize, Maps* chunkMapToSave) {
             }
             fileChunkSave.close();
         }
-        return 1;
+        return true;
     }
     else {
-        return -2;
+        return false;
     }
-    return -1;
+    return false;
 }
 
-int EngineUtilSaveLoad::loadchunks(Maps* unloadedMap) {
+bool EngineUtilSaveLoad::loadchunks(Maps* unloadedMap) {
 
     int worldsize = loadWorldSize();
     if (worldsize > 0) {
@@ -52,21 +52,25 @@ int EngineUtilSaveLoad::loadchunks(Maps* unloadedMap) {
         if(fileChunks.is_open()) {
             for(int c = 0; c < worldsize*worldsize; ++c) {
                 std::getline(fileChunks, sWholeChunkLine);
-                stringChunkToActiveChunk(sWholeChunkLine, unloadedMap);
+                stringChunkToActiveChunk(c,worldsize, sWholeChunkLine, unloadedMap);
             }
         }
+        return true;
     }
 
-    return -1;
+
+    return false;
 }
 
-void EngineUtilSaveLoad::stringChunkToActiveChunk(std::string sWholeChunk, Maps* unloadedMap) {
+void EngineUtilSaveLoad::stringChunkToActiveChunk(int chunkNum, int worldsize,std::string sWholeChunk, Maps* unloadedMap) {
     //start with an empty chunk
 
     //seperate whole chunk string to pieces
     std::vector<std::string> vChunkPieces = wholeChunkToPieces(sWholeChunk);
     std::vector<uint64_t> vSingleLoadedChunk = intToUint(vChunkPieces);
-    //std::cout << "length: " << vChunkPieces.size();
+    //give loaded chunk tiles to Maps to actually create whole chunk
+    unloadedMap->continueMap(chunkNum,worldsize,vSingleLoadedChunk);
+
 
 }
 
@@ -74,7 +78,7 @@ std::vector<uint64_t> EngineUtilSaveLoad::intToUint(std::vector<std::string> vec
     std::vector<uint64_t> vSingleLoadedChunk = std::vector<uint64_t>(511,0);
 
     //ulli1 = strtoull (szNumbers, &pEnd, 10);
-    for(int i = 0; i <= (int)vect_s.size(); ++i) {
+    for(int i = 0; i < (int)vect_s.size(); ++i) {
         vSingleLoadedChunk[i] = std::stoull(vect_s[i]);
     }
     return vSingleLoadedChunk;

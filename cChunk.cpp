@@ -4,21 +4,37 @@
 /// This class cChunk constructor creates a whole new chunk gen each time it calls itself.
 /// This should be taken out and put in a better spot.
 cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id) {
-	PACK_SIZE = packSizeAtStart;
-    mapTL = atStartMapTL;
-    mapBR = atStartMapBR;
-	pge = p;
-	ChunkID = id;
-	decryptIDtoYX();
 
+    loadTypicalData(packSizeAtStart,atStartMapTL, atStartMapBR, p, id);
 	vChunk = MUCG.GenerateChunk();
 
+
+}
+
+cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::vector<uint64_t> chunkToLoad) {
+    loadTypicalData(packSizeAtStart,atStartMapTL, atStartMapBR, p, id);
+    vChunk = chunkToLoad;
+}
+
+void cChunk::loadTypicalData(olc::vi2d &packSizeAtStart, olc::vi2d &atStartMapTL, olc::vi2d &atStartMapBR, olc::PixelGameEngine *p, uint64_t id) {
+    PACK_SIZE = packSizeAtStart;
+    mapTL = atStartMapTL;
+    mapBR = atStartMapBR;
+    pge = p;
+    ChunkID = id;
+    decryptIDtoYX();
+
+     fillvptrTiles();
+}
+
+
+void cChunk::fillvptrTiles() {
     //This creates the tile pointers that can be drawn. Clean this up later
-	vptrTiles.emplace_back(std::make_unique<TileAir>(PACK_SIZE, pge));
-	vptrTiles.emplace_back(std::make_unique<TileWater>(PACK_SIZE, pge));
-	vptrTiles.emplace_back(std::make_unique<TileGrass>(PACK_SIZE, pge));
-	vptrTiles.emplace_back(std::make_unique<TileDirt>(PACK_SIZE, pge));
-	vptrTiles.emplace_back(std::make_unique<TileStone>(PACK_SIZE, pge));
+    vptrTiles.emplace_back(std::make_unique<TileAir>(PACK_SIZE, pge));
+    vptrTiles.emplace_back(std::make_unique<TileWater>(PACK_SIZE, pge));
+    vptrTiles.emplace_back(std::make_unique<TileGrass>(PACK_SIZE, pge));
+    vptrTiles.emplace_back(std::make_unique<TileDirt>(PACK_SIZE, pge));
+    vptrTiles.emplace_back(std::make_unique<TileStone>(PACK_SIZE, pge));
 }
 
 //Takes in the z,y,x coordinates of a tile and returns the TileID
