@@ -6,7 +6,7 @@ public:
     EntHuman() {
 
     }
-    EntHuman(olc::vi2d& PS, olc::PixelGameEngine* p, olc::vi2d posXY, int posZ) {
+    EntHuman(olc::vi2d& PS, olc::PixelGameEngine* p, olc::vi2d& posXY, int posZ) {
         constructEntBasics(PS,p);
         decalSourcePos = { 0,4 };
         entPositionXY = posXY;

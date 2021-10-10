@@ -4,6 +4,7 @@
 #include "InfoDisplay.h"
 #include "InspectionCursor.h"
 #include "EngineUtilSaveLoad.h"
+#include "entityFunctions/entitieshandler.h"
 
 
 //
@@ -26,6 +27,7 @@ private:
 	Maps chunkMap;
 	std::unique_ptr<InfoDisplay> TextDisplay;
     std::unique_ptr<EngineUtilSaveLoad> utilSL;
+    std::unique_ptr<EntitiesHandler> EntHandler;
 
 	int nLayerBackground = 0;
 	
@@ -38,6 +40,7 @@ private:
 	float timeAcc;
 	bool flash;
 	bool focusMenu = false;
+    bool tickUpdate = false;
 
     int PSIZEint;
     olc::vi2d PACK_SIZE;
@@ -59,6 +62,8 @@ private:
 
 //Private Functions;
 	void updateTick(float fElapsedTime);
+    void CommonRuntimeUpdates();
+    void ActionUpdates();
 	void DrawMapOutline();
 	void DrawScreenBoarder();
 	void DrawChunksToScreen();

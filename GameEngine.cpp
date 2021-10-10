@@ -27,7 +27,8 @@ bool GameEngine::OnUserCreate()
     insp = std::make_unique<InspectionCursor>(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight,this);
     //save load calass
     utilSL = std::make_unique<EngineUtilSaveLoad>();
-
+    //create entity handler class
+    EntHandler = std::make_unique<EntitiesHandler>(PACK_SIZE,this);
 
     return true;
 
@@ -47,10 +48,8 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
 //  usuall game loop
 //
     case mapview:
-        DrawMapOutline();
-        DrawChunksToScreen();
+        CommonRuntimeUpdates();
         TextDisplay->DrawMapViewInfo(bDebugInfo,chunkMap.moveViewOffset,chunkMap.activeZLayer);
-        UserInput();
         break;
 //
 //  This is the inspection mode, gameplay is paused
@@ -58,11 +57,9 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
 //  the world
 //
     case mapinspection:
-        DrawMapOutline();
-        DrawChunksToScreen();
+        CommonRuntimeUpdates();
         insp->DrawSelf();
         TextDisplay->DrawMapInspectionViewInfo(insp->returnPos(),bDebugInfo, chunkMap.moveViewOffset, chunkMap.activeZLayer);
-        UserInput();
         break;
 //
 //  This is the Title Screen, game boots into this mode
@@ -102,10 +99,12 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
     case worldCreator:
         worldSize = TextDisplay->newGameMenu();
         if (worldSize > 0) {
+            //create new map
             chunkMap.newMap(worldSize);
             if(chunkMap.mapLoaded) {
-
-                CURRENT_GAMEMODE = mapview;
+                //create new Entities
+                EntHandler->newGameEntities();
+                    CURRENT_GAMEMODE = mapview;
             }
         }
         break;
@@ -148,6 +147,20 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
     }
 	return true;
 
+}
+
+void GameEngine::CommonRuntimeUpdates() {
+    DrawMapOutline();
+    DrawChunksToScreen();
+    ActionUpdates();
+    EntHandler->drawEntities(chunkMap.activeZLayer,mapAreaTopLeft,mapAreaBottomRight,chunkMap.moveViewOffset);
+    UserInput();
+}
+
+void GameEngine::ActionUpdates() {
+    if(tickUpdate) {
+        EntHandler->updateEntities(gameTick);
+    }
 }
 
 void GameEngine::DrawChunksToScreen() {
@@ -265,7 +278,9 @@ void GameEngine::updateTick(float ElapsedTime) {
 	if (stopwatch >= 0.033) {
 		stopwatch = 0;
 		gameTick = gameTick + 1;
+        tickUpdate = true;
 	}
+    else {tickUpdate = false;}
 }
 //edit
 

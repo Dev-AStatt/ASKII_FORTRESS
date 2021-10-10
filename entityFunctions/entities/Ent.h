@@ -27,11 +27,12 @@ public:
         entPositionXY.y = entPositionXY.y + y;
     }
 
-    virtual void DrawSelf(int activeZLayer) {
+    virtual void DrawSelf(int activeZLayer, olc::vi2d& viewOffset) {
         if(activeZLayer == entPositionZ) {
+            olc::vi2d entFinalPos = {entPositionXY.x + viewOffset.x,entPositionXY.y + viewOffset.y };
             //the ent pos gets a + 1x1 to adjust for the header bar to match up
             //with the chunkxyz's so 0x0 is the same 0x0
-            pge->DrawPartialDecal((entPositionXY + olc::vi2d(1,1)) * PACK_SIZE, decTile.get(), decalSourcePos*PACK_SIZE, PACK_SIZE, olc::vi2d(1, 1), tint);
+            pge->DrawPartialDecal((entFinalPos + olc::vi2d(1,1)) * PACK_SIZE, decTile.get(), decalSourcePos*PACK_SIZE, PACK_SIZE, olc::vi2d(1, 1), tint);
         }
     }
 
