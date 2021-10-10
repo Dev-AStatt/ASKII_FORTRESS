@@ -22,6 +22,8 @@ HEADERS += \
     InfoDisplay.h \
     InspectionCursor.h \
 	entityFunctions/Ent.h \
+	entityFunctions/entities/Ent.h \
+	entityFunctions/entities/EntHuman.h \
 	entityFunctions/entitieshandler.h \
     mapFunctions/MapUtilChunkGen.h \
     mapFunctions/MapUtilTileIDList.h \
