@@ -1,4 +1,5 @@
 #pragma once
+#include <random>
 #include "olcPixelGameEngine.h"
 
 
@@ -8,6 +9,35 @@
 ///
 class Ent {
 private:
+protected:
+    std::string sEntName;
+    olc::vi2d decalSourcePos;
+    olc::vi2d entPositionXY;
+    int entPositionZ;
+    olc::Pixel tint;
+    olc::vi2d PACK_SIZE;
+    olc::PixelGameEngine* pge;
+    //These are pointers to sprites and Decals
+    std::unique_ptr<olc::Sprite> sprTile;
+    std::unique_ptr<olc::Decal> decTile;
+
+    void constructDecal() {
+        sprTile = std::make_unique<olc::Sprite>("art/Phoebus_16x16_Next.png");
+        decTile = std::make_unique<olc::Decal>(sprTile.get());
+    }
+    void constructEntBasics(olc::vi2d& PS, olc::PixelGameEngine* p) {
+        PACK_SIZE = PS;
+        pge = p;
+        constructDecal();
+    }
+
+    //Randomizer function with default inputs
+    int entRand(int from = 0, int to = 10) {
+        std::random_device rd; // obtain a random number from hardware
+        std::mt19937 gen(rd()); // seed the generator
+        std::uniform_int_distribution<> distr(from, to); // define the range
+        return distr(gen);
+    }
 
 public:
     Ent() {};
@@ -40,27 +70,13 @@ public:
         return entPositionXY;
     }
 
-protected:
-    std::string sEntName;
-    olc::vi2d decalSourcePos;
-    olc::vi2d entPositionXY;
-    int entPositionZ;
-    olc::Pixel tint;
-    olc::vi2d PACK_SIZE;
-    olc::PixelGameEngine* pge;
-    //These are pointers to sprites and Decals
-    std::unique_ptr<olc::Sprite> sprTile;
-    std::unique_ptr<olc::Decal> decTile;
+    virtual void updateSelf(int tick) {
 
-    void constructDecal() {
-        sprTile = std::make_unique<olc::Sprite>("art/Phoebus_16x16_Next.png");
-        decTile = std::make_unique<olc::Decal>(sprTile.get());
     }
-    void constructEntBasics(olc::vi2d& PS, olc::PixelGameEngine* p) {
-        PACK_SIZE = PS;
-        pge = p;
-        constructDecal();
-    }
+
+
+
+
 };
 //
 // This is an example of an entity that can be created.

@@ -1,8 +1,9 @@
 #include "entitieshandler.h"
 
-EntitiesHandler::EntitiesHandler(olc::vi2d PS, olc::PixelGameEngine* p) {
+EntitiesHandler::EntitiesHandler(olc::vi2d PS, Maps* m, olc::PixelGameEngine* p) {
     PACK_SIZE = PS;
     pge = p;
+    map = m;
 }
 
 void EntitiesHandler::newEntity(olc::vi2d posXY, int posZ) {
@@ -35,5 +36,8 @@ void EntitiesHandler::newGameEntities() {
 
 
 void EntitiesHandler::updateEntities(int tick) {
-
+     for(int i = 0; i < (int)aliveEnts.size(); ++i) {
+         //map
+         aliveEnts[i]->updateSelf(tick);
+     }
 }

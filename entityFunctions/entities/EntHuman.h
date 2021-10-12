@@ -13,4 +13,12 @@ public:
         entPositionZ = posZ;
         tint = olc::WHITE;
     }
+
+    virtual void updateSelf(int tick) override {
+        if (tick % 10 == 0) {
+            moveSelf(entRand(-1,1),entRand(-1,1));
+        }
+    }
+
+
 };

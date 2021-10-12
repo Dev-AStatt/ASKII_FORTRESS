@@ -109,13 +109,50 @@ void Maps::flipTileOnMap(olc::vi2d& insplocXY) {
             }
         }
         vptrActiveChunks[chunkToPoint]->tileReplacement(TileID::Water,tileX,tileY,activeZLayer);
+    }
+}
 
 
+std::vector<std::unique_ptr<Tile>> Maps::viewOfWorld(olc::vi2d& posXY, int posZ,int viewDistance) {
+    std::vector<std::unique_ptr<Tile>> vSight;
+    std::vector<olc::vi2d> chunksInView;
+
+    //fisrt get chunks that are in view
+    //only for viewsize less than 16
+    if(viewDistance >= chunkSize) {
+        //This is for later when viewsize > 16 is needed
+    }
+    else {
+        //normal
+        //if the chunk viewd from is the same as north chunk
+        if(worldPosToChunkXY(posXY) != worldPosToChunkXY({posXY.x,posXY.y + viewDistance})) {
+
+        }
     }
 
 
 
+    //look through chunks
+
+    return vSight;
 }
+
+bool Maps::viewOnSingleChunk(olc::vi2d posXY, int vD) {
+    if(worldPosToChunkXY(posXY) != worldPosToChunkXY({posXY.x + vD,posXY.y + vD})) {
+        if(worldPosToChunkXY(posXY) != worldPosToChunkXY({posXY.x - vD,posXY.y - vD})) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+olc::vi2d Maps::worldPosToChunkXY(olc::vi2d worldPos) {
+    olc::vi2d chunkXY = {worldPos.x / chunkSize,worldPos.y / chunkSize};
+    return chunkXY;
+}
+
+
 
 
 

@@ -28,7 +28,7 @@ bool GameEngine::OnUserCreate()
     //save load calass
     utilSL = std::make_unique<EngineUtilSaveLoad>();
     //create entity handler class
-    EntHandler = std::make_unique<EntitiesHandler>(PACK_SIZE,this);
+    EntHandler = std::make_unique<EntitiesHandler>(PACK_SIZE,&chunkMap,this);
 
     return true;
 

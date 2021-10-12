@@ -1,6 +1,7 @@
 #pragma once
 #include "olcPixelGameEngine.h"
 #include "mapFunctions/cChunk.h"
+#include "Tiles.h"
 //#include "memory"
 
 
@@ -27,6 +28,10 @@ private:
     void makeNewChunk(olc::vi2d newChunkLocation);
     //used for the creation of a new chunk.
     uint64_t olcTo64Hex (olc::vi2d olcvi2d);
+    //takes a xy position in the world and returns
+    //the chunk x and chunk y in an olc::vi2d
+    olc::vi2d worldPosToChunkXY(olc::vi2d worldPos);
+    bool viewOnSingleChunk(olc::vi2d posXY, int vD);
 public:
 
     std::vector<std::unique_ptr<cChunk>> vptrActiveChunks;
@@ -46,6 +51,9 @@ public:
     void flipTileOnMap(olc::vi2d& insplocXY);
     void newMap(int atStartWorldSize);
     void continueMap(int chunkNum,int worldSize, std::vector<uint64_t> newChunk);
+
+    std::vector<std::unique_ptr<Tile>> viewOfWorld(olc::vi2d& posXY, int posZ,int viewDistance);
+
 
 };
 
