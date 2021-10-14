@@ -21,6 +21,7 @@ private:
 
     //This is fixed Do not change
     int chunkSize = 16;
+    int currentWorldSize;
 	
 
 
@@ -32,6 +33,8 @@ private:
     //the chunk x and chunk y in an olc::vi2d
     olc::vi2d worldPosToChunkXY(olc::vi2d worldPos);
     bool viewOnSingleChunk(olc::vi2d posXY, int vD);
+    //takes in the id xy of a chunk and returns position in vptrActiveChunks
+    int returnVIndexOfChunk(int x, int y);
 public:
 
     std::vector<std::unique_ptr<cChunk>> vptrActiveChunks;
@@ -52,7 +55,7 @@ public:
     void newMap(int atStartWorldSize);
     void continueMap(int chunkNum,int worldSize, std::vector<uint64_t> newChunk);
 
-    std::vector<std::unique_ptr<Tile>> viewOfWorld(olc::vi2d& posXY, int posZ,int viewDistance);
+    std::vector<int> viewOfWorld(olc::vi2d& posXY, int posZ,int viewDistance);
 
 
 };

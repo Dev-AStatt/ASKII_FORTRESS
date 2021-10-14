@@ -57,7 +57,7 @@ int cChunk::TileIDAtLocation(int zLayer, int yCol, int xRow) {
 //returns a pointer to a tile that is at the location of z, vi2d(yx)
 std::unique_ptr<Tile>& cChunk::TilePtrAtLocation(int zLayer, olc::vi2d yx) {
 	//call TileIDAtLoc and return a pointer at that loc
-	std::unique_ptr<Tile>& t = vptrTiles[TileIDAtLocation(zLayer, yx.y, yx.x)];
+    std::unique_ptr<Tile>& t = vptrTiles[TileIDAtLocation(zLayer, yx.y, yx.x)];
 	return t;
 
 }

@@ -14,8 +14,11 @@ private:
 
     std::vector<std::unique_ptr<Ent>> aliveEnts;
 
+
     //functions
     bool olcWithinBounds(olc::vi2d checkpos, olc::vi2d& mapTL, olc::vi2d& mapBR, olc::vi2d& viewOffset);
+
+
 
 public:
     EntitiesHandler(olc::vi2d PS, Maps* m, olc::PixelGameEngine* p);

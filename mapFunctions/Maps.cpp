@@ -12,6 +12,7 @@ Maps::Maps(olc::vi2d& packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atSta
 }
 
 void Maps::newMap(int atStartWorldSize) {
+    currentWorldSize = atStartWorldSize;
     mapCreateStartingChunks(atStartWorldSize);
     activeZLayer = 11;
 }
@@ -27,6 +28,7 @@ void Maps::continueMap(int chunkNum, int worldSize, std::vector<uint64_t> newChu
         vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, locationHex, newChunk));
 
         if(chunkNum == (worldSize*worldSize) -1) {
+            currentWorldSize = worldSize;
             mapLoaded = true;
             activeZLayer = 11;
         }
@@ -113,8 +115,8 @@ void Maps::flipTileOnMap(olc::vi2d& insplocXY) {
 }
 
 
-std::vector<std::unique_ptr<Tile>> Maps::viewOfWorld(olc::vi2d& posXY, int posZ,int viewDistance) {
-    std::vector<std::unique_ptr<Tile>> vSight;
+std::vector<int> Maps::viewOfWorld(olc::vi2d& posXY, int posZ,int viewDistance) {
+    std::vector<int> vSight;
     std::vector<olc::vi2d> chunksInView;
 
     //fisrt get chunks that are in view
@@ -127,6 +129,20 @@ std::vector<std::unique_ptr<Tile>> Maps::viewOfWorld(olc::vi2d& posXY, int posZ,
         //if the chunk viewd from is the same as north chunk
         if(worldPosToChunkXY(posXY) != worldPosToChunkXY({posXY.x,posXY.y + viewDistance})) {
 
+        }
+        else {
+            olc::vi2d chunkvi2d = worldPosToChunkXY(posXY);
+            int chunkint = returnVIndexOfChunk(chunkvi2d.x, chunkvi2d.y);
+            int posYStart = (posXY.y - viewDistance);
+            int posYEnd = (posXY.y + viewDistance);
+            for (int y = posYStart; y <= posYEnd; ++y) {
+                for (int x = (posXY.x - viewDistance); x <= (posXY.x + viewDistance); ++x) {
+                    //for x y pos above within view, place into vsight the tile at location from chunk
+                    vSight.emplace_back(vptrActiveChunks[chunkint]->TileIDAtLocation(posZ,y,x));
+
+                }
+            }
+            return vSight;
         }
     }
 
@@ -152,6 +168,13 @@ olc::vi2d Maps::worldPosToChunkXY(olc::vi2d worldPos) {
     return chunkXY;
 }
 
+int Maps::returnVIndexOfChunk(int x, int y) {
+    int r = x + (y*currentWorldSize);
+    if(r >= 0 && r <= (int)vptrActiveChunks.size()) {
+        return r;
+    }
+    else return -1;
+}
 
 
 

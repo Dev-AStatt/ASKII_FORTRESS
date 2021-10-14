@@ -4,7 +4,10 @@ EntitiesHandler::EntitiesHandler(olc::vi2d PS, Maps* m, olc::PixelGameEngine* p)
     PACK_SIZE = PS;
     pge = p;
     map = m;
+    fillvptrTiles();
 }
+
+
 
 void EntitiesHandler::newEntity(olc::vi2d posXY, int posZ) {
     aliveEnts.emplace_back(std::make_unique<EntHuman>(PACK_SIZE,pge,posXY,posZ));
@@ -38,6 +41,7 @@ void EntitiesHandler::newGameEntities() {
 void EntitiesHandler::updateEntities(int tick) {
      for(int i = 0; i < (int)aliveEnts.size(); ++i) {
          //map
+         aliveEnts[i]->giftOfSight(map->viewOfWorld(aliveEnts[i]->returnPos(),aliveEnts[i]->returnZpos(),2));
          aliveEnts[i]->updateSelf(tick);
      }
 }

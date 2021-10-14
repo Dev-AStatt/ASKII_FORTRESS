@@ -1,6 +1,8 @@
 #pragma once
 #include <random>
 #include "olcPixelGameEngine.h"
+#include "mapFunctions/Tiles.h"
+#include "mapFunctions/MapUtilTileIDList.h"
 
 
 ///
@@ -21,6 +23,10 @@ protected:
     std::unique_ptr<olc::Sprite> sprTile;
     std::unique_ptr<olc::Decal> decTile;
 
+    //field of view
+    std::vector<int> fieldOfView;
+    std::vector<std::unique_ptr<Tile>> vptrTiles;
+
     void constructDecal() {
         sprTile = std::make_unique<olc::Sprite>("art/Phoebus_16x16_Next.png");
         decTile = std::make_unique<olc::Decal>(sprTile.get());
@@ -29,6 +35,7 @@ protected:
         PACK_SIZE = PS;
         pge = p;
         constructDecal();
+        fillvptrTiles();
     }
 
     //Randomizer function with default inputs
@@ -37,6 +44,15 @@ protected:
         std::mt19937 gen(rd()); // seed the generator
         std::uniform_int_distribution<> distr(from, to); // define the range
         return distr(gen);
+    }
+
+    void fillvptrTiles() {
+        //This creates the tile pointers that can be drawn. Clean this up later, this espessially need to be in MapUtilTileIDList
+        vptrTiles.emplace_back(std::make_unique<TileAir>(PACK_SIZE, pge));
+        vptrTiles.emplace_back(std::make_unique<TileWater>(PACK_SIZE, pge));
+        vptrTiles.emplace_back(std::make_unique<TileGrass>(PACK_SIZE, pge));
+        vptrTiles.emplace_back(std::make_unique<TileDirt>(PACK_SIZE, pge));
+        vptrTiles.emplace_back(std::make_unique<TileStone>(PACK_SIZE, pge));
     }
 
 public:
@@ -52,6 +68,10 @@ public:
     std::string returnName() {
         return "";
     }
+    int returnZpos() {
+        return entPositionZ;
+    }
+
     virtual void moveSelf(int x, int y) {
         entPositionXY.x = entPositionXY.x + x;
         entPositionXY.y = entPositionXY.y + y;
@@ -66,7 +86,7 @@ public:
         }
     }
 
-    virtual olc::vi2d returnPos() {
+    virtual olc::vi2d& returnPos() {
         return entPositionXY;
     }
 
@@ -74,7 +94,9 @@ public:
 
     }
 
-
+    virtual void giftOfSight(std::vector<int> vSight) {
+        fieldOfView = std::move(vSight);
+    }
 
 
 };
