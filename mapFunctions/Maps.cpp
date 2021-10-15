@@ -117,66 +117,53 @@ void Maps::flipTileOnMap(olc::vi2d& insplocXY) {
 
 std::vector<int> Maps::viewOfWorld(olc::vi2d& posXY, int posZ,int viewDistance) {
     std::vector<int> vSight;
-    std::vector<olc::vi2d> chunksInView;
+    //std::vector<olc::vi2d> chunksInView;
+    olc::vi2d chunkIDLoc;
+    int chunkIndex;
 
-    //fisrt get chunks that are in view
-    //only for viewsize less than 16
-    if(viewDistance >= chunkSize) {
-        //This is for later when viewsize > 16 is needed
-    }
-    else {
-        //normal
-        //if the chunk viewd from is the same as north chunk
-        if(worldPosToChunkXY(posXY) != worldPosToChunkXY({posXY.x,posXY.y + viewDistance})) {
+    int yStart = posXY.y - viewDistance;
+    int yEnd = posXY.y + viewDistance;
+    int XStart = posXY.x - viewDistance;
+    int XEnd = posXY.x + viewDistance;
 
-        }
-        else {
-            olc::vi2d chunkvi2d = worldPosToChunkXY(posXY);
-            int chunkint = returnVIndexOfChunk(chunkvi2d.x, chunkvi2d.y);
-            int posYStart = (posXY.y - viewDistance);
-            int posYEnd = (posXY.y + viewDistance);
-            for (int y = posYStart; y <= posYEnd; ++y) {
-                for (int x = (posXY.x - viewDistance); x <= (posXY.x + viewDistance); ++x) {
-                    //for x y pos above within view, place into vsight the tile at location from chunk
-                    vSight.emplace_back(vptrActiveChunks[chunkint]->TileIDAtLocation(posZ,y,x));
-
-                }
+    for(int y = yStart; y <= yEnd; ++y) {
+        for(int x = XStart; x <= XEnd; ++x) {
+            chunkIDLoc = worldPosToChunkXY({x,y});
+            chunkIndex = returnVIndexOfChunk(chunkIDLoc);
+            if(chunkIndex >= 0) {
+                int temp = vptrActiveChunks[chunkIndex]->TileIDAtLocation(posZ,y,x);
+                vSight.emplace_back(temp);
             }
-            return vSight;
+
         }
     }
-
-
-
-    //look through chunks
-
     return vSight;
 }
 
-bool Maps::viewOnSingleChunk(olc::vi2d posXY, int vD) {
-    if(worldPosToChunkXY(posXY) != worldPosToChunkXY({posXY.x + vD,posXY.y + vD})) {
-        if(worldPosToChunkXY(posXY) != worldPosToChunkXY({posXY.x - vD,posXY.y - vD})) {
-            return true;
-        }
-    }
-
-    return false;
-}
 
 olc::vi2d Maps::worldPosToChunkXY(olc::vi2d worldPos) {
     olc::vi2d chunkXY = {worldPos.x / chunkSize,worldPos.y / chunkSize};
     return chunkXY;
 }
 
-int Maps::returnVIndexOfChunk(int x, int y) {
-    int r = x + (y*currentWorldSize);
+int Maps::returnVIndexOfChunk(olc::vi2d XY) {
+    int r = XY.x + (XY.y*currentWorldSize);
     if(r >= 0 && r <= (int)vptrActiveChunks.size()) {
         return r;
     }
     else return -1;
 }
 
+bool Maps::vi2dInVector(std::vector<olc::vi2d> vect, olc::vi2d check) {
 
+    for(int i = 0; i < (int)vect.size(); ++i) {
+        if (check == vect[i]) {
+            return true;
+        }
+    }
+
+    return false;
+}
 
 
 

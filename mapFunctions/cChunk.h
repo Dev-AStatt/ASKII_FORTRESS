@@ -1,6 +1,7 @@
 #pragma once
 #include "Tiles.h"
 #include "MapUtilChunkGen.h"
+
 #include <vector>
 #include <memory>
 
@@ -31,11 +32,12 @@ private:
     olc::vi2d mapBR; //map area bottom right
 	olc::vi2d vTileFinalPosition;
 	olc::PixelGameEngine* pge;
+    std::unique_ptr<TileID::cTileID> cTiles;
 
     //loads typical data that is needed no mater how class is created
     void loadTypicalData(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id);
 
-    void fillvptrTiles();
+
     //VectorID takes in the z and y coordinate that is understood
 	//for a 3d object and translates that into the 1d Vector
 	int vectorID(int z, int y) { return (z * 32 + y); };

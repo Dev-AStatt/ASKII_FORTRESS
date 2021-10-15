@@ -23,19 +23,10 @@ void cChunk::loadTypicalData(olc::vi2d &packSizeAtStart, olc::vi2d &atStartMapTL
     pge = p;
     ChunkID = id;
     decryptIDtoYX();
+    cTiles = std::make_unique<TileID::cTileID>(PACK_SIZE,pge);
 
-     fillvptrTiles();
 }
 
-
-void cChunk::fillvptrTiles() {
-    //This creates the tile pointers that can be drawn. Clean this up later
-    vptrTiles.emplace_back(std::make_unique<TileAir>(PACK_SIZE, pge));
-    vptrTiles.emplace_back(std::make_unique<TileWater>(PACK_SIZE, pge));
-    vptrTiles.emplace_back(std::make_unique<TileGrass>(PACK_SIZE, pge));
-    vptrTiles.emplace_back(std::make_unique<TileDirt>(PACK_SIZE, pge));
-    vptrTiles.emplace_back(std::make_unique<TileStone>(PACK_SIZE, pge));
-}
 
 //Takes in the z,y,x coordinates of a tile and returns the TileID
 int cChunk::TileIDAtLocation(int zLayer, int yCol, int xRow) {
@@ -57,7 +48,7 @@ int cChunk::TileIDAtLocation(int zLayer, int yCol, int xRow) {
 //returns a pointer to a tile that is at the location of z, vi2d(yx)
 std::unique_ptr<Tile>& cChunk::TilePtrAtLocation(int zLayer, olc::vi2d yx) {
 	//call TileIDAtLoc and return a pointer at that loc
-    std::unique_ptr<Tile>& t = vptrTiles[TileIDAtLocation(zLayer, yx.y, yx.x)];
+    std::unique_ptr<Tile>& t = cTiles->vptrTiles[TileIDAtLocation(zLayer, yx.y, yx.x)];
 	return t;
 
 }
@@ -75,7 +66,7 @@ void cChunk::decryptIDtoYX() {
 void cChunk::DrawChunk(int zLayer, olc::vi2d& moveViewOffset) {
 	for (int y = 0; y < 16; ++y) {
 		for (int x = 0; x < 16; ++x) {
-			auto& t = vptrTiles[TileIDAtLocation(zLayer, y, x)];
+            auto& t = cTiles->vptrTiles[TileIDAtLocation(zLayer, y, x)];
 			if (t) {							//the + 1 on the X, Y is to add space for the header
                 vTileFinalPosition = {x + (int)(chunkPositionX * 16) + 1 + moveViewOffset.x,(y + (int)(chunkPositionY * 16) + 1) + moveViewOffset.y };
 				//make sure adjusted position is on screen

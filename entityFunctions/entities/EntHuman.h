@@ -11,6 +11,7 @@ public:
         decalSourcePos = { 0,4 };
         entPositionXY = posXY;
         entPositionZ = posZ;
+        viewDistance = 2;
         tint = olc::WHITE;
     }
 

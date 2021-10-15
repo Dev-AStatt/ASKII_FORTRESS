@@ -1,6 +1,8 @@
 #pragma once
 #include <random>
+
 #include "olcPixelGameEngine.h"
+
 #include "mapFunctions/Tiles.h"
 #include "mapFunctions/MapUtilTileIDList.h"
 
@@ -16,16 +18,20 @@ protected:
     olc::vi2d decalSourcePos;
     olc::vi2d entPositionXY;
     int entPositionZ;
+    int viewDistance;
     olc::Pixel tint;
     olc::vi2d PACK_SIZE;
     olc::PixelGameEngine* pge;
+
     //These are pointers to sprites and Decals
     std::unique_ptr<olc::Sprite> sprTile;
     std::unique_ptr<olc::Decal> decTile;
 
+    std::unique_ptr<TileID::cTileID> cTiles;
+
     //field of view
     std::vector<int> fieldOfView;
-    std::vector<std::unique_ptr<Tile>> vptrTiles;
+
 
     void constructDecal() {
         sprTile = std::make_unique<olc::Sprite>("art/Phoebus_16x16_Next.png");
@@ -34,8 +40,10 @@ protected:
     void constructEntBasics(olc::vi2d& PS, olc::PixelGameEngine* p) {
         PACK_SIZE = PS;
         pge = p;
+
         constructDecal();
-        fillvptrTiles();
+        cTiles = std::make_unique<TileID::cTileID>(PACK_SIZE,pge);
+
     }
 
     //Randomizer function with default inputs
@@ -46,23 +54,17 @@ protected:
         return distr(gen);
     }
 
-    void fillvptrTiles() {
-        //This creates the tile pointers that can be drawn. Clean this up later, this espessially need to be in MapUtilTileIDList
-        vptrTiles.emplace_back(std::make_unique<TileAir>(PACK_SIZE, pge));
-        vptrTiles.emplace_back(std::make_unique<TileWater>(PACK_SIZE, pge));
-        vptrTiles.emplace_back(std::make_unique<TileGrass>(PACK_SIZE, pge));
-        vptrTiles.emplace_back(std::make_unique<TileDirt>(PACK_SIZE, pge));
-        vptrTiles.emplace_back(std::make_unique<TileStone>(PACK_SIZE, pge));
-    }
+
 
 public:
     Ent() {};
     Ent(olc::vi2d& PS, olc::PixelGameEngine* p) {
         constructEntBasics(PS,p);
-        //These three lines should be overwritten by inheriting classes
+        //These lines should be overwritten by inheriting classes
         decalSourcePos = { 15,3 };
         entPositionXY = {1,1};
         entPositionZ = 0;
+        viewDistance = 3;
         tint = olc::WHITE;
     }
     std::string returnName() {
@@ -71,10 +73,26 @@ public:
     int returnZpos() {
         return entPositionZ;
     }
+    int returnViewDistance() {
+        return viewDistance;
+    }
 
     virtual void moveSelf(int x, int y) {
-        entPositionXY.x = entPositionXY.x + x;
-        entPositionXY.y = entPositionXY.y + y;
+
+        if(watchYourStep(x,y)) {
+            entPositionXY = entPositionXY + olc::vi2d(x,y);
+        }
+    }
+
+    //returns true if you can walk on tile in the x,y direction
+    bool watchYourStep(int x, int y) {
+        //this function for index is wrong
+        int index = (x+viewDistance) + ((y+viewDistance) * viewDistance);
+        auto& t = cTiles->vptrTiles[fieldOfView[index]];
+        if(t->isWalkable()) {
+            return true;
+        }
+        return false;
     }
 
     virtual void DrawSelf(int activeZLayer, olc::vi2d& viewOffset) {
@@ -95,7 +113,7 @@ public:
     }
 
     virtual void giftOfSight(std::vector<int> vSight) {
-        fieldOfView = std::move(vSight);
+        fieldOfView = vSight;
     }
 
 

@@ -18,9 +18,15 @@ public:
         return "";
 	}
 
+    bool isWalkable() {
+        return walkable;
+    }
+
 	virtual void DrawSelf(const olc::vi2d& pos) {
 		pge->DrawPartialDecal(pos * PACK_SIZE, decTile.get(), decalSourcePos*PACK_SIZE, PACK_SIZE, olc::vi2d(1, 1), tint);
 	}
+
+
 protected:
 	std::string sTileName;
 	olc::vi2d decalSourcePos;
@@ -31,6 +37,7 @@ protected:
 	std::unique_ptr<olc::Sprite> sprTile;
 	std::unique_ptr<olc::Decal> decTile;
 	bool mineable = false;
+    bool walkable = true;
 
 	void constructDecal() {
 		sprTile = std::make_unique<olc::Sprite>("art/Phoebus_16x16_Next.png");
@@ -61,6 +68,7 @@ public:
 		constructDecal();
 		sTileName = "Air";
 		tint = olc::BLACK;
+        walkable = false;
 	}
 
 };
@@ -74,6 +82,7 @@ public:
 		decalSourcePos = { 14,7 };
 		sTileName = "Water";
 		tint = olc::BLUE;
+        walkable = false;
 	}
 
 };

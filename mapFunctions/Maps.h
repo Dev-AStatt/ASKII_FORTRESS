@@ -32,9 +32,10 @@ private:
     //takes a xy position in the world and returns
     //the chunk x and chunk y in an olc::vi2d
     olc::vi2d worldPosToChunkXY(olc::vi2d worldPos);
-    bool viewOnSingleChunk(olc::vi2d posXY, int vD);
+
     //takes in the id xy of a chunk and returns position in vptrActiveChunks
-    int returnVIndexOfChunk(int x, int y);
+    int returnVIndexOfChunk(olc::vi2d XY);
+    bool vi2dInVector(std::vector<olc::vi2d> vect, olc::vi2d check);
 public:
 
     std::vector<std::unique_ptr<cChunk>> vptrActiveChunks;
