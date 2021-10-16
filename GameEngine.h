@@ -14,7 +14,7 @@ class GameEngine : public olc::PixelGameEngine
 {
 private:
 	enum eGameMode {
-		mapview,
+        mapview,
 		menu,
 		title,
         worldCreator,

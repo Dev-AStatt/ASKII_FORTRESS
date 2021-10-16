@@ -41,7 +41,15 @@ void EntitiesHandler::newGameEntities() {
 void EntitiesHandler::updateEntities(int tick) {
      for(int i = 0; i < (int)aliveEnts.size(); ++i) {
          //map
-         aliveEnts[i]->giftOfSight(map->viewOfWorld(aliveEnts[i]->returnPos(),aliveEnts[i]->returnZpos(),aliveEnts[i]->returnViewDistance()));
-         aliveEnts[i]->updateSelf(tick);
+		 aliveEnts[i]->giftOfSight(map->viewOfWorld(aliveEnts[i]->returnPos(),aliveEnts[i]->returnStepZ(),aliveEnts[i]->returnViewDistance()));
+		 if(aliveEnts[i]->updateSelf(tick)) {
+
+		 } else {
+			//this is to delete unique pointer from vector after ent dies
+			 aliveEnts.erase(aliveEnts.begin() + i);
+		}
      }
 }
+
+
+

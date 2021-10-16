@@ -9,6 +9,7 @@ SOURCES += \
     GameEngine.cpp \
     InfoDisplay.cpp \
     Main.cpp \
+    entityFunctions/entities/Ent.cpp \
 	entityFunctions/entitieshandler.cpp \
     mapFunctions/MapUtilChunkGen.cpp \
     mapFunctions/Maps.cpp \
@@ -17,11 +18,9 @@ SOURCES += \
 
 HEADERS += \
     EngineUtilSaveLoad.h \
-    Ent.h \
     GameEngine.h \
     InfoDisplay.h \
     InspectionCursor.h \
-	entityFunctions/Ent.h \
 	entityFunctions/entities/Ent.h \
 	entityFunctions/entities/EntHuman.h \
 	entityFunctions/entitieshandler.h \
@@ -29,7 +28,6 @@ HEADERS += \
     mapFunctions/MapUtilTileIDList.h \
     mapFunctions/Maps.h \
     mapFunctions/Tiles.h \
-    mapFunctions/cChunk.h \
     mapsFunctions/cChunk.h \
     olcPixelGameEngine.h \
 
