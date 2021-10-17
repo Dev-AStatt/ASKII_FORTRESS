@@ -8,30 +8,25 @@ GameEngine::GameEngine() {
 
 bool GameEngine::OnUserCreate()
 {
-
-	// Set the map outline point from screen width and hight
-    PSIZEint = 16;
-	mapOutline.x = (ScreenWidth() / 4) - 1;
-    mapOutline.y = (ScreenHeight() - (PSIZEint * 32));
-
 	CURRENT_GAMEMODE = title;
-    PACK_SIZE = { PSIZEint,PSIZEint };
+	// Set the map outline point from screen width and hight
+	mapOutline.x		=	(ScreenWidth() / 4) - 1;
+	mapOutline.y		=	(ScreenHeight() - (PSIZEint * 32));
+	mapAreaTopLeft		=	{1,1};
+	mapAreaBottomRight	=	{chunkSize * 3, chunkSize * 2};
+	//size of the texture pack in olc::vi2d
+	PSIZEint	= 16;
+	PACK_SIZE	= { PSIZEint,PSIZEint };
+	//Pointer Class
+	chunkMap	=	Maps(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight, this);
+	//Unique Pointers
+	TextDisplay =	std::make_unique<InfoDisplay>		(PSIZEint,mapAreaBottomRight, this);
+	insp		=	std::make_unique<InspectionCursor>	(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight,this);
+	utilSL		=	std::make_unique<EngineUtilSaveLoad>();
+	EntHandler	=	std::make_unique<EntitiesHandler>	(PACK_SIZE,&chunkMap,this);
+	ObjHandler	=	std::make_unique<ObjectHandler>		(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight,this);
 
-    mapAreaBottomRight = {chunkSize * 3, chunkSize * 2};
-
-    //Map Class
-    chunkMap = Maps(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight, this);
-    //Onscreen Text Class
-    TextDisplay = std::make_unique<InfoDisplay>(PSIZEint,mapAreaBottomRight, this);
-    //Inspector Cursor class
-    insp = std::make_unique<InspectionCursor>(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight,this);
-    //save load calass
-    utilSL = std::make_unique<EngineUtilSaveLoad>();
-    //create entity handler class
-    EntHandler = std::make_unique<EntitiesHandler>(PACK_SIZE,&chunkMap,this);
-
-    return true;
-
+	return true;
 }
 //
 // This is the function that runs every "Tick" called by the OLC Engine
@@ -154,6 +149,7 @@ void GameEngine::CommonRuntimeUpdates() {
     DrawChunksToScreen();
     ActionUpdates();
     EntHandler->drawEntities(chunkMap.activeZLayer,mapAreaTopLeft,mapAreaBottomRight,chunkMap.moveViewOffset);
+	ObjHandler->drawObjects(chunkMap.activeZLayer,chunkMap.moveViewOffset);
     UserInput();
 }
 

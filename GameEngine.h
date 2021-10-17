@@ -5,6 +5,7 @@
 #include "InspectionCursor.h"
 #include "EngineUtilSaveLoad.h"
 #include "entityFunctions/entitieshandler.h"
+#include "objectFunctions/objecthandler.h"
 
 
 //
@@ -28,39 +29,33 @@ private:
 	std::unique_ptr<InfoDisplay> TextDisplay;
     std::unique_ptr<EngineUtilSaveLoad> utilSL;
     std::unique_ptr<EntitiesHandler> EntHandler;
+	std::unique_ptr<InspectionCursor> insp;
+	std::unique_ptr<ObjectHandler> ObjHandler;
+
 
 	int nLayerBackground = 0;
-	
-	//30 ticks per second. 
+	//30 ticks per second.
 	uint32_t gameTick = 0;
 	float stopwatch = 0;
-
 
 //Constants for UpdateFlashPlayer through calls.
 	float timeAcc;
 	bool flash;
 	bool focusMenu = false;
     bool tickUpdate = false;
-
     int PSIZEint;
     olc::vi2d PACK_SIZE;
 	olc::vi2d mapOutline;
-
-    //InspectionIcon items (Move to class later?)
-    void togglegamemode();
-    std::unique_ptr<InspectionCursor> insp;
-    //End of InspectionIcon stuff
-
-    //playable map size
+//playable map size
     int chunkSize = 16;
     int worldSize;
-    olc::vi2d mapAreaTopLeft = {1,1};
+	olc::vi2d mapAreaTopLeft;
     olc::vi2d mapAreaBottomRight;
-
-    //debug functions
+//debug functions
     bool bDebugInfo = false;
 
 //Private Functions;
+	void togglegamemode();
 	void updateTick(float fElapsedTime);
     void CommonRuntimeUpdates();
     void ActionUpdates();

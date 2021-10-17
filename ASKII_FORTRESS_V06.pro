@@ -14,6 +14,7 @@ SOURCES += \
     mapFunctions/MapUtilChunkGen.cpp \
     mapFunctions/Maps.cpp \
     mapFunctions/cChunk.cpp \
+    objectFunctions/objecthandler.cpp \
     olcPixelGameEngine.cpp \
 
 HEADERS += \
@@ -29,6 +30,8 @@ HEADERS += \
     mapFunctions/Maps.h \
     mapFunctions/Tiles.h \
     mapsFunctions/cChunk.h \
+    objectFunctions/Object.h \
+    objectFunctions/objecthandler.h \
     olcPixelGameEngine.h \
 
 DISTFILES += \
