@@ -33,7 +33,7 @@ private:
 	}
 	void drawSingleObject(olc::vi2d posXY, olc::vi2d decalSourcePos,olc::vi2d& viewOffset, int bc);
 	bool visable(olc::vi2d posXY,int posZ, int activeZLayer,olc::vi2d viewOffset);
-
+	bool isObjPtrAt(olc::vi2d& XY, int z);
 public:
 	ObjectHandler(olc::vi2d PS,olc::vi2d atStartTL,olc::vi2d atStartBR, olc::PixelGameEngine* p);
 	void createMeat(olc::vi2d posXY, int posZ);
@@ -42,6 +42,9 @@ public:
 	void drawObjects(int activeZLayer,olc::vi2d& viewOffset);
 	int ItemIDAtPosition(olc::vi2d& XY, int z);
 	std::vector<int> fillVectWithItemID(std::vector<int>& vect, std::vector<olc::vi2d>& vectPosXY, int z);
+	std::vector<std::shared_ptr<Object>> fillVectWithObjPtrs(std::vector<olc::vi2d>& vectPosXY, int z);
+	std::shared_ptr<Object> getObjPtrAt(olc::vi2d &XY, int z);
+
 };
 
 

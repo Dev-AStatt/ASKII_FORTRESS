@@ -25,7 +25,7 @@ public:
     void newGameEntities();
     void drawEntities(int activeZLayer,olc::vi2d& mapTL, olc::vi2d& mapBR, olc::vi2d& viewOffset);
     void updateEntities(int tick);
-	void passItemsToEnt(int entIndex);
+	void passItemPtrToEnt(int entIndex);
 };
 
 

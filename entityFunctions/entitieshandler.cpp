@@ -8,8 +8,6 @@ EntitiesHandler::EntitiesHandler(olc::vi2d PS, Maps* m, std::shared_ptr<ObjectHa
 
 }
 
-
-
 void EntitiesHandler::newEntity(olc::vi2d posXY, int posZ) {
     aliveEnts.emplace_back(std::make_unique<EntHuman>(PACK_SIZE,pge,posXY,posZ));
 }
@@ -44,7 +42,7 @@ void EntitiesHandler::updateEntities(int tick) {
 		//give view of map
 		aliveEnts[i]->giftOfSight(map->viewOfWorld(aliveEnts[i]->returnPos(),aliveEnts[i]->returnStepZ(),aliveEnts[i]->returnViewDistance()));
 		//give view of Objects
-		passItemsToEnt(i);
+		passItemPtrToEnt(i);
 
 		//update Ent
 		aliveEnts[i]->updateSelf(tick);
@@ -57,16 +55,13 @@ void EntitiesHandler::updateEntities(int tick) {
      }
 }
 
-
-void EntitiesHandler::passItemsToEnt(int entIndex) {
-	std::vector<int> vItems = std::vector<int>(aliveEnts[entIndex]->getViewDistance() * 12 + 1,-1);
+void EntitiesHandler::passItemPtrToEnt(int entIndex) {
+	std::vector<std::shared_ptr<Object>> tmp;
 	std::vector<olc::vi2d> vPos = aliveEnts[entIndex]->getPosInView();
-	vItems = ObjHandler->fillVectWithItemID(vItems,vPos,map->activeZLayer);
+	tmp = ObjHandler->fillVectWithObjPtrs(vPos,aliveEnts[entIndex]->returnStepZ());
+	aliveEnts[entIndex]->giftObjectsInView(tmp);
 
-	aliveEnts[entIndex]->giftObjectsInView(vItems);
 }
-
-
 
 
 

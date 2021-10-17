@@ -27,7 +27,6 @@ int notNegativeXY(int x) { if(x >=0) { return x; } else return 0; }
 
 void Ent::UpdatePosInView() {
 	positionsXYInView.clear();
-	objectsInView.clear();
 	for(int y = notNegativeXY(entPositionXY.y - viewDistance); y < entPositionXY.y + viewDistance; ++y) {
 		for(int x = notNegativeXY(entPositionXY.x - viewDistance); x < entPositionXY.x + viewDistance; ++x) {
 			positionsXYInView.emplace_back(olc::vi2d(x,y));
@@ -97,7 +96,15 @@ void Ent::pathfinding(int currentTask) {
 			}
 			if(vPriorities[0] == Memory::food) {
 				//add set dest to object
-				moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
+				if(searchForFood()) {
+					olc::vi2d tmp = locationOfFood();
+					Destination->setNewDest(tmp,entStepZPosition,Memory::food,foodIDAt(tmp));
+					moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
+				} else {
+					moveSelf(entRand(-1,1),entRand(-1,1));
+				}
+
+
 			}
 		}
 
@@ -105,13 +112,42 @@ void Ent::pathfinding(int currentTask) {
 	}
 }
 
-bool Ent::searchForFood() {
-	for(int i = 0; i < (int)objectsInView.size(); ++i) {
-		//if object is -1 then it is an empty space
-		if(objectsInView[i] != -1) {
-
+int Ent::foodIDAt(olc::vi2d XY) {
+	for(int i = 0; i < (int)objectPtrsInView.size(); ++i) {
+		if(objectPtrsInView[i]->getXPos() == XY.x &&objectPtrsInView[i]->getYPos() == XY.y) {
+			return objectPtrsInView[i]->getID();
 		}
 	}
+	return -1;
+}
+
+bool Ent::searchForFood() {
+	if((int)objectPtrsInView.size() > 0) {
+		for(int i = 0; i < (int)objectPtrsInView.size(); ++i) {
+			if(objectPtrsInView[i]->isEdable()) {
+				return true;
+			}
+		}
+	}
+	return false;
+}
+
+olc::vi2d Ent::locationOfFood() {
+	olc::vi2d closest, tmp;
+	for(int i = 0; i < (int)objectPtrsInView.size(); ++i) {
+		if(objectPtrsInView[i]->isEdable()) {
+			closest = {objectPtrsInView[i]->getXPos(),objectPtrsInView[i]->getYPos()};
+		}
+	}
+	for(int i = 0; i < (int)objectPtrsInView.size(); ++i) {
+		if(objectPtrsInView[i]->isEdable()) {
+			tmp = {objectPtrsInView[i]->getXPos(),objectPtrsInView[i]->getYPos()};
+			if(closerToEnt(closest,tmp)) {
+				closest = tmp;
+			}
+		}
+	}
+	return closest;
 }
 
 //will currently return 0,0 if no tile is found
@@ -139,8 +175,8 @@ bool Ent::closerToEnt(olc::vi2d &oldXY, olc::vi2d &newXY) {
 	return false;
 }
 
-void Ent::giftObjectsInView(std::vector<int> vGivenItems) {
-	if((int)vGivenItems.size() == (viewDistance*12 + 1)) {
-		objectsInView = vGivenItems;
-	}
-}
+//void Ent::giftObjectsInView(std::vector<int> vGivenItems) {
+//	if((int)vGivenItems.size() == (viewDistance*12 + 1)) {
+//		objectsInView = vGivenItems;
+//	}
+//}

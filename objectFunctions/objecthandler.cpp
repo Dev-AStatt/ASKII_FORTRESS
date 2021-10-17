@@ -68,7 +68,38 @@ std::vector<int> ObjectHandler::fillVectWithItemID(std::vector<int>& vect, std::
 	return vect;
 }
 
+std::vector<std::shared_ptr<Object>> ObjectHandler::fillVectWithObjPtrs(std::vector<olc::vi2d> &vectPosXY, int z) {
+	std::vector<std::shared_ptr<Object>> tmp;
+	for(int i = 0; i < (int)vectPosXY.size(); ++i) {
+		if(ItemIDAtPosition(vectPosXY[i],z) != -1) {
+			std::shared_ptr<Object> check = getObjPtrAt(vectPosXY[i],z);
+			if(check != nullptr) {
+				tmp.emplace_back(check);
+			}
+		}
+	}
+	return tmp;
+}
 
+std::shared_ptr<Object> ObjectHandler::getObjPtrAt(olc::vi2d &XY, int z) {
+	if(isObjPtrAt(XY,z)) {
+		for(int i = 0; i < (int)vObjects.size(); ++i) {
+			if(vObjects[i]->getXPos() == XY.x && vObjects[i]->getYPos() == XY.y && vObjects[i]->getZPos() == z) {
+				return vObjects[i];
+			}
+		}
+	}
+	return nullptr;
+}
+
+bool ObjectHandler::isObjPtrAt(olc::vi2d &XY, int z) {
+	for(int i = 0; i < (int)vObjects.size(); ++i) {
+		if(vObjects[i]->getXPos() == XY.x && vObjects[i]->getYPos() == XY.y && vObjects[i]->getZPos() == z) {
+			return true;
+		}
+	}
+	return false;
+}
 
 
 

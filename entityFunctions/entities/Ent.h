@@ -38,8 +38,9 @@ protected:
 
     //field of view
 	std::vector<int>		tilesInView;
-	std::vector<int>		objectsInView;
+	//std::vector<int>		objectsInView;
 	std::vector<olc::vi2d>	positionsXYInView;
+	std::vector<std::shared_ptr<Object>> objectPtrsInView;
 
 
 
@@ -55,7 +56,9 @@ protected:
 	int entRand(int from = 0, int to = 10);
 	void pathfinding(int currentTask);
 	bool searchForFood();
-	olc::vi2d locateForFood();
+	olc::vi2d locationOfFood();
+	int foodIDAt(olc::vi2d XY);
+
 	olc::vi2d searchForTile(TileID::TileIDList tileLookingFor);
 	//will compare old and new vi2d and retrun true if new is closer
 	bool closerToEnt(olc::vi2d& old, olc::vi2d& newXY);
@@ -80,7 +83,9 @@ public:
 	bool watchYourStep(int x, int y);
 	virtual void DrawSelf(int activeZLayer, olc::vi2d& viewOffset);
 	virtual void giftOfSight(std::vector<int> vSight) {tilesInView = vSight;}
-	virtual void giftObjectsInView(std::vector<int> vGivenItems);
+	virtual void giftObjectsInView(std::vector<std::shared_ptr<Object>> vPSight) {objectPtrsInView = vPSight;}
+
+
 	//looks at current needs and redefines priorities
 	virtual void assessPriorities(){};
 
