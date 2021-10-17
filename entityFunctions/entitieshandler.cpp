@@ -61,9 +61,9 @@ void EntitiesHandler::updateEntities(int tick) {
 void EntitiesHandler::passItemsToEnt(int entIndex) {
 	std::vector<int> vItems = std::vector<int>(aliveEnts[entIndex]->getViewDistance() * 12 + 1,-1);
 	std::vector<olc::vi2d> vPos = aliveEnts[entIndex]->getPosInView();
+	vItems = ObjHandler->fillVectWithItemID(vItems,vPos,map->activeZLayer);
 
-
-
+	aliveEnts[entIndex]->giftObjectsInView(vItems);
 }
 
 

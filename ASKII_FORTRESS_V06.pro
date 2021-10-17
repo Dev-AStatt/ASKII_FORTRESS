@@ -23,6 +23,7 @@ HEADERS += \
     InfoDisplay.h \
     InspectionCursor.h \
 	entityFunctions/entities/Ent.h \
+    entityFunctions/entities/EntDest.h \
 	entityFunctions/entities/EntHuman.h \
 	entityFunctions/entitieshandler.h \
     mapFunctions/MapUtilChunkGen.h \

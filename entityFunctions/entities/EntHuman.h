@@ -11,14 +11,13 @@ public:
     }
     EntHuman(olc::vi2d& PS, olc::PixelGameEngine* p, olc::vi2d& posXY, int posZ) {
         constructEntBasics(PS,p);
-        decalSourcePos = { 0,4 };
-        entPositionXY = posXY;
-		entStepZPosition = posZ;
-        viewDistance = 2;
-		thirst = 100;
-		hunger = 100;
-
-        tint = olc::WHITE;
+		decalSourcePos		= { 0,4 };
+		entPositionXY		= posXY;
+		entStepZPosition	= posZ;
+		viewDistance		= 2;
+		thirst				= 100;
+		hunger				= 100;
+		tint				= olc::WHITE;
     }
 
 	virtual bool updateSelf(int tick) override {
@@ -41,8 +40,8 @@ public:
 	virtual void assessPriorities() override {
 		vPriorities.clear();
 		if(thirst < hunger && thirst < 70) {
-			vPriorities.emplace_back(water);
-			vPriorities.emplace_back(food);
+			vPriorities.emplace_back(Memory::water);
+			vPriorities.emplace_back(Memory::food);
 		}
 	}
 };

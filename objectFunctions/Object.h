@@ -1,5 +1,9 @@
 #pragma once
 
+enum objectIDs {
+	meat,
+};
+
 class Object {
 protected:
 	int posX;
@@ -15,11 +19,6 @@ protected:
 		white,
 
 	};
-
-	enum objectIDs {
-		meat,
-	};
-
 public:
 	Object() {}
 	Object(int sourcePosX, int sourcePosY, int sourcePosZ) {

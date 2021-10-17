@@ -3,7 +3,8 @@
 #include "olcPixelGameEngine.h"
 #include "mapFunctions/Tiles.h"
 #include "mapFunctions/MapUtilTileIDList.h"
-
+#include "entityFunctions/entities/EntDest.h"
+#include "objectFunctions/objecthandler.h"
 
 ///
 /// \brief The Ent class currently is not used for anything in this project
@@ -12,13 +13,6 @@
 class Ent {
 private:
 protected:
-	enum priorities {
-		food,
-		water,
-		social,
-		recreation,
-		reproduction
-	};
 
     std::string sEntName;
     olc::vi2d decalSourcePos;
@@ -29,21 +23,24 @@ protected:
 	int thirst;
 	int hunger;
 
+
     olc::Pixel tint;
     olc::vi2d PACK_SIZE;
     olc::PixelGameEngine* pge;
 
     //These are pointers to sprites and Decals
-    std::unique_ptr<olc::Sprite> sprTile;
-    std::unique_ptr<olc::Decal> decTile;
-    std::unique_ptr<TileID::cTileID> cTiles;
+	std::unique_ptr<olc::Sprite>		sprTile;
+	std::unique_ptr<olc::Decal>			decTile;
+	std::unique_ptr<TileID::cTileID>	cTiles;
+	std::unique_ptr<Memory::EntDest>	Destination;
 
 	std::vector<int> vPriorities;
 
     //field of view
-	std::vector<int> tilesInView;
-	std::vector<olc::vi2d> positionsXYInView;
-	std::vector<int> objectsInView;
+	std::vector<int>		tilesInView;
+	std::vector<int>		objectsInView;
+	std::vector<olc::vi2d>	positionsXYInView;
+
 
 
 	//
@@ -57,6 +54,11 @@ protected:
     //Randomizer function with default inputs
 	int entRand(int from = 0, int to = 10);
 	void pathfinding(int currentTask);
+	bool searchForFood();
+	olc::vi2d locateForFood();
+	olc::vi2d searchForTile(TileID::TileIDList tileLookingFor);
+	//will compare old and new vi2d and retrun true if new is closer
+	bool closerToEnt(olc::vi2d& old, olc::vi2d& newXY);
 
 public:
 	bool alive;
@@ -72,6 +74,8 @@ public:
 	virtual bool updateSelf(int tick)		{return true;};
 
 	virtual void moveSelf(int x, int y);
+	//just translates a moveself with vi2d to moveself
+	virtual void moveSelfvi2d(olc::vi2d XY) {moveSelf(XY.x,XY.y);}
     //returns true if you can walk on tile in the x,y direction
 	bool watchYourStep(int x, int y);
 	virtual void DrawSelf(int activeZLayer, olc::vi2d& viewOffset);
@@ -82,3 +86,10 @@ public:
 
 
 };
+
+
+
+
+
+
+

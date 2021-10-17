@@ -3,22 +3,21 @@
 Ent::Ent(olc::vi2d& PS, olc::PixelGameEngine* p) {
 	constructEntBasics(PS,p);
 	//These lines should be overwritten by inheriting classes
-	decalSourcePos = { 15,3 };
-	entPositionXY = {1,1};
-	entStepZPosition = 0;
-	viewDistance = 3;
-	thirst = 100;
-	tint = olc::WHITE;
+	decalSourcePos		= { 15,3 };
+	entPositionXY		= {1,1};
+	entStepZPosition	= 0;
+	viewDistance		= 3;
+	thirst				= 100;
+	tint				= olc::WHITE;
 }
 
 void Ent::constructEntBasics(olc::vi2d& PS, olc::PixelGameEngine* p) {
 	PACK_SIZE = PS;
 	pge = p;
 	entHeadZPosition = entStepZPosition + 1;
-
-
 	constructDecal();	//construct decal will add decals to Ents
 	cTiles = std::make_unique<TileID::cTileID>(PACK_SIZE,pge);
+	Destination = std::make_unique<Memory::EntDest>();
 	UpdatePosInView();
 	alive = true;
 }
@@ -84,7 +83,60 @@ void Ent::DrawSelf(int activeZLayer, olc::vi2d& viewOffset) {
 }
 
 void Ent::pathfinding(int currentTask) {
-	moveSelf(entRand(-1,1),entRand(-1,1));
+	if((int)vPriorities.size() <=0) {
+		moveSelf(entRand(-1,1),entRand(-1,1));
+	} else {
+		//look if already has a destination with the same prioirity
+		if(Destination->getPriority() == vPriorities[0]) {
+			moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
+		}
+		else {
+			if(vPriorities[0] == Memory::water) {
+				Destination->setNewDest(searchForTile(TileID::Water),entStepZPosition,Memory::water,TileID::Water);
+				moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
+			}
+			if(vPriorities[0] == Memory::food) {
+				//add set dest to object
+				moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
+			}
+		}
+
+
+	}
+}
+
+bool Ent::searchForFood() {
+	for(int i = 0; i < (int)objectsInView.size(); ++i) {
+		//if object is -1 then it is an empty space
+		if(objectsInView[i] != -1) {
+
+		}
+	}
+}
+
+//will currently return 0,0 if no tile is found
+olc::vi2d Ent::searchForTile(TileID::TileIDList tileLookingFor) {
+	olc::vi2d closest = {0,0}, temp;
+	for (int i = 0; i < (int)tilesInView.size(); ++i) {
+		if(tilesInView[i] == tileLookingFor) {
+			temp = positionsXYInView[i];
+			if(closerToEnt(closest,temp)) {
+				closest = temp;
+			}
+		}
+	}
+	return closest;
+}
+
+bool Ent::closerToEnt(olc::vi2d &oldXY, olc::vi2d &newXY) {
+	olc::vi2d d = entPositionXY - oldXY;
+	//get the distance to the old match
+	int oldDist = std::abs(d.x) + std::abs(d.y);
+	d = entPositionXY - newXY;
+	int newDist = std::abs(d.x) + std::abs(d.y);
+
+	if(newDist < oldDist) { return true; }
+	return false;
 }
 
 void Ent::giftObjectsInView(std::vector<int> vGivenItems) {

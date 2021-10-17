@@ -9,7 +9,7 @@ private:
 	olc::vi2d mapTL;
 	olc::vi2d mapBR;
 	olc::PixelGameEngine* pge;
-	std::vector<std::unique_ptr<Object>> vObjects;
+	std::vector<std::shared_ptr<Object>> vObjects;
 	//These are pointers to sprites and Decals
 	std::unique_ptr<olc::Sprite> sprTile;
 	std::unique_ptr<olc::Decal> decTile;
@@ -40,6 +40,8 @@ public:
 	//draw all objects
 	//currently will draw them off screen
 	void drawObjects(int activeZLayer,olc::vi2d& viewOffset);
+	int ItemIDAtPosition(olc::vi2d& XY, int z);
+	std::vector<int> fillVectWithItemID(std::vector<int>& vect, std::vector<olc::vi2d>& vectPosXY, int z);
 };
 
 

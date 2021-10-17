@@ -11,7 +11,7 @@ ObjectHandler::ObjectHandler(olc::vi2d PS,olc::vi2d atStartTL,olc::vi2d atStartB
 }
 
 void ObjectHandler::createMeat(olc::vi2d posXY, int posZ)  {
-	vObjects.emplace_back(std::make_unique<ObjectMeat>(posXY.x,posXY.y, posZ));
+	vObjects.emplace_back(std::make_shared<ObjectMeat>(posXY.x,posXY.y, posZ));
 }
 
 void ObjectHandler::drawSingleObject(olc::vi2d posXY, olc::vi2d decalSourcePos, olc::vi2d &viewOffset, int bc)  {
@@ -48,7 +48,25 @@ bool ObjectHandler::visable(olc::vi2d posXY,int posZ, int activeZLayer,olc::vi2d
 	else return false;
 }
 
+int ObjectHandler::ItemIDAtPosition(olc::vi2d& XY, int z) {
+	for(int i = 0; i < (int)vObjects.size(); ++i) {
+		if(vObjects[i]->getXPos() == XY.x && vObjects[i]->getYPos() == XY.y && vObjects[i]->getZPos() == z) {
+			return vObjects[i]->getID();
+		}
+	}
 
+
+	return -1;
+}
+
+std::vector<int> ObjectHandler::fillVectWithItemID(std::vector<int>& vect, std::vector<olc::vi2d>& vectPosXY, int z) {
+	for(int i = 0; i < (int)vectPosXY.size(); ++i) {
+		vect[i] = ItemIDAtPosition(vectPosXY[i],z);
+	}
+
+
+	return vect;
+}
 
 
 
