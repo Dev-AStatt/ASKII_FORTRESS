@@ -15,10 +15,27 @@ void Ent::constructEntBasics(olc::vi2d& PS, olc::PixelGameEngine* p) {
 	PACK_SIZE = PS;
 	pge = p;
 	entHeadZPosition = entStepZPosition + 1;
-	alive = true;
+
 
 	constructDecal();	//construct decal will add decals to Ents
 	cTiles = std::make_unique<TileID::cTileID>(PACK_SIZE,pge);
+	UpdatePosInView();
+	alive = true;
+}
+
+//used for update Position in view to check if number is pos
+int notNegativeXY(int x) { if(x >=0) { return x; } else return 0; }
+
+void Ent::UpdatePosInView() {
+	positionsXYInView.clear();
+	objectsInView.clear();
+	for(int y = notNegativeXY(entPositionXY.y - viewDistance); y < entPositionXY.y + viewDistance; ++y) {
+		for(int x = notNegativeXY(entPositionXY.x - viewDistance); x < entPositionXY.x + viewDistance; ++x) {
+			positionsXYInView.emplace_back(olc::vi2d(x,y));
+			//fill objects in view vector with -1 {empty/no item}
+
+		}
+	}
 }
 
 void Ent::constructDecal() {
@@ -35,17 +52,17 @@ int Ent::entRand(int from, int to) {
 }
 
 void Ent::moveSelf(int x, int y) {
-
+	//check if tile going to walk on is "walkable"
 	if(watchYourStep(x,y)) {
 		entPositionXY = entPositionXY + olc::vi2d(x,y);
+		UpdatePosInView();
 	}
 }
 
 bool Ent::watchYourStep(int x, int y) {
-
 	//this function for index is wrong
 	int index = (x+viewDistance) + ((y+viewDistance) * (viewDistance*2 + 1));
-	auto& t = cTiles->vptrTiles[fieldOfView[index]];
+	auto& t = cTiles->vptrTiles[tilesInView[index]];
 	if(t->isWalkable()) {
 		return true;
 	}
@@ -57,7 +74,12 @@ void Ent::DrawSelf(int activeZLayer, olc::vi2d& viewOffset) {
 		olc::vi2d entFinalPos = {entPositionXY.x + viewOffset.x,entPositionXY.y + viewOffset.y };
 		//the ent pos gets a + 1x1 to adjust for the header bar to match up
 		//with the chunkxyz's so 0x0 is the same 0x0
-		pge->DrawPartialDecal((entFinalPos + olc::vi2d(1,1)) * PACK_SIZE, decTile.get(), decalSourcePos*PACK_SIZE, PACK_SIZE, olc::vi2d(1, 1), tint);
+		pge->DrawPartialDecal((entFinalPos + olc::vi2d(1,1)) * PACK_SIZE,	//position to draw to
+							  decTile.get(),
+							  decalSourcePos*PACK_SIZE,
+							  PACK_SIZE,
+							  olc::vi2d(1, 1),								//scale
+							  tint);
 	}
 }
 
@@ -65,3 +87,8 @@ void Ent::pathfinding(int currentTask) {
 	moveSelf(entRand(-1,1),entRand(-1,1));
 }
 
+void Ent::giftObjectsInView(std::vector<int> vGivenItems) {
+	if((int)vGivenItems.size() == (viewDistance*12 + 1)) {
+		objectsInView = vGivenItems;
+	}
+}

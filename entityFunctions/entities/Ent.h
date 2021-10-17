@@ -41,12 +41,17 @@ protected:
 	std::vector<int> vPriorities;
 
     //field of view
-    std::vector<int> fieldOfView;
+	std::vector<int> tilesInView;
+	std::vector<olc::vi2d> positionsXYInView;
+	std::vector<int> objectsInView;
+
+
 	//
 	//Functions
 	//
 	//Basics that need to be loaded for every Ent and inheritors
 	void constructEntBasics(olc::vi2d& PS, olc::PixelGameEngine* p);
+	void UpdatePosInView();
 	//full sprite tile with art, and put into decTile to be used by drawing
 	void constructDecal();
     //Randomizer function with default inputs
@@ -54,21 +59,24 @@ protected:
 	void pathfinding(int currentTask);
 
 public:
+	bool alive;
     Ent() {};
 	Ent(olc::vi2d& PS, olc::PixelGameEngine* p);
 
-	bool alive;
+	std::string returnName()				{return "";}
+	int returnStepZ()						{return entStepZPosition;}
+	int returnViewDistance()				{return viewDistance;}
+	int getViewDistance()					{return viewDistance;}
+	std::vector<olc::vi2d> getPosInView()	{return positionsXYInView;}
+	virtual olc::vi2d& returnPos()			{return entPositionXY;}
+	virtual bool updateSelf(int tick)		{return true;};
 
-	std::string returnName() {return "";}
-	int returnStepZ() {return entStepZPosition;}
-	int returnViewDistance() {return viewDistance;}
 	virtual void moveSelf(int x, int y);
     //returns true if you can walk on tile in the x,y direction
 	bool watchYourStep(int x, int y);
 	virtual void DrawSelf(int activeZLayer, olc::vi2d& viewOffset);
-	virtual olc::vi2d& returnPos() {return entPositionXY;}
-	virtual bool updateSelf(int tick){return true;};
-	virtual void giftOfSight(std::vector<int> vSight) {fieldOfView = vSight;}
+	virtual void giftOfSight(std::vector<int> vSight) {tilesInView = vSight;}
+	virtual void giftObjectsInView(std::vector<int> vGivenItems);
 	//looks at current needs and redefines priorities
 	virtual void assessPriorities(){};
 

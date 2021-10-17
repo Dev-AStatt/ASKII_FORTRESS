@@ -29,6 +29,7 @@ HEADERS += \
     mapFunctions/MapUtilTileIDList.h \
     mapFunctions/Maps.h \
     mapFunctions/Tiles.h \
+    mapFunctions/cChunk.h \
     mapsFunctions/cChunk.h \
     objectFunctions/Object.h \
     objectFunctions/objecthandler.h \

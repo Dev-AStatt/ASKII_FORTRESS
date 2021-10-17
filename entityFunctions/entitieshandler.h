@@ -4,6 +4,7 @@
 #include "entities/Ent.h"
 #include "entities/EntHuman.h"
 #include "mapFunctions/Maps.h"
+#include "objectFunctions/objecthandler.h"
 
 class EntitiesHandler
 {
@@ -11,22 +12,20 @@ private:
     olc::vi2d PACK_SIZE;
     olc::PixelGameEngine* pge;
     Maps* map;
-
+	std::shared_ptr<ObjectHandler> ObjHandler;
     std::vector<std::unique_ptr<Ent>> aliveEnts;
-
 
     //functions
     bool olcWithinBounds(olc::vi2d checkpos, olc::vi2d& mapTL, olc::vi2d& mapBR, olc::vi2d& viewOffset);
 
-
-
 public:
-    EntitiesHandler(olc::vi2d PS, Maps* m, olc::PixelGameEngine* p);
+	EntitiesHandler(olc::vi2d PS, Maps* m, std::shared_ptr<ObjectHandler> obj, olc::PixelGameEngine* p);
+
     void newEntity(olc::vi2d posXY, int posZ);
     void newGameEntities();
     void drawEntities(int activeZLayer,olc::vi2d& mapTL, olc::vi2d& mapBR, olc::vi2d& viewOffset);
-
     void updateEntities(int tick);
+	void passItemsToEnt(int entIndex);
 };
 
 

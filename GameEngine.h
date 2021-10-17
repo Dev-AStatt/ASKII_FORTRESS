@@ -30,7 +30,7 @@ private:
     std::unique_ptr<EngineUtilSaveLoad> utilSL;
     std::unique_ptr<EntitiesHandler> EntHandler;
 	std::unique_ptr<InspectionCursor> insp;
-	std::unique_ptr<ObjectHandler> ObjHandler;
+	std::shared_ptr<ObjectHandler> ObjHandler;
 
 
 	int nLayerBackground = 0;
