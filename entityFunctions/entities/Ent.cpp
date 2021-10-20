@@ -88,8 +88,12 @@ void Ent::pathfinding(int currentTask) {
 	} else {
 		//look if already has a destination with the same prioirity
 		if(Destination->getPriority() == vPriorities[0]) {
-			std::cout << sEntName << " Is Following A Destination" << '\n';
-			moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
+			if(Destination->arivedAtDest(entPositionXY,entHeadZPosition)) {
+				std::cout << sEntName << " Has Arived At Destination" << '\n';
+			} else {
+				//std::cout << sEntName << " Is Following A Destination" << '\n';
+				moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
+			}
 		}
 		else {
 			if(vPriorities[0] == Memory::water) {

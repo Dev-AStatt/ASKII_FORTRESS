@@ -57,6 +57,18 @@ namespace Memory {
 			}
 			return {dX,dY};
 		}
+		bool arivedAtDest(olc::vi2d& currentPosXY, int currentZ) {
+			if(currentZ ==destinationZ) {
+				for(int y = currentPosXY.y - 1; y <= currentPosXY.y + 1; ++y) {
+					for(int x = currentPosXY.x - 1; x <= currentPosXY.x + 1; ++x) {
+						if(destinationX == x && destinationY == y) {
+							return true;
+						}
+					}
+				}
+			}
+			return false;
+		}
 	};
 
 }

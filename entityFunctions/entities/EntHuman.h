@@ -14,7 +14,7 @@ public:
 		decalSourcePos		= { 0,4 };
 		entPositionXY		= posXY;
 		entStepZPosition	= posZ;
-		viewDistance		= 2;
+		viewDistance		= 3;
 		thirst				= 70;
 		hunger				= 100;
 		tint				= olc::WHITE;
