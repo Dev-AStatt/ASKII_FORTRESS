@@ -55,18 +55,20 @@ protected:
     //Randomizer function with default inputs
 	int entRand(int from = 0, int to = 10);
 	void pathfinding(int currentTask);
+	//return true if anything edable is in view
 	bool searchForFood();
 	olc::vi2d locationOfFood();
 	int foodIDAt(olc::vi2d XY);
-
-	olc::vi2d searchForTile(TileID::TileIDList tileLookingFor);
+	//returns true if tile is in view
+	bool searchForTile(TileID::TileIDList tileLookingFor);
+	olc::vi2d locateTile(TileID::TileIDList tileLookingFor);
 	//will compare old and new vi2d and retrun true if new is closer
 	bool closerToEnt(olc::vi2d& old, olc::vi2d& newXY);
 
 public:
 	bool alive;
     Ent() {};
-	Ent(olc::vi2d& PS, olc::PixelGameEngine* p);
+	Ent(olc::vi2d& PS, olc::PixelGameEngine* p, std::string n);
 
 	std::string returnName()				{return "";}
 	int returnStepZ()						{return entStepZPosition;}

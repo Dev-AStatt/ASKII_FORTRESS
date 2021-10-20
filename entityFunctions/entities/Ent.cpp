@@ -1,6 +1,6 @@
 #include "Ent.h"
 
-Ent::Ent(olc::vi2d& PS, olc::PixelGameEngine* p) {
+Ent::Ent(olc::vi2d& PS, olc::PixelGameEngine* p, std::string n) {
 	constructEntBasics(PS,p);
 	//These lines should be overwritten by inheriting classes
 	decalSourcePos		= { 15,3 };
@@ -9,6 +9,7 @@ Ent::Ent(olc::vi2d& PS, olc::PixelGameEngine* p) {
 	viewDistance		= 3;
 	thirst				= 100;
 	tint				= olc::WHITE;
+	sEntName			= n;
 }
 
 void Ent::constructEntBasics(olc::vi2d& PS, olc::PixelGameEngine* p) {
@@ -87,28 +88,36 @@ void Ent::pathfinding(int currentTask) {
 	} else {
 		//look if already has a destination with the same prioirity
 		if(Destination->getPriority() == vPriorities[0]) {
+			std::cout << sEntName << " Is Following A Destination" << '\n';
 			moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
 		}
 		else {
 			if(vPriorities[0] == Memory::water) {
-				Destination->setNewDest(searchForTile(TileID::Water),entStepZPosition,Memory::water,TileID::Water);
-				moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
-			}
-			if(vPriorities[0] == Memory::food) {
-				//add set dest to object
-				if(searchForFood()) {
-					olc::vi2d tmp = locationOfFood();
-					Destination->setNewDest(tmp,entStepZPosition,Memory::food,foodIDAt(tmp));
+				if(searchForTile(TileID::Water)) {
+					std::cout << sEntName << " Has Found Water" << '\n';
+					Destination->setNewDest(locateTile(TileID::Water),entStepZPosition,Memory::water,TileID::Water);
 					moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
-				} else {
+				}
+				else {
+					std::cout << sEntName << " Cant Find Any Water" << '\n';
 					moveSelf(entRand(-1,1),entRand(-1,1));
 				}
 
 
 			}
+			if(vPriorities[0] == Memory::food) {
+				//add set dest to object
+				if(searchForFood()) {
+					std::cout << sEntName << " Has Found Food" << '\n';
+					olc::vi2d tmp = locationOfFood();
+					Destination->setNewDest(tmp,entStepZPosition,Memory::food,foodIDAt(tmp));
+					moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
+				} else {
+					std::cout << sEntName << " Cant Find Any Food" << '\n';
+					moveSelf(entRand(-1,1),entRand(-1,1));
+				}
+			}
 		}
-
-
 	}
 }
 
@@ -147,12 +156,23 @@ olc::vi2d Ent::locationOfFood() {
 			}
 		}
 	}
+	std::cout << sEntName << " Found Food At: " << "{" << std::to_string(closest.x)<< ", " << std::to_string(closest.y) << "}" << '\n';
 	return closest;
 }
 
+bool Ent::searchForTile(TileID::TileIDList tileLookingFor) {
+	for (int i = 0; i < (int)tilesInView.size(); ++i) {
+		if(tilesInView[i] == tileLookingFor) {
+			return true;
+		}
+	}
+	return false;
+}
+
+
 //will currently return 0,0 if no tile is found
-olc::vi2d Ent::searchForTile(TileID::TileIDList tileLookingFor) {
-	olc::vi2d closest = {0,0}, temp;
+olc::vi2d Ent::locateTile(TileID::TileIDList tileLookingFor) {
+	olc::vi2d closest = {-200,-200}, temp;
 	for (int i = 0; i < (int)tilesInView.size(); ++i) {
 		if(tilesInView[i] == tileLookingFor) {
 			temp = positionsXYInView[i];
@@ -161,6 +181,7 @@ olc::vi2d Ent::searchForTile(TileID::TileIDList tileLookingFor) {
 			}
 		}
 	}
+	std::cout << sEntName << " Found Tile At: " << "{" << std::to_string(closest.x)<< ", " << std::to_string(closest.y) << "}" << '\n';
 	return closest;
 }
 

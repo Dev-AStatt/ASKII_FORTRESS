@@ -21,7 +21,7 @@ private:
 public:
 	EntitiesHandler(olc::vi2d PS, Maps* m, std::shared_ptr<ObjectHandler> obj, olc::PixelGameEngine* p);
 
-    void newEntity(olc::vi2d posXY, int posZ);
+	void newEntity(olc::vi2d posXY, int posZ, std::string n);
     void newGameEntities();
     void drawEntities(int activeZLayer,olc::vi2d& mapTL, olc::vi2d& mapBR, olc::vi2d& viewOffset);
     void updateEntities(int tick);

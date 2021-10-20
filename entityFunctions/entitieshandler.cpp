@@ -8,8 +8,8 @@ EntitiesHandler::EntitiesHandler(olc::vi2d PS, Maps* m, std::shared_ptr<ObjectHa
 
 }
 
-void EntitiesHandler::newEntity(olc::vi2d posXY, int posZ) {
-    aliveEnts.emplace_back(std::make_unique<EntHuman>(PACK_SIZE,pge,posXY,posZ));
+void EntitiesHandler::newEntity(olc::vi2d posXY, int posZ, std::string n) {
+	aliveEnts.emplace_back(std::make_unique<EntHuman>(PACK_SIZE,pge,posXY,posZ,n));
 }
 
 void EntitiesHandler::drawEntities(int activeZLayer, olc::vi2d &mapTL, olc::vi2d &mapBR, olc::vi2d& viewOffset) {
@@ -32,8 +32,8 @@ bool EntitiesHandler::olcWithinBounds(olc::vi2d checkpos, olc::vi2d &mapTL, olc:
 }
 
 void EntitiesHandler::newGameEntities() {
-    newEntity({5,5},11);
-    newEntity({10,10},11);
+	newEntity({5,5},11,"Dave");
+	newEntity({10,10},11, "Igor");
 }
 
 
