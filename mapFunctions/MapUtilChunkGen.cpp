@@ -3,9 +3,7 @@
 //Generates a new chunk and returns hard copy. 
 //
 std::vector<uint64_t> MapUtilChunkGen::GenerateChunk() {
-
 	CreateFlatWorld();
-
 	return newChunk;
 }
 
@@ -14,26 +12,18 @@ std::vector<uint64_t> MapUtilChunkGen::GenerateChunk() {
 //
 std::vector<uint64_t> MapUtilChunkGen::editchunkSingleTile(std::vector<uint64_t> activeChunk, int x, int y, int z, TileID::TileIDList newTile) {
     newChunk = activeChunk;
-
     FillSingleTile(z,y,x,newTile);
-
     return newChunk;
 }
-
-
-
-
 
 //
 // FillChunkZLayer will take a Z layer value and a tile id and
 // fill that layer with all tiles of that ID
 //
 void MapUtilChunkGen::FillChunkZLayer(int zLayerToFill, int tileID) {
-
 	for (int yCol = 0; yCol < 16; ++yCol) {
 		FillChunkXRow(zLayerToFill, yCol, tileID);
 	}
-
 }
 //
 //Function takes Z, y, x coordinate and changes tile at single location.
@@ -59,9 +49,6 @@ void MapUtilChunkGen::FillSingleTile(int zLayer, int yCol, int xRow, int tileID)
 	//OR bits of tile ID into correct tile position. 
 	newChunk[vectorID(zLayer, yCol)] |= bitshiftedIDtmp;
 }
-
-
-
 //
 //Function to fill an X row with a single tile type. 
 //zLayerToFill is the z layer of chunk, yColToFil is the litteral Y value of the column [0-15].
@@ -88,7 +75,6 @@ void MapUtilChunkGen::FillChunkXRow(int zLayer, int yColToFill, int tileIDToFill
 			newChunk[vectorID(zLayer, y)] |= bitshiftedIDtmp;
 		}
 	}
-
 }
 
 void MapUtilChunkGen::FillChunkYCol(int zLayer, int xRowToFill, int tileIDToFill) {
@@ -104,8 +90,7 @@ void MapUtilChunkGen::CreateFlatWorld() {
 	}
 	FillChunkZLayer(11, TileID::Grass);
 	FillChunkXRow(11, 0, TileID::Water);
-	FillChunkXRow(11, 15, TileID::Water);
+	FillChunkXRow(11, 15, TileID::SlopeNorth);
 	FillChunkYCol(11,0, TileID::Water);
 	FillChunkYCol(11,15,TileID::Water);
-	
 }

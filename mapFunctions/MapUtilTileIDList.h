@@ -7,10 +7,11 @@ namespace TileID {
 		Grass,
 		Dirt,
 		Stone,
+		SlopeNorth,
+		SlopeSouth,
 	};
 
     class cTileID;
-
 };
 
 class TileID::cTileID {
@@ -24,7 +25,6 @@ public:
         pge = p;
         fillvptrTiles();
     }
-
     std::vector<std::unique_ptr<Tile>> vptrTiles;
 
     void fillvptrTiles() {
@@ -34,6 +34,7 @@ public:
         vptrTiles.emplace_back(std::make_unique<TileGrass>(PACK_SIZE, pge));
         vptrTiles.emplace_back(std::make_unique<TileDirt>(PACK_SIZE, pge));
         vptrTiles.emplace_back(std::make_unique<TileStone>(PACK_SIZE, pge));
+		vptrTiles.emplace_back(std::make_unique<TileSlopeNorth>(PACK_SIZE, pge));
+		vptrTiles.emplace_back(std::make_unique<TileSlopeSouth>(PACK_SIZE, pge));
     }
-
 };

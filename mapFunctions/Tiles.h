@@ -14,19 +14,11 @@ public:
 		decalSourcePos = { 15,3 };
 		tint = olc::WHITE;
 	}
-	std::string returnName() {
-        return "";
-	}
-
-    bool isWalkable() {
-        return walkable;
-    }
-
+	std::string returnName()	{ return "";}
+	bool isWalkable()			{ return walkable;}
 	virtual void DrawSelf(const olc::vi2d& pos) {
 		pge->DrawPartialDecal(pos * PACK_SIZE, decTile.get(), decalSourcePos*PACK_SIZE, PACK_SIZE, olc::vi2d(1, 1), tint);
 	}
-
-
 protected:
 	std::string sTileName;
 	olc::vi2d decalSourcePos;
@@ -43,7 +35,6 @@ protected:
 		sprTile = std::make_unique<olc::Sprite>("art/Phoebus_16x16_Next.png");
 		decTile = std::make_unique<olc::Decal>(sprTile.get());
 	}
-
 };
 
 class TileStone : public Tile {
@@ -57,7 +48,6 @@ public:
 		tint = olc::GREY;
 		mineable = true;
 	}
-
 };
 
 class TileAir : public Tile {
@@ -70,7 +60,6 @@ public:
 		tint = olc::BLACK;
         walkable = false;
 	}
-
 };
 
 class TileWater : public Tile {
@@ -84,7 +73,6 @@ public:
 		tint = olc::BLUE;
         walkable = false;
 	}
-
 };
 
 class TileGrass : public Tile {
@@ -98,7 +86,6 @@ public:
 		tint = olc::GREEN;
 		mineable = true;
 	}
-
 };
 
 class TileDirt : public Tile {
@@ -112,5 +99,30 @@ public:
 		tint = olc::GREY;
 		mineable = true;
 	}
+};
 
+class TileSlopeNorth : public Tile {
+public:
+	TileSlopeNorth(olc::vi2d& PS, olc::PixelGameEngine* p) {
+		PACK_SIZE = PS;
+		pge = p;
+		constructDecal();
+		decalSourcePos = { 14,1 };
+		sTileName = "Slope North";
+		tint = olc::GREY;
+		mineable = true;
+	}
+};
+
+class TileSlopeSouth : public Tile {
+public:
+	TileSlopeSouth(olc::vi2d& PS, olc::PixelGameEngine* p) {
+		PACK_SIZE = PS;
+		pge = p;
+		constructDecal();
+		decalSourcePos = { 15,1 };
+		sTileName = "Slope South";
+		tint = olc::GREY;
+		mineable = true;
+	}
 };

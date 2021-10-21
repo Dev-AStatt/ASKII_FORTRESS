@@ -39,27 +39,30 @@ private:
     int returnVIndexOfChunk(olc::vi2d XY);
     bool vi2dInVector(std::vector<olc::vi2d> vect, olc::vi2d check);
 public:
-
+	//
+	//Convert this to shared pointers and create get functions to protect chunks
+	//
     std::vector<std::unique_ptr<cChunk>> vptrActiveChunks;
-
-	Maps() {};
 	bool mapLoaded = false;
 	int activeZLayer;
 	olc::vi2d moveViewOffset = { 0,0 };
-	
+	//
+	//All of these should be protected
+	//
 
+
+	Maps() {};
 	void changeZLayer(int i);
     //   Size of Texture pack,       Top left x,y of map,    Bottom Right of map,      pixel game engine
     Maps(olc::vi2d& packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p);
 	void DrawActiveChunks();
 	void changeMapViewOffset(olc::vi2d i);
 	void resetMapViewOffset() { moveViewOffset = { 0,0 }; };
+	//this is just a debug function currently to interact with maps for saving
     void flipTileOnMap(olc::vi2d& insplocXY);
     void newMap(int atStartWorldSize);
     void continueMap(int chunkNum,int worldSize, std::vector<uint64_t> newChunk);
 
     std::vector<int> viewOfWorld(olc::vi2d& posXY, int posZ,int viewDistance);
-
-
 };
 

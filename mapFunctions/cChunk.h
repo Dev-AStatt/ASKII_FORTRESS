@@ -53,7 +53,7 @@ public:
     //Creating New Chunk, will call chunk generator for new
 	cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id,std::shared_ptr<MapUtilChunkGen> cg);
     //Will load passed in chunk by being given tileset
-    cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::vector<uint64_t> chunkToLoad);
+	cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::vector<uint64_t> chunkToLoad, std::shared_ptr<MapUtilChunkGen> cg);
 	void DrawChunk(int zLayer, olc::vi2d& moveViewOffset);
 	//Returns the pointer of the tile at location z, olc(y,x)
     std::unique_ptr<Tile>& TilePtrAtLocation(int zLayer, olc::vi2d yx);

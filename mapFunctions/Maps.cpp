@@ -25,7 +25,7 @@ void Maps::continueMap(int chunkNum, int worldSize, std::vector<uint64_t> newChu
         //
         //Right here call cChunk and make new chunk with id and vect
         //
-        vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, locationHex, newChunk));
+		vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, locationHex, newChunk,ChunkGen));
 
         if(chunkNum == (worldSize*worldSize) -1) {
             currentWorldSize = worldSize;
