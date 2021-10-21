@@ -57,6 +57,4 @@ public:
 
 	//Creates stone from z[0] to z[10] then a dirt island.
 	void CreateFlatWorld();
-
-
 };

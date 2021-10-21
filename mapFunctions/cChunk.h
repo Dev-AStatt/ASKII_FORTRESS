@@ -23,8 +23,9 @@ private:
 	std::vector<uint64_t> vChunk = std::vector<uint64_t>(511,0);
     std::vector<std::unique_ptr<Tile>> vptrTiles;
 
-
-    MapUtilChunkGen MUCG;
+	//this was taken out to remove mutilple creations of the same thing
+	//MapUtilChunkGen MUCG;
+	std::shared_ptr<MapUtilChunkGen> ChunkGen;
 
 
 	olc::vi2d PACK_SIZE;
@@ -50,7 +51,7 @@ private:
 	bool checkIfOnScreen(olc::vi2d& newPos);
 public:
     //Creating New Chunk, will call chunk generator for new
-    cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id);
+	cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id,std::shared_ptr<MapUtilChunkGen> cg);
     //Will load passed in chunk by being given tileset
     cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::vector<uint64_t> chunkToLoad);
 	void DrawChunk(int zLayer, olc::vi2d& moveViewOffset);

@@ -4,7 +4,7 @@
 Maps::Maps(olc::vi2d& packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p) {
     PACK_SIZE = packSizeAtStart;
 	pge = p;
-
+	ChunkGen = std::make_shared<MapUtilChunkGen>();
     mapTL = atStartMapTL;
     mapBR = atStartMapBR;
 
@@ -57,7 +57,7 @@ void Maps::mapCreateStartingChunks(int worldsize) {
 void Maps::makeNewChunk(olc::vi2d newChunkLocation) {
     // get the hex value for cChunk for an id
     uint64_t locationHex = olcTo64Hex(newChunkLocation);
-    vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, locationHex));
+	vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, locationHex,ChunkGen));
 }
 
 uint64_t Maps::olcTo64Hex (olc::vi2d olcvi2d) {

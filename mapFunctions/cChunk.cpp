@@ -3,10 +3,12 @@
 ///
 /// This class cChunk constructor creates a whole new chunk gen each time it calls itself.
 /// This should be taken out and put in a better spot.
-cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id) {
+cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::shared_ptr<MapUtilChunkGen> cg) {
 
     loadTypicalData(packSizeAtStart,atStartMapTL, atStartMapBR, p, id);
-	vChunk = MUCG.GenerateChunk();
+	ChunkGen = cg;
+	vChunk = ChunkGen->GenerateChunk();
+	//vChunk = MUCG.GenerateChunk();
 
 
 }
@@ -92,20 +94,16 @@ bool cChunk::checkIfOnScreen(olc::vi2d& newPos) {
 
 //call chunk gen passing the current chunk and return it with edits
 void cChunk::tileReplacement(TileID::TileIDList newTile, int x, int y, int z) {
-    vChunk = MUCG.editchunkSingleTile(vChunk,x,y,z,newTile);
+	vChunk = ChunkGen->editchunkSingleTile(vChunk,x,y,z,newTile);
+	//vChunk = MUCG.editchunkSingleTile(vChunk,x,y,z,newTile);
 }
 
 std::string cChunk::compileChunkToString(int i) {
-
-
-
     if (i < (int)vChunk.size()) {
         std::string s = std::to_string(vChunk[i]);
         return s;
     }
     else {return "NULLVAL";}
-
-
 }
 
 

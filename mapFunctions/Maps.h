@@ -1,6 +1,7 @@
 #pragma once
 #include "olcPixelGameEngine.h"
 #include "mapFunctions/cChunk.h"
+#include "mapFunctions/MapUtilChunkGen.h"
 #include "Tiles.h"
 //#include "memory"
 
@@ -18,6 +19,7 @@ private:
     olc::vi2d mapTL;
     olc::vi2d mapBR;
 	olc::PixelGameEngine* pge;
+	std::shared_ptr<MapUtilChunkGen> ChunkGen;
 
     //This is fixed Do not change
     int chunkSize = 16;
