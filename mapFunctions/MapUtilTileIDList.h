@@ -1,5 +1,6 @@
 #pragma once
-#include "mapFunctions/Tiles.h"
+#include "mapFunctions/TileFunctions/Tiles.h"
+#include "mapFunctions/TileFunctions/TileSlope.h"
 namespace TileID {
 	enum TileIDList {
 		Air,
@@ -9,6 +10,12 @@ namespace TileID {
 		Stone,
 		SlopeNorth,
 		SlopeSouth,
+	};
+	enum TileIDSlope {
+		North,
+		South,
+		East,
+		West,
 	};
 
     class cTileID;

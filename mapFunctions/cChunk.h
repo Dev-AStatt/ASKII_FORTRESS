@@ -1,5 +1,5 @@
 #pragma once
-#include "Tiles.h"
+#include "MapUtilTileIDList.h"
 #include "MapUtilChunkGen.h"
 
 #include <vector>
@@ -37,8 +37,6 @@ private:
 
     //loads typical data that is needed no mater how class is created
     void loadTypicalData(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id);
-
-
     //VectorID takes in the z and y coordinate that is understood
 	//for a 3d object and translates that into the 1d Vector
 	int vectorID(int z, int y) { return (z * 32 + y); };
@@ -50,6 +48,10 @@ private:
 	//is contained in the window. false if it lays outside map view.
 	bool checkIfOnScreen(olc::vi2d& newPos);
 public:
+	//Return functions for fetching class data
+	long getChunkPosX() {return chunkPositionX;};
+	long getChunkPosY() {return chunkPositionY;};
+
     //Creating New Chunk, will call chunk generator for new
 	cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id,std::shared_ptr<MapUtilChunkGen> cg);
     //Will load passed in chunk by being given tileset
@@ -57,8 +59,6 @@ public:
 	void DrawChunk(int zLayer, olc::vi2d& moveViewOffset);
 	//Returns the pointer of the tile at location z, olc(y,x)
     std::unique_ptr<Tile>& TilePtrAtLocation(int zLayer, olc::vi2d yx);
-    long returnChunkPosX() {return chunkPositionX;};
-    long returnChunkPosY() {return chunkPositionY;};
     //takes input of tile and position and edits the chunk
     void tileReplacement(TileID::TileIDList newTile, int x, int y, int z);
     std::string compileChunkToString(int i);

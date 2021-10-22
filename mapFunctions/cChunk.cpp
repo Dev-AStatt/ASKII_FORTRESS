@@ -1,8 +1,6 @@
 #include "cChunk.h"
 
-///
-/// This class cChunk constructor creates a whole new chunk gen each time it calls itself.
-/// This should be taken out and put in a better spot.
+
 cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::shared_ptr<MapUtilChunkGen> cg) {
     loadTypicalData(packSizeAtStart,atStartMapTL, atStartMapBR, p, id);
 	ChunkGen = cg;
@@ -15,6 +13,7 @@ cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atS
     vChunk = chunkToLoad;
 }
 
+//Stuff that needs to be loaded if a new chunk or a loaded chunk is made
 void cChunk::loadTypicalData(olc::vi2d &packSizeAtStart, olc::vi2d &atStartMapTL, olc::vi2d &atStartMapBR, olc::PixelGameEngine *p, uint64_t id) {
     PACK_SIZE = packSizeAtStart;
     mapTL = atStartMapTL;
@@ -47,7 +46,7 @@ int cChunk::TileIDAtLocation(int zLayer, int yCol, int xRow) {
 //returns a pointer to a tile that is at the location of z, vi2d(yx)
 std::unique_ptr<Tile>& cChunk::TilePtrAtLocation(int zLayer, olc::vi2d yx) {
 	//call TileIDAtLoc and return a pointer at that loc
-    std::unique_ptr<Tile>& t = cTiles->vptrTiles[TileIDAtLocation(zLayer, yx.y, yx.x)];
+	std::unique_ptr<Tile>& t = cTiles->vptrTiles[TileIDAtLocation(zLayer, yx.y, yx.x)];
 	return t;
 
 }

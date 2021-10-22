@@ -29,6 +29,8 @@ HEADERS += \
     mapFunctions/MapUtilChunkGen.h \
     mapFunctions/MapUtilTileIDList.h \
     mapFunctions/Maps.h \
+    mapFunctions/TileFunctions/TileSlope.h \
+    mapFunctions/TileFunctions/Tiles.h \
     mapFunctions/Tiles.h \
     mapFunctions/cChunk.h \
     mapsFunctions/cChunk.h \

@@ -106,7 +106,7 @@ void Maps::flipTileOnMap(olc::vi2d& insplocXY) {
     if(mapLoaded) {
         //sort through list of active chunks looking for a match
         for (size_t c = 0; c < vptrActiveChunks.size(); c++) {
-            if (chunkX == vptrActiveChunks[c]->returnChunkPosX() &&chunkY == vptrActiveChunks[c]->returnChunkPosY() ) {
+			if (chunkX == vptrActiveChunks[c]->getChunkPosX() &&chunkY == vptrActiveChunks[c]->getChunkPosY() ) {
                 chunkToPoint = c;
             }
         }
