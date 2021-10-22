@@ -20,7 +20,10 @@ protected:
 	int entHeadZPosition;
     int viewDistance;
 	int thirst;
+	int thirstBurnRate;
 	int hunger;
+	int hungerBurnRate;
+
 
 
     olc::Pixel tint;
@@ -53,13 +56,14 @@ protected:
 	void constructDecal();
     //Randomizer function with default inputs
 	int entRand(int from = 0, int to = 10);
-	void pathfinding(int currentTask);
+	bool pathfinding();
 	//return true if anything edable is in view
 	bool searchForFood();
 	olc::vi2d locationOfFood();
 	int foodIDAt(olc::vi2d XY);
 	//returns true if tile is in view
 	bool searchForTile(TileID::TileIDList tileLookingFor);
+	//returns the 2d coord of tile
 	olc::vi2d locateTile(TileID::TileIDList tileLookingFor);
 	//will compare old and new vi2d and retrun true if new is closer
 	bool closerToEnt(olc::vi2d& old, olc::vi2d& newXY);

@@ -20,14 +20,14 @@ public:
 	void basicSlopeConstructor(olc::vi2d& PS, olc::PixelGameEngine* p,
 							   olc::vi2d source, std::string name,
 							   SlopeD s, olc::Pixel c = olc::GREY,bool mine = true) {
-		PACK_SIZE = PS;
-		pge = p;
+		PACK_SIZE		= PS;
+		pge				= p;
+		decalSourcePos	= source;
+		sTileName		= name;
+		tint			= c;
+		mineable		= mine;
+		sDirection		= s;
 		constructDecal();
-		decalSourcePos = source;
-		sTileName = name;
-		tint = c;
-		mineable = mine;
-		sDirection = s;
 	}
 };
 

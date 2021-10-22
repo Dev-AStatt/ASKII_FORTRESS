@@ -82,47 +82,40 @@ void Ent::DrawSelf(int activeZLayer, olc::vi2d& viewOffset) {
 	}
 }
 
-void Ent::pathfinding(int currentTask) {
-	if((int)vPriorities.size() <=0) {
-		moveSelf(entRand(-1,1),entRand(-1,1));
-	} else {
-		//look if already has a destination with the same prioirity
-		if(Destination->getPriority() == vPriorities[0]) {
-			if(Destination->arivedAtDest(entPositionXY,entHeadZPosition)) {
-				std::cout << sEntName << " Has Arived At Destination" << '\n';
-			} else {
-				//std::cout << sEntName << " Is Following A Destination" << '\n';
-				moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
-			}
-		}
-		else {
-			if(vPriorities[0] == Memory::water) {
-				if(searchForTile(TileID::Water)) {
-					std::cout << sEntName << " Has Found Water" << '\n';
-					Destination->setNewDest(locateTile(TileID::Water),entStepZPosition,Memory::water,TileID::Water);
-					moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
-				}
-				else {
-					std::cout << sEntName << " Cant Find Any Water" << '\n';
-					moveSelf(entRand(-1,1),entRand(-1,1));
-				}
+bool Ent::pathfinding() {
+	if((int)vPriorities.size() <= 0) { return false;}
 
-
-			}
-			if(vPriorities[0] == Memory::food) {
-				//add set dest to object
-				if(searchForFood()) {
-					std::cout << sEntName << " Has Found Food" << '\n';
-					olc::vi2d tmp = locationOfFood();
-					Destination->setNewDest(tmp,entStepZPosition,Memory::food,foodIDAt(tmp));
-					moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
-				} else {
-					std::cout << sEntName << " Cant Find Any Food" << '\n';
-					moveSelf(entRand(-1,1),entRand(-1,1));
-				}
-			}
+	//look if already has a destination with the same prioirity
+	if(Destination->getPriority() == vPriorities[0]) {
+		if(Destination->arivedAtDest(entPositionXY,entHeadZPosition)) {
+			std::cout << sEntName << " Has Arived At Destination" << '\n';
+		} else {
+			//std::cout << sEntName << " Is Following A Destination" << '\n';
+			moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
 		}
+		return true;
 	}
+	if(vPriorities[0] == Memory::water) {
+		//search for tile returns if tile is even in view
+		if(!searchForTile(TileID::Water)) { return false;}
+		std::cout << sEntName << " Has Found Water" << '\n';
+		//set destination to new tile found
+		Destination->setNewDest(locateTile(TileID::Water),entStepZPosition,Memory::water,TileID::Water);
+		//move tward tile
+		moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
+		return true;
+	}
+	if(vPriorities[0] == Memory::food) {
+		//check to see if there is anything edable in view
+		if(!searchForFood()) { return false;}
+		std::cout << sEntName << " Has Found Food" << '\n';
+		//get location of food
+		olc::vi2d tmp = locationOfFood();
+		Destination->setNewDest(tmp,entStepZPosition,Memory::food,foodIDAt(tmp));	//set destindation of food
+		moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));	//Go to food
+		return true;
+	}
+	return false;
 }
 
 int Ent::foodIDAt(olc::vi2d XY) {
