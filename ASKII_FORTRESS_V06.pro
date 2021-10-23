@@ -28,6 +28,7 @@ HEADERS += \
 	entityFunctions/entitieshandler.h \
     mapFunctions/MapUtilChunkGen.h \
     mapFunctions/MapUtilTileIDList.h \
+    mapFunctions/MapUtil_I3d.h \
     mapFunctions/Maps.h \
     mapFunctions/TileFunctions/TileSlope.h \
     mapFunctions/TileFunctions/Tiles.h \

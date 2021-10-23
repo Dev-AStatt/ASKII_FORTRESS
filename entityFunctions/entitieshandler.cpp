@@ -58,6 +58,7 @@ void EntitiesHandler::updateEntities(int tick) {
 void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 	std::vector<std::shared_ptr<Object>> tmp;
 	std::vector<olc::vi2d> vPos = aliveEnts[entIndex]->getPosInView();
+	//tmp = ObjHandler->fillVectWithObjPtrs(vPos,aliveEnts[entIndex]->returnStepZ());
 	tmp = ObjHandler->fillVectWithObjPtrs(vPos,aliveEnts[entIndex]->returnStepZ());
 	aliveEnts[entIndex]->giftObjectsInView(tmp);
 

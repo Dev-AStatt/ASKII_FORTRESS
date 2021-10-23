@@ -1,5 +1,6 @@
 #pragma once
 #include "olcPixelGameEngine.h"
+#include "mapFunctions/MapUtil_I3d.h"
 #include "Object.h"
 
 class ObjectHandler {
@@ -18,7 +19,6 @@ private:
 	olc::Pixel colorExchanger(int c) {
 		if(c == 0) {return olc::WHITE;	}
 		if(c == 1) {return olc::GREY;	}
-
 		return olc::WHITE;
 	}
 
@@ -32,18 +32,19 @@ private:
 			decTile = std::make_unique<olc::Decal>(sprTile.get());
 	}
 	void drawSingleObject(olc::vi2d posXY, olc::vi2d decalSourcePos,olc::vi2d& viewOffset, int bc);
-	bool visable(olc::vi2d posXY,int posZ, int activeZLayer,olc::vi2d viewOffset);
-	bool isObjPtrAt(olc::vi2d& XY, int z);
+	//bool visable(olc::vi2d posXY,int posZ, int activeZLayer,olc::vi2d viewOffset);
+	bool visable(AKI::I3d pos, int activeZLayer,olc::vi2d viewOffset);
+	bool isObjPtrAt(AKI::I3d pos);
 public:
 	ObjectHandler(olc::vi2d PS,olc::vi2d atStartTL,olc::vi2d atStartBR, olc::PixelGameEngine* p);
 	void createMeat(olc::vi2d posXY, int posZ);
 	//draw all objects
 	//currently will draw them off screen
 	void drawObjects(int activeZLayer,olc::vi2d& viewOffset);
-	int ItemIDAtPosition(olc::vi2d& XY, int z);
-	std::vector<int> fillVectWithItemID(std::vector<int>& vect, std::vector<olc::vi2d>& vectPosXY, int z);
+	int ItemIDAtPosition(AKI::I3d pos);
+
 	std::vector<std::shared_ptr<Object>> fillVectWithObjPtrs(std::vector<olc::vi2d>& vectPosXY, int z);
-	std::shared_ptr<Object> getObjPtrAt(olc::vi2d &XY, int z);
+	std::shared_ptr<Object> getObjPtrAt(AKI::I3d pos);
 
 };
 
