@@ -1,9 +1,10 @@
 #pragma once
 #include "MapUtilTileIDList.h"
 #include "MapUtilChunkGen.h"
+#include "ChunkDataStruct.h"
 
-#include <vector>
-#include <memory>
+
+
 
 
 class cChunk {
@@ -19,9 +20,13 @@ private:
 	long chunkPositionY;
 	long chunkPositionX;
 	
-
-	std::vector<uint64_t> vChunk = std::vector<uint64_t>(511,0);
-    std::vector<std::unique_ptr<Tile>> vptrTiles;
+//
+//	Chunks are going to be made of two identifieers for each "Block"
+//	There is the slab, which is what is walked on, and the fill that
+//	is the infill of stuff that fills the space between slabs.
+//
+	ChunkDataStruct FullChunkIDs;
+	std::vector<std::unique_ptr<Tile>> vptrTiles;
 
 	//this was taken out to remove mutilple creations of the same thing
 	//MapUtilChunkGen MUCG;

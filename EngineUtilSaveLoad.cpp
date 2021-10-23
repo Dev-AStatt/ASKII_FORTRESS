@@ -66,8 +66,8 @@ void EngineUtilSaveLoad::stringChunkToActiveChunk(int chunkNum, int worldsize,st
     //start with an empty chunk
 
     //seperate whole chunk string to pieces
-    std::vector<std::string> vChunkPieces = wholeChunkToPieces(sWholeChunk);
-    std::vector<uint64_t> vSingleLoadedChunk = intToUint(vChunkPieces);
+	std::vector<std::string> vChunkPieces = wholeChunkToPieces(sWholeChunk);
+	std::vector<uint64_t> vSingleLoadedChunk = intToUint(vChunkPieces);
     //give loaded chunk tiles to Maps to actually create whole chunk
     unloadedMap->continueMap(chunkNum,worldsize,vSingleLoadedChunk);
 
@@ -94,7 +94,6 @@ std::vector<std::string> EngineUtilSaveLoad::wholeChunkToPieces(std::string my_s
         if(substr != "") {
             result.push_back(substr);
         }
-
     }
     return result;
 }

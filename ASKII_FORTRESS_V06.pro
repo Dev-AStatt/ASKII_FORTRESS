@@ -26,6 +26,7 @@ HEADERS += \
     entityFunctions/entities/EntDest.h \
 	entityFunctions/entities/EntHuman.h \
 	entityFunctions/entitieshandler.h \
+    mapFunctions/ChunkDataStruct.h \
     mapFunctions/MapUtilChunkGen.h \
     mapFunctions/MapUtilTileIDList.h \
     mapFunctions/MapUtil_I3d.h \

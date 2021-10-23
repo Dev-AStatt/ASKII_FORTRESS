@@ -4,16 +4,20 @@
 //
 std::vector<uint64_t> MapUtilChunkGen::GenerateChunk() {
 	CreateFlatWorld();
-	return newChunk;
+	return newChunkSlab;
+}
+
+ChunkDataStruct MapUtilChunkGen::GenerateChunkStruct() {
+
 }
 
 //
 //Takes the input of a already created chunk and will fill the single tile with a new tile
 //
 std::vector<uint64_t> MapUtilChunkGen::editchunkSingleTile(std::vector<uint64_t> activeChunk, int x, int y, int z, TileID::TileIDList newTile) {
-    newChunk = activeChunk;
+	newChunkSlab = activeChunk;
     FillSingleTile(z,y,x,newTile);
-    return newChunk;
+	return newChunkSlab;
 }
 
 //
@@ -43,11 +47,11 @@ void MapUtilChunkGen::FillSingleTile(int zLayer, int yCol, int xRow, int tileID)
 	//Clear the single tile before writing to it. 
 	for (int n = bitshift; n < 4 + bitshift; ++n) {
 		//for each 4 bits in tile ID clear each bit
-		newChunk[vectorID(zLayer,yCol)] &= ~(1ULL << n);
+		newChunkSlab[vectorID(zLayer,yCol)] &= ~(1ULL << n);
 	}
 
 	//OR bits of tile ID into correct tile position. 
-	newChunk[vectorID(zLayer, yCol)] |= bitshiftedIDtmp;
+	newChunkSlab[vectorID(zLayer, yCol)] |= bitshiftedIDtmp;
 }
 //
 //Function to fill an X row with a single tile type. 
@@ -64,7 +68,7 @@ void MapUtilChunkGen::FillChunkXRow(int zLayer, int yColToFill, int tileIDToFill
 	//Run for both Y holding one row. [y0] = x0 -> x7, [y1] for x8-x15
 	for (int y = yColToFill; y < yColToFill + 2; ++y) {
 		//Because we are changing the whole row we can start with 0. 
-		newChunk[vectorID(zLayer, y)] = 0x0;
+		newChunkSlab[vectorID(zLayer, y)] = 0x0;
 		//For each x in a row of Y1.0
 		for (int x = 0; x < 8; ++x) {
 			//start at the leftmost bit x0 
@@ -72,7 +76,7 @@ void MapUtilChunkGen::FillChunkXRow(int zLayer, int yColToFill, int tileIDToFill
 			//Bitshift the tile number to position of tile in mem so we can OR
 			bitshiftedIDtmp = unitTileId << bitshift;
 			//OR bits of tile ID into correct tile position. 
-			newChunk[vectorID(zLayer, y)] |= bitshiftedIDtmp;
+			newChunkSlab[vectorID(zLayer, y)] |= bitshiftedIDtmp;
 		}
 	}
 }

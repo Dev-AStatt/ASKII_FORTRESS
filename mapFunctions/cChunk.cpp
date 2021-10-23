@@ -4,13 +4,15 @@
 cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::shared_ptr<MapUtilChunkGen> cg) {
     loadTypicalData(packSizeAtStart,atStartMapTL, atStartMapBR, p, id);
 	ChunkGen = cg;
-	vChunk = ChunkGen->GenerateChunk();
+	FullChunkIDs.slabs = ChunkGen->GenerateChunk();
+	FullChunkIDs.inFill = FullChunkIDs.slabs;
+
 }
 
 cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::vector<uint64_t> chunkToLoad, std::shared_ptr<MapUtilChunkGen> cg) {
     loadTypicalData(packSizeAtStart,atStartMapTL, atStartMapBR, p, id);
 	ChunkGen = cg;
-    vChunk = chunkToLoad;
+    FullChunkIDs.slabs = chunkToLoad;
 }
 
 //Stuff that needs to be loaded if a new chunk or a loaded chunk is made
@@ -35,7 +37,7 @@ int cChunk::TileIDAtLocation(int zLayer, int yCol, int xRow) {
 	//calculate the bitshifting needed to move x to LSB
 	int bitshift = 56 - (xRow * 8);
 
-	bitshiftedIDtmp = vChunk[vectorID(zLayer,yCol)] >> bitshift;
+	bitshiftedIDtmp = FullChunkIDs.slabs[vectorID(zLayer,yCol)] >> bitshift;
     bitshiftedIDtmp &= extractor;
     //if the above line creats an error in shifting bits. the below line was
     //what was there origninally. I think it means the same thing.
@@ -90,12 +92,12 @@ bool cChunk::checkIfOnScreen(olc::vi2d& newPos) {
 
 //call chunk gen passing the current chunk and return it with edits
 void cChunk::tileReplacement(TileID::TileIDList newTile, int x, int y, int z) {
-	vChunk = ChunkGen->editchunkSingleTile(vChunk,x,y,z,newTile);
+	FullChunkIDs.slabs = ChunkGen->editchunkSingleTile(FullChunkIDs.slabs,x,y,z,newTile);
 }
 
 std::string cChunk::compileChunkToString(int i) {
-    if (i < (int)vChunk.size()) {
-        std::string s = std::to_string(vChunk[i]);
+    if (i < (int)FullChunkIDs.slabs.size()) {
+        std::string s = std::to_string(FullChunkIDs.slabs[i]);
         return s;
     }
     else {return "NULLVAL";}

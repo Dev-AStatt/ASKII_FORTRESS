@@ -1,7 +1,7 @@
 #pragma once
 #include "MapUtilTileIDList.h"
-#include <vector>
-#include <cstdint> // include this header for uint64_t
+#include "ChunkDataStruct.h"
+
 
 ///
 /// Chunk Orgonization. Vector <z> Vector <Y> = 0xFF for X
@@ -15,7 +15,8 @@ class MapUtilChunkGen {
 
 private:
 	//new chunk that is 16x33 of 0's
-	std::vector<uint64_t> newChunk = std::vector<uint64_t>(511, 0);
+	std::vector<uint64_t> newChunkSlab = std::vector<uint64_t>(511, 0);
+	ChunkDataStruct newChunkStruct;
 	//Temporary or Maluable Values
 	uint64_t unitTileId = 0;
 	int bitshift = 0;
@@ -29,6 +30,11 @@ public:
 	//Generates a new chunk and returns hard copy. 
 	//
 	std::vector<uint64_t> GenerateChunk();
+
+	//
+	//Generates a new chunk and returns hard copy.
+	//
+	ChunkDataStruct GenerateChunkStruct();
 
     //
     //Takes the input of a already created chunk and will fill the single tile with a new tile
