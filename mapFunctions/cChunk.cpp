@@ -30,7 +30,7 @@ void cChunk::loadTypicalData(olc::vi2d &packSizeAtStart, olc::vi2d &atStartMapTL
 
 
 //Takes in the z,y,x coordinates of a tile and returns the TileID
-int cChunk::TileIDAtLocation(int zLayer, int yCol, int xRow) {
+int cChunk::SlabIDAtLocation(int zLayer, int yCol, int xRow) {
 	//Is x in Y[even] or Y[odd]
 	if (xRow < 8) { yCol = yCol * 2; };
 	if (xRow > 7) { yCol = (yCol * 2) + 1; };
@@ -46,10 +46,35 @@ int cChunk::TileIDAtLocation(int zLayer, int yCol, int xRow) {
 	return (int)bitshiftedIDtmp;
 }
 
+//Takes in the z,y,x coordinates of a tile and returns the TileID
+int cChunk::InfillIDAtLocation(int zLayer, int yCol, int xRow) {
+	//Is x in Y[even] or Y[odd]
+	if (xRow < 8) { yCol = yCol * 2; };
+	if (xRow > 7) { yCol = (yCol * 2) + 1; };
+
+	//calculate the bitshifting needed to move x to LSB
+	int bitshift = 56 - (xRow * 8);
+
+	bitshiftedIDtmp = FullChunkIDs.inFill[vectorID(zLayer,yCol)] >> bitshift;
+	bitshiftedIDtmp &= extractor;
+	//if the above line creats an error in shifting bits. the below line was
+	//what was there origninally. I think it means the same thing.
+	//bitshiftedIDtmp = bitshiftedIDtmp &= extractor;
+	return (int)bitshiftedIDtmp;
+}
+
 //returns a pointer to a tile that is at the location of z, vi2d(yx)
-std::unique_ptr<Tile>& cChunk::TilePtrAtLocation(int zLayer, olc::vi2d yx) {
+std::unique_ptr<Tile>& cChunk::SlabPtrAtLocation(int zLayer, olc::vi2d yx) {
 	//call TileIDAtLoc and return a pointer at that loc
-	std::unique_ptr<Tile>& t = cTiles->vptrTiles[TileIDAtLocation(zLayer, yx.y, yx.x)];
+	std::unique_ptr<Tile>& t = cTiles->vptrTiles[SlabIDAtLocation(zLayer, yx.y, yx.x)];
+	return t;
+
+}
+
+//returns a pointer to a tile that is at the location of z, vi2d(yx)
+std::unique_ptr<Tile>& cChunk::InfillPtrAtLocation(int zLayer, olc::vi2d yx) {
+	//call TileIDAtLoc and return a pointer at that loc
+	std::unique_ptr<Tile>& t = cTiles->vptrTiles[InfillIDAtLocation(zLayer, yx.y, yx.x)];
 	return t;
 
 }
@@ -67,7 +92,7 @@ void cChunk::decryptIDtoYX() {
 void cChunk::DrawChunk(int zLayer, olc::vi2d& moveViewOffset) {
 	for (int y = 0; y < 16; ++y) {
 		for (int x = 0; x < 16; ++x) {
-            auto& t = cTiles->vptrTiles[TileIDAtLocation(zLayer, y, x)];
+			auto& t = cTiles->vptrTiles[SlabIDAtLocation(zLayer, y, x)];
 			if (t) {							//the + 1 on the X, Y is to add space for the header
                 vTileFinalPosition = {x + (int)(chunkPositionX * 16) + 1 + moveViewOffset.x,(y + (int)(chunkPositionY * 16) + 1) + moveViewOffset.y };
 				//make sure adjusted position is on screen

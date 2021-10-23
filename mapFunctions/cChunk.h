@@ -63,13 +63,15 @@ public:
 	cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::vector<uint64_t> chunkToLoad, std::shared_ptr<MapUtilChunkGen> cg);
 	void DrawChunk(int zLayer, olc::vi2d& moveViewOffset);
 	//Returns the pointer of the tile at location z, olc(y,x)
-    std::unique_ptr<Tile>& TilePtrAtLocation(int zLayer, olc::vi2d yx);
+	std::unique_ptr<Tile>& SlabPtrAtLocation(int zLayer, olc::vi2d yx);
+	std::unique_ptr<Tile>& InfillPtrAtLocation(int zLayer, olc::vi2d yx);
     //takes input of tile and position and edits the chunk
     void tileReplacement(TileID::TileIDList newTile, int x, int y, int z);
     std::string compileChunkToString(int i);
     //returns the int of MapUtilTileIDList enum for the tile at
     //location z,y,x
-    int TileIDAtLocation(int zLayer, int yCol, int xRow);
+	int SlabIDAtLocation(int zLayer, int yCol, int xRow);
+	int InfillIDAtLocation(int zLayer, int yCol, int xRow);
 
 };
 

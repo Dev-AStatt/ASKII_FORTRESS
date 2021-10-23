@@ -131,7 +131,7 @@ std::vector<int> Maps::viewOfWorld(olc::vi2d& posXY, int posZ,int viewDistance) 
             chunkIDLoc = worldPosToChunkXY({x,y});
             chunkIndex = returnVIndexOfChunk(chunkIDLoc);
             if(chunkIndex >= 0) {
-                int temp = vptrActiveChunks[chunkIndex]->TileIDAtLocation(posZ,y,x);
+				int temp = vptrActiveChunks[chunkIndex]->SlabIDAtLocation(posZ,y,x);
                 vSight.emplace_back(temp);
             }
 
