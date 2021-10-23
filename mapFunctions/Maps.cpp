@@ -110,7 +110,7 @@ void Maps::flipTileOnMap(olc::vi2d& insplocXY) {
                 chunkToPoint = c;
             }
         }
-        vptrActiveChunks[chunkToPoint]->tileReplacement(TileID::Water,tileX,tileY,activeZLayer);
+		vptrActiveChunks[chunkToPoint]->SlabReplacement(TileID::Water,tileX,tileY,activeZLayer);
     }
 }
 

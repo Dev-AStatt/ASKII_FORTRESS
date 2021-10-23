@@ -8,6 +8,7 @@ std::vector<uint64_t> MapUtilChunkGen::GenerateChunk() {
 }
 
 ChunkDataStruct MapUtilChunkGen::GenerateChunkStruct() {
+	CreateFlatWorldSlabs();
 	newChunkStruct.slabs = newChunkSlab;
 	CreateFlatWorldInfill();
 	newChunkStruct.inFill = newChunkSlab;

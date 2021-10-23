@@ -4,9 +4,8 @@
 cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::shared_ptr<MapUtilChunkGen> cg) {
     loadTypicalData(packSizeAtStart,atStartMapTL, atStartMapBR, p, id);
 	ChunkGen = cg;
-	FullChunkIDs.slabs = ChunkGen->GenerateChunk();
-	FullChunkIDs.inFill = FullChunkIDs.slabs;
-	//FullChunkIDs = ChunkGen->GenerateChunkStruct();
+
+	FullChunkIDs = ChunkGen->GenerateChunkStruct();
 
 }
 
@@ -117,8 +116,12 @@ bool cChunk::checkIfOnScreen(olc::vi2d& newPos) {
 }
 
 //call chunk gen passing the current chunk and return it with edits
-void cChunk::tileReplacement(TileID::TileIDList newTile, int x, int y, int z) {
+void cChunk::SlabReplacement(TileID::TileIDList newTile, int x, int y, int z) {
 	FullChunkIDs.slabs = ChunkGen->editchunkSingleTile(FullChunkIDs.slabs,x,y,z,newTile);
+}
+
+void cChunk::InfillReplacement(TileID::TileIDList newTile, int x, int y, int z) {
+	FullChunkIDs.inFill = ChunkGen->editchunkSingleTile(FullChunkIDs.slabs,x,y,z,newTile);
 }
 
 std::string cChunk::compileChunkToString(int i) {

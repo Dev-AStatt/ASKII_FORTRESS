@@ -3,10 +3,6 @@
 #include "MapUtilChunkGen.h"
 #include "ChunkDataStruct.h"
 
-
-
-
-
 class cChunk {
 private:
 	///
@@ -62,11 +58,14 @@ public:
     //Will load passed in chunk by being given tileset
 	cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::vector<uint64_t> chunkToLoad, std::shared_ptr<MapUtilChunkGen> cg);
 	void DrawChunk(int zLayer, olc::vi2d& moveViewOffset);
-	//Returns the pointer of the tile at location z, olc(y,x)
+	//Returns the pointer of the Slab at location z, olc(y,x)
 	std::unique_ptr<Tile>& SlabPtrAtLocation(int zLayer, olc::vi2d yx);
+	//Returns the pointer of the Infill at location z, olc(y,x)
 	std::unique_ptr<Tile>& InfillPtrAtLocation(int zLayer, olc::vi2d yx);
-    //takes input of tile and position and edits the chunk
-    void tileReplacement(TileID::TileIDList newTile, int x, int y, int z);
+	//takes input of tile and position and edits the chunk slab
+	void SlabReplacement(TileID::TileIDList newTile, int x, int y, int z);
+	//takes input of tile and position and edits the chunk Infill
+	void InfillReplacement(TileID::TileIDList newTile, int x, int y, int z);
     std::string compileChunkToString(int i);
     //returns the int of MapUtilTileIDList enum for the tile at
     //location z,y,x
