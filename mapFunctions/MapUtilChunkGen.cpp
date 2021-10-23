@@ -3,12 +3,15 @@
 //Generates a new chunk and returns hard copy. 
 //
 std::vector<uint64_t> MapUtilChunkGen::GenerateChunk() {
-	CreateFlatWorld();
+	CreateFlatWorldSlabs();
 	return newChunkSlab;
 }
 
 ChunkDataStruct MapUtilChunkGen::GenerateChunkStruct() {
-
+	newChunkStruct.slabs = newChunkSlab;
+	CreateFlatWorldInfill();
+	newChunkStruct.inFill = newChunkSlab;
+	return newChunkStruct;
 }
 
 //
@@ -88,7 +91,7 @@ void MapUtilChunkGen::FillChunkYCol(int zLayer, int xRowToFill, int tileIDToFill
 }
 
 
-void MapUtilChunkGen::CreateFlatWorld() {
+void MapUtilChunkGen::CreateFlatWorldSlabs() {
 	for (int z = 0; z < 11; ++z) {
 		FillChunkZLayer(z, TileID::Stone);
 	}
@@ -98,3 +101,11 @@ void MapUtilChunkGen::CreateFlatWorld() {
 	FillChunkYCol(11,0, TileID::Water);
 	FillChunkYCol(11,15,TileID::Water);
 }
+
+void MapUtilChunkGen::CreateFlatWorldInfill() {
+	for (int z = 0; z < 10; ++z) {
+		FillChunkZLayer(z, TileID::Stone);
+	}
+
+}
+

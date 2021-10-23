@@ -11,8 +11,6 @@
 
 
 class MapUtilChunkGen {
-
-
 private:
 	//new chunk that is 16x33 of 0's
 	std::vector<uint64_t> newChunkSlab = std::vector<uint64_t>(511, 0);
@@ -25,6 +23,30 @@ private:
 
 
 	int vectorID(int z, int y) { return (z * 32 + y); };
+	//Creates stone from z[0] to z[10] then a dirt island.
+	void CreateFlatWorldSlabs();
+	void CreateFlatWorldInfill();
+	//
+	// FillChunkZLayer will take a Z layer value and a tile id and
+	// fill that layer with all tiles of that ID
+	//
+	void FillChunkZLayer(int zLayerToFill, int tileID);
+	//
+	//Function takes Z, y, x coordinate and changes tile at single location.
+	//
+	void FillSingleTile(int zLayer, int yCol, int xRow, int tileID);
+	//
+	//Function to fill an X row with a single tile type.
+	//zLayerToFill is the z layer of chunk, yColToFil is the litteral Y value of the column [0-15].
+	//function will do both y0 and y1 for the whole 128 bit row.
+	// 	   Ex: yColToFill = 1. will fill y[2] and y[3].
+	//
+	void FillChunkXRow(int zLayer, int yColToFill, int tileIDToFill);
+
+	//More Inifficient version of Fill Chunk XRow. Same thing for Y
+	void FillChunkYCol(int zLayer, int xRowToFill, int tileIDToFill);
+
+
 public:
 	//
 	//Generates a new chunk and returns hard copy. 
@@ -41,26 +63,6 @@ public:
     //
     std::vector<uint64_t> editchunkSingleTile(std::vector<uint64_t> activeChunk, int x, int y, int z, TileID::TileIDList newTile);
 
-	//
-	// FillChunkZLayer will take a Z layer value and a tile id and
-	// fill that layer with all tiles of that ID
-	//
-	void FillChunkZLayer(int zLayerToFill, int tileID);
-	//
-	//Function takes Z, y, x coordinate and changes tile at single location.
-	//
-	void FillSingleTile(int zLayer, int yCol, int xRow, int tileID);
-	//
-	//Function to fill an X row with a single tile type. 
-	//zLayerToFill is the z layer of chunk, yColToFil is the litteral Y value of the column [0-15].
-	//function will do both y0 and y1 for the whole 128 bit row. 
-	// 	   Ex: yColToFill = 1. will fill y[2] and y[3].
-	//
-	void FillChunkXRow(int zLayer, int yColToFill, int tileIDToFill);
 
-	//More Inifficient version of Fill Chunk XRow. Same thing for Y
-	void FillChunkYCol(int zLayer, int xRowToFill, int tileIDToFill);
 
-	//Creates stone from z[0] to z[10] then a dirt island.
-	void CreateFlatWorld();
 };

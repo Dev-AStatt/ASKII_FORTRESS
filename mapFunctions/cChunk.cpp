@@ -6,6 +6,7 @@ cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atS
 	ChunkGen = cg;
 	FullChunkIDs.slabs = ChunkGen->GenerateChunk();
 	FullChunkIDs.inFill = FullChunkIDs.slabs;
+	//FullChunkIDs = ChunkGen->GenerateChunkStruct();
 
 }
 
