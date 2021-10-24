@@ -19,7 +19,7 @@ void Ent::constructEntBasics(olc::vi2d& PS, olc::PixelGameEngine* p) {
 	constructDecal();	//construct decal will add decals to Ents
 	cTiles = std::make_unique<TileID::cTileID>(PACK_SIZE,pge);
 	Destination = std::make_unique<Memory::EntDest>();
-	UpdatePosInView();
+
 	alive = true;
 }
 

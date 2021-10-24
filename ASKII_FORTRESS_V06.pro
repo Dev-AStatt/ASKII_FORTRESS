@@ -11,11 +11,12 @@ SOURCES += \
     Main.cpp \
     entityFunctions/entities/Ent.cpp \
 	entityFunctions/entitieshandler.cpp \
+	libraries/olcPixelGameEngine.cpp \
     mapFunctions/MapUtilChunkGen.cpp \
     mapFunctions/Maps.cpp \
     mapFunctions/cChunk.cpp \
     objectFunctions/objecthandler.cpp \
-    olcPixelGameEngine.cpp \
+
 
 HEADERS += \
     EngineUtilSaveLoad.h \
@@ -26,6 +27,7 @@ HEADERS += \
     entityFunctions/entities/EntDest.h \
 	entityFunctions/entities/EntHuman.h \
 	entityFunctions/entitieshandler.h \
+	libraries/olcPixelGameEngine.h \
     mapFunctions/ChunkDataStruct.h \
     mapFunctions/MapUtilChunkGen.h \
     mapFunctions/MapUtilTileIDList.h \
@@ -33,12 +35,10 @@ HEADERS += \
     mapFunctions/Maps.h \
     mapFunctions/TileFunctions/TileSlope.h \
     mapFunctions/TileFunctions/Tiles.h \
-    mapFunctions/Tiles.h \
     mapFunctions/cChunk.h \
-    mapsFunctions/cChunk.h \
     objectFunctions/Object.h \
     objectFunctions/objecthandler.h \
-    olcPixelGameEngine.h \
+
 
 DISTFILES += \
     art/Phoebus_16x16_Next.png

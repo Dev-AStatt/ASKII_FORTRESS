@@ -8,7 +8,8 @@ private:
 public:
     EntHuman() {}
 	EntHuman(olc::vi2d& PS, olc::PixelGameEngine* p, olc::vi2d& posXY, int posZ, std::string n) {
-        constructEntBasics(PS,p);
+		constructEntBasics(PS,p);
+
 		decalSourcePos		= { 0,4 };
 		entPositionXY		= posXY;
 		entStepZPosition	= posZ;
@@ -19,6 +20,7 @@ public:
 		hungerBurnRate		= 1;
 		tint				= olc::WHITE;
 		sEntName			= n;
+		UpdatePosInView();
     }
 
 	virtual bool updateSelf(int tick) override {

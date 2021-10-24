@@ -23,9 +23,6 @@ private:
 //
 	ChunkDataStruct FullChunkIDs;
 	std::vector<std::unique_ptr<Tile>> vptrTiles;
-
-	//this was taken out to remove mutilple creations of the same thing
-	//MapUtilChunkGen MUCG;
 	std::shared_ptr<MapUtilChunkGen> ChunkGen;
 
 

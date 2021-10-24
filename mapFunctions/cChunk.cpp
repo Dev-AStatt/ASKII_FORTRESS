@@ -93,7 +93,7 @@ void cChunk::DrawChunk(int zLayer, olc::vi2d& moveViewOffset) {
 		for (int x = 0; x < 16; ++x) {
 			auto& t = cTiles->vptrTiles[SlabIDAtLocation(zLayer, y, x)];
 			if (t) {							//the + 1 on the X, Y is to add space for the header
-                vTileFinalPosition = {x + (int)(chunkPositionX * 16) + 1 + moveViewOffset.x,(y + (int)(chunkPositionY * 16) + 1) + moveViewOffset.y };
+				vTileFinalPosition = {x + (int)(chunkPositionX * 16) + 1 + moveViewOffset.x,(y + (int)(chunkPositionY * 16) + 1) + moveViewOffset.y };
 				//make sure adjusted position is on screen
 				if (checkIfOnScreen(vTileFinalPosition)) {
 					t->DrawSelf(vTileFinalPosition);

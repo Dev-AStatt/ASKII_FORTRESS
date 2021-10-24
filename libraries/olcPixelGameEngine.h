@@ -1,8 +1,9 @@
+#pragma region license_and_help
 /*
 	olcPixelGameEngine.h
 
 	+-------------------------------------------------------------+
-	|           OneLoneCoder Pixel Game Engine v2.12              |
+	|           OneLoneCoder Pixel Game Engine v2.16              |
 	|  "What do you need? Pixels... Lots of Pixels..." - javidx9  |
 	+-------------------------------------------------------------+
 
@@ -67,6 +68,8 @@
 	Patreon:	https://www.patreon.com/javidx9
 	Community:  https://community.onelonecoder.com
 
+
+
 	Compiling in Linux
 	~~~~~~~~~~~~~~~~~~
 	You will need a modern C++ compiler, so update yours!
@@ -79,6 +82,7 @@
 	able to, in which case try launching your program like this:
 
 	vblank_mode=0 ./YourProgName
+
 
 
 	Compiling in Code::Blocks on Windows
@@ -98,6 +102,8 @@
 
 	Set these compiler options: -std=c++17
 
+
+
 	Compiling on Mac - EXPERIMENTAL! PROBABLY HAS BUGS
 	~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 	Yes yes, people use Macs for C++ programming! Who knew? Anyway, enough
@@ -105,7 +111,20 @@
 	about Mac, so if you need support, I suggest checking out the instructions
 	here: https://github.com/MumflrFumperdink/olcPGEMac
 
-	clang++ -arch x86_64 -std=c++17 -mmacosx-version-min=10.15 -Wall -framework OpenGL -framework GLUT -lpng YourSource.cpp -o YourProgName
+	clang++ -arch x86_64 -std=c++17 -mmacosx-version-min=10.15 -Wall -framework OpenGL 
+		-framework GLUT -framework Carbon -lpng YourSource.cpp -o YourProgName
+
+
+
+	Compiling with Emscripten (New & Experimental)
+	~~~~~~~~~~~~~~~~~~~~~~~~~
+	Emscripten compiler will turn your awesome C++ PixelGameEngine project into WASM!
+	This means you can run your application in teh browser, great for distributing
+	and submission in to jams and things! It's a bit new at the moment. 
+
+	em++ -std=c++17 -O2 -s ALLOW_MEMORY_GROWTH=1 -s MAX_WEBGL_VERSION=2 -s MIN_WEBGL_VERSION=2 -s USE_LIBPNG=1 ./YourSource.cpp -o pge.html
+
+
 
 	Using stb_image.h
 	~~~~~~~~~~~~~~~~~
@@ -119,6 +138,25 @@
 	Before including the olcPixelGameEngine.h header file. stb_image.h works on many systems
 	and can be downloaded here: https://github.com/nothings/stb/blob/master/stb_image.h
 
+
+
+	Multiple cpp file projects?
+	~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	As a single header solution, the OLC_PGE_APPLICATION definition is used to
+	insert the engine implementation at a project location of your choosing.
+	The simplest way to setup multifile projects is to create a file called
+	"olcPixelGameEngine.cpp" which includes the following:
+
+	#define OLC_PGE_APPLICATION
+	#include "libraries/olcPixelGameEngine.h"
+
+	That's all it should include. You can also include PGEX includes and 
+	defines in here too. With this in place, you dont need to 
+	#define OLC_PGE_APPLICATION anywhere, and can simply include this 
+	header file as an when you need to.
+
+
+
 	Ports
 	~~~~~
 	olc::PixelGameEngine has been ported and tested with varying degrees of
@@ -126,34 +164,42 @@
 	Chromebook, Playstation Portable (PSP) and Nintendo Switch. If you are
 	interested in the details of these ports, come and visit the Discord!
 
+
+
 	Thanks
 	~~~~~~
-	I'd like to extend thanks to Bispoo, Eremiell, slavka, gurkanctn, Phantim, IProgramInCPP
-	JackOJC, KrossX, Huhlig, Dragoneye, Appa, JustinRichardsMusic, SliceNDice, dandistine
-	Ralakus, Gorbit99, raoul, joshinils, benedani, Moros1138, Alexio, SaladinAkara & MagetzUb
-	for advice, ideas and testing, and I'd like to extend my appreciation to the
-	210K YouTube followers,	80+ Patreons and 10K Discord server members who give me
+	I'd like to extend thanks to Ian McKay, Bispoo, Eremiell, slavka, gurkanctn, Phantim,
+	IProgramInCPP, JackOJC, KrossX, Huhlig, Dragoneye, Appa, JustinRichardsMusic, SliceNDice, 
+	dandistine,	Ralakus, Gorbit99, raoul, joshinils, benedani, Moros1138, Alexio, SaladinAkara 
+	& MagetzUb for advice, ideas and testing, and I'd like to extend my appreciation to the
+	230K YouTube followers,	80+ Patreons and 10K Discord server members who give me
 	the motivation to keep going with all this :D
 
 	Significant Contributors: @Moros1138, @SaladinAkara, @MaGetzUb, @slavka,
-							  @Dragoneye, @Gorbit99 & @Mumflr
+							  @Dragoneye, @Gorbit99, @dandistine & @Mumflr
 
 	Special thanks to those who bring gifts!
 	GnarGnarHead.......Domina
-	Gorbit99...........Bastion, Ori & The Blind Forest, Terraria, Spelunky 2
+	Gorbit99...........Bastion, Ori & The Blind Forest, Terraria, Spelunky 2, Skully
 	Marti Morta........Gris
 	Danicron...........Terraria
-	SaladinAkara.......Aseprite, Inside
+	SaladinAkara.......Aseprite, Inside, Quern: Undying Thoughts, Outer Wilds
 	AlterEgo...........Final Fantasy XII - The Zodiac Age
 	SlicEnDicE.........Noita, Inside
 
 	Special thanks to my Patreons too - I wont name you on here, but I've
 	certainly enjoyed my tea and flapjacks :D
 
+
+
 	Author
 	~~~~~~
-	David Barr, aka javidx9, ©OneLoneCoder 2018, 2019, 2020, 2021
+	David Barr, aka javidx9, \A9OneLoneCoder 2018, 2019, 2020, 2021
+*/
+#pragma endregion
 
+#pragma region version_history
+/*
 	2.01: Made renderer and platform static for multifile projects
 	2.02: Added Decal destructor, optimised Pixel constructor
 	2.03: Added FreeBSD flags, Added DrawStringDecal()
@@ -209,22 +255,44 @@
 		  +Wireframe Decal Mode - For debug overlays
 	2.11: Made PGEX hooks optional - (provide true to super constructor)
 	2.12: Fix for MinGW compiler non-compliance :( - why is its sdk structure different?? why???
+	2.13: +GetFontSprite() - allows access to font data	 
+	2.14: Fix WIN32 Definition reshuffle
+		  Fix DrawPartialDecal() - messed up dimension during renderer experiment, didnt remove junk code, thanks Alexio
+		  Fix? Strange error regarding GDI+ Image Loader not knowing about COM, SDK change?
+	2.15: Big Reformat
+		  +WASM Platform (via Emscripten) - Big Thanks to OLC Community - See Platform for details		  
+		  +Sample Mode for Decals
+		  +Made olc_ConfigureSystem() accessible
+		  +Added OLC_----_CUSTOM_EX for externalised platforms, renderers and image loaders
+		  =Refactored olc::Sprite pixel data store
+		  -Deprecating LoadFromPGESprFile()
+		  -Deprecating SaveToPGESprFile()
+		  Fix Pixel -= operator (thanks Au Lit)
+	2.16: FIX Emscripten JS formatting in VS IDE (thanks Moros)
+		  +"Headless" Mode
+		  +DrawLineDecal()
+		  +Mouse Button Constants
+		  +Move Constructor for olc::Renderable
+		  +Polar/Cartesian conversion for v2d_generic
+		  +DrawRotatedStringDecal()/DrawRotatedStringPropDecal() (thanks Oso-Grande/Sopadeoso (PR #209))
+		  =Using olc::Renderable for layer surface
+		  +Major Mac and GLUT Update (thanks Mumflr)
 		  
+
 		  
     !! Apple Platforms will not see these updates immediately - Sorry, I dont have a mac to test... !!
 	!!   Volunteers willing to help appreciated, though PRs are manually integrated with credit     !!
 */
+#pragma endregion
 
-//////////////////////////////////////////////////////////////////////////////////////////
-
-
+#pragma region hello_world_example
 // O------------------------------------------------------------------------------O
 // | Example "Hello World" Program (main.cpp)                                     |
 // O------------------------------------------------------------------------------O
 /*
 
 #define OLC_PGE_APPLICATION
-#include "olcPixelGameEngine.h"
+#include "libraries/olcPixelGameEngine.h"
 
 // Override base class with your custom functionality
 class Example : public olc::PixelGameEngine
@@ -262,10 +330,12 @@ int main()
 }
 
 */
+#pragma endregion
 
 #ifndef OLC_PGE_DEF
 #define OLC_PGE_DEF
 
+#pragma region std_includes
 // O------------------------------------------------------------------------------O
 // | STANDARD INCLUDES                                                            |
 // O------------------------------------------------------------------------------O
@@ -286,45 +356,42 @@ int main()
 #include <algorithm>
 #include <array>
 #include <cstring>
+#pragma endregion
 
-#define PGE_VER 212
+#define PGE_VER 216
 
 // O------------------------------------------------------------------------------O
 // | COMPILER CONFIGURATION ODDITIES                                              |
 // O------------------------------------------------------------------------------O
+#pragma region compiler_config
 #define USE_EXPERIMENTAL_FS
-
 #if defined(_WIN32)
-#if _MSC_VER >= 1920 && _MSVC_LANG >= 201703L
-#undef USE_EXPERIMENTAL_FS
+	#if _MSC_VER >= 1920 && _MSVC_LANG >= 201703L
+		#undef USE_EXPERIMENTAL_FS
+	#endif
 #endif
-#endif
-
 #if defined(__linux__) || defined(__MINGW32__) || defined(__EMSCRIPTEN__) || defined(__FreeBSD__) || defined(__APPLE__)
-#if __cplusplus >= 201703L
-#undef USE_EXPERIMENTAL_FS
-#endif
+	#if __cplusplus >= 201703L
+		#undef USE_EXPERIMENTAL_FS
+	#endif
 #endif
 
-#if defined(__APPLE__)
-#define PGE_USE_CUSTOM_START
-#endif
 
 #if defined(USE_EXPERIMENTAL_FS) || defined(FORCE_EXPERIMENTAL_FS)
 	// C++14
-#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
-#include <experimental/filesystem>
-namespace _gfs = std::experimental::filesystem::v1;
+	#define _SILENCE_EXPERIMENTAL_FILESYSTEM_DEPRECATION_WARNING
+	#include <experimental/filesystem>
+	namespace _gfs = std::experimental::filesystem::v1;
 #else
 	// C++17
-#include <filesystem>
-namespace _gfs = std::filesystem;
+	#include <filesystem>
+	namespace _gfs = std::filesystem;
 #endif
 
 #if defined(UNICODE) || defined(_UNICODE)
-#define olcT(s) L##s
+	#define olcT(s) L##s
 #else
-#define olcT(s) s
+	#define olcT(s) s
 #endif
 
 #define UNUSED(x) (void)(x)
@@ -334,87 +401,105 @@ namespace _gfs = std::filesystem;
 // O------------------------------------------------------------------------------O
 
 // Platform
-#if !defined(OLC_PLATFORM_WINAPI) && !defined(OLC_PLATFORM_X11) && !defined(OLC_PLATFORM_GLUT)
-#if defined(_WIN32)
-#define OLC_PLATFORM_WINAPI
+#if !defined(OLC_PLATFORM_WINAPI) && !defined(OLC_PLATFORM_X11) && !defined(OLC_PLATFORM_GLUT) && !defined(OLC_PLATFORM_EMSCRIPTEN)
+	#if !defined(OLC_PLATFORM_CUSTOM_EX)
+		#if defined(_WIN32)
+			#define OLC_PLATFORM_WINAPI
+		#endif
+		#if defined(__linux__) || defined(__FreeBSD__)
+			#define OLC_PLATFORM_X11
+		#endif
+		#if defined(__APPLE__)
+			#define GL_SILENCE_DEPRECATION
+			#define OLC_PLATFORM_GLUT
+		#endif
+		#if defined(__EMSCRIPTEN__)
+			#define OLC_PLATFORM_EMSCRIPTEN
+		#endif
+	#endif
 #endif
-#if defined(__linux__) || defined(__FreeBSD__)
-#define OLC_PLATFORM_X11
-#endif
-#if defined(__APPLE__)
-#define OLC_PLATFORM_GLUT
-#endif
+
+// Start Situation
+#if defined(OLC_PLATFORM_GLUT) || defined(OLC_PLATFORM_EMSCRIPTEN)
+	#define PGE_USE_CUSTOM_START
 #endif
 
 // Renderer
 #if !defined(OLC_GFX_OPENGL10) && !defined(OLC_GFX_OPENGL33) && !defined(OLC_GFX_DIRECTX10)
-#define OLC_GFX_OPENGL10
+	#if !defined(OLC_GFX_CUSTOM_EX)
+		#if defined(OLC_PLATFORM_EMSCRIPTEN)
+			#define OLC_GFX_OPENGL33
+		#else
+			#define OLC_GFX_OPENGL10
+		#endif
+	#endif
 #endif
 
 // Image loader
 #if !defined(OLC_IMAGE_STB) && !defined(OLC_IMAGE_GDI) && !defined(OLC_IMAGE_LIBPNG)
-#if defined(_WIN32)
-#define	OLC_IMAGE_GDI
-#endif
-#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__)
-#define	OLC_IMAGE_LIBPNG
-#endif
+	#if !defined(OLC_IMAGE_CUSTOM_EX)
+		#if defined(_WIN32)
+			#define	OLC_IMAGE_GDI
+		#endif
+		#if defined(__linux__) || defined(__APPLE__) || defined(__FreeBSD__) || defined(__EMSCRIPTEN__)
+			#define	OLC_IMAGE_LIBPNG
+		#endif
+	#endif
 #endif
 
 
 // O------------------------------------------------------------------------------O
 // | PLATFORM-SPECIFIC DEPENDENCIES                                               |
 // O------------------------------------------------------------------------------O
+#if !defined(OLC_PGE_HEADLESS)
 #if defined(OLC_PLATFORM_WINAPI)	
-#define _WINSOCKAPI_ // Thanks Cornchipss
+	#define _WINSOCKAPI_ // Thanks Cornchipss
+		#if !defined(VC_EXTRALEAN)
+		#define VC_EXTRALEAN
+	#endif
+	#if !defined(NOMINMAX)
+		#define NOMINMAX
+	#endif
 
-//#if !defined(WIN32_LEAN_AND_MEAN) // Removes something GDI requires
-//	#define WIN32_LEAN_AND_MEAN
-//#endif
-#if !defined(VC_EXTRALEAN)
-#define VC_EXTRALEAN
-#endif
-#if !defined(NOMINMAX)
-#define NOMINMAX
-#endif
+	// In Code::Blocks
+	#if !defined(_WIN32_WINNT)
+		#ifdef HAVE_MSMF
+			#define _WIN32_WINNT 0x0600 // Windows Vista
+		#else
+			#define _WIN32_WINNT 0x0500 // Windows 2000
+		#endif
+	#endif
 
-// In Code::Blocks
-#if !defined(_WIN32_WINNT)
-#ifdef HAVE_MSMF
-#define _WIN32_WINNT 0x0600 // Windows Vista
-#else
-#define _WIN32_WINNT 0x0500 // Windows 2000
-#endif
-#endif
-
-#include <windows.h>
-
-#undef _WINSOCKAPI_
+	#include <windows.h>
+	#undef _WINSOCKAPI_
 #endif
 
 #if defined(OLC_PLATFORM_X11)
-namespace X11
-{
-#include <X11/X.h>
-#include <X11/Xlib.h>
-}
+	namespace X11
+	{
+		#include <X11/X.h>
+		#include <X11/Xlib.h>
+	}
 #endif
 
 #if defined(OLC_PLATFORM_GLUT)
-#define PGE_USE_CUSTOM_START
-#if defined(__linux__)
-#include <GL/glut.h>
-#include <GL/freeglut_ext.h>
+	#if defined(__linux__)
+		#include <GL/glut.h>
+		#include <GL/freeglut_ext.h>
+	#endif
+	#if defined(__APPLE__)
+		#include <GLUT/glut.h>
+	#include <objc/message.h>
+	#include <objc/NSObjCRuntime.h>
+	#endif
 #endif
-#if defined(__APPLE__)
-#include <GLUT/glut.h>
 #endif
-#endif
-
+#pragma endregion
 
 // O------------------------------------------------------------------------------O
 // | olcPixelGameEngine INTERFACE DECLARATION                                     |
 // O------------------------------------------------------------------------------O
+#pragma region pge_declaration
 namespace olc
 {
 	class PixelGameEngine;
@@ -491,6 +576,24 @@ namespace olc
 		CAPS_LOCK, ENUM_END
 	};
 
+	namespace Mouse
+	{
+		static constexpr int32_t LEFT = 0;
+		static constexpr int32_t RIGHT = 1;
+		static constexpr int32_t MIDDLE = 2;
+	};
+
+	// O------------------------------------------------------------------------------O
+	// | olc::HWButton - Represents the state of a hardware button (mouse/key/joy)    |
+	// O------------------------------------------------------------------------------O
+	struct HWButton
+	{
+		bool bPressed = false;	// Set once during the frame the event occurs
+		bool bReleased = false;	// Set once during the frame the event occurs
+		bool bHeld = false;		// Set true for all frames between pressed and released events
+	};
+
+
 
 
 	// O------------------------------------------------------------------------------O
@@ -514,6 +617,8 @@ namespace olc
 		v2d_generic  ceil() const { return v2d_generic(std::ceil(x), std::ceil(y)); }
 		v2d_generic  max(const v2d_generic& v) const { return v2d_generic(std::max(x, v.x), std::max(y, v.y)); }
 		v2d_generic  min(const v2d_generic& v) const { return v2d_generic(std::min(x, v.x), std::min(y, v.y)); }
+		v2d_generic  cart() { return { std::cos(y) * x, std::sin(y) * x }; }
+		v2d_generic  polar() { return { mag(), std::atan2(y, x) }; }
 		T dot(const v2d_generic& rhs) const { return this->x * rhs.x + this->y * rhs.y; }
 		T cross(const v2d_generic& rhs) const { return this->x * rhs.y - this->y * rhs.x; }
 		v2d_generic  operator +  (const v2d_generic& rhs) const { return v2d_generic(this->x + rhs.x, this->y + rhs.y); }
@@ -542,39 +647,23 @@ namespace olc
 	// Note: joshinils has some good suggestions here, but they are complicated to implement at this moment, 
 	// however they will appear in a future version of PGE
 	template<class T> inline v2d_generic<T> operator * (const float& lhs, const v2d_generic<T>& rhs)
-	{
-		return v2d_generic<T>((T)(lhs * (float)rhs.x), (T)(lhs * (float)rhs.y));
-	}
+	{ return v2d_generic<T>((T)(lhs * (float)rhs.x), (T)(lhs * (float)rhs.y)); }
 	template<class T> inline v2d_generic<T> operator * (const double& lhs, const v2d_generic<T>& rhs)
-	{
-		return v2d_generic<T>((T)(lhs * (double)rhs.x), (T)(lhs * (double)rhs.y));
-	}
+	{ return v2d_generic<T>((T)(lhs * (double)rhs.x), (T)(lhs * (double)rhs.y)); }
 	template<class T> inline v2d_generic<T> operator * (const int& lhs, const v2d_generic<T>& rhs)
-	{
-		return v2d_generic<T>((T)(lhs * (int)rhs.x), (T)(lhs * (int)rhs.y));
-	}
+	{ return v2d_generic<T>((T)(lhs * (int)rhs.x), (T)(lhs * (int)rhs.y)); }
 	template<class T> inline v2d_generic<T> operator / (const float& lhs, const v2d_generic<T>& rhs)
-	{
-		return v2d_generic<T>((T)(lhs / (float)rhs.x), (T)(lhs / (float)rhs.y));
-	}
+	{ return v2d_generic<T>((T)(lhs / (float)rhs.x), (T)(lhs / (float)rhs.y)); }
 	template<class T> inline v2d_generic<T> operator / (const double& lhs, const v2d_generic<T>& rhs)
-	{
-		return v2d_generic<T>((T)(lhs / (double)rhs.x), (T)(lhs / (double)rhs.y));
-	}
+	{ return v2d_generic<T>((T)(lhs / (double)rhs.x), (T)(lhs / (double)rhs.y)); }
 	template<class T> inline v2d_generic<T> operator / (const int& lhs, const v2d_generic<T>& rhs)
-	{
-		return v2d_generic<T>((T)(lhs / (int)rhs.x), (T)(lhs / (int)rhs.y));
-	}
+	{ return v2d_generic<T>((T)(lhs / (int)rhs.x), (T)(lhs / (int)rhs.y)); }
 
 	// To stop dandistine crying...
 	template<class T, class U> inline bool operator < (const v2d_generic<T>& lhs, const v2d_generic<U>& rhs)
-	{
-		return lhs.y < rhs.y || (lhs.y == rhs.y && lhs.x < rhs.x);
-	}
+	{ return lhs.y < rhs.y || (lhs.y == rhs.y && lhs.x < rhs.x); }
 	template<class T, class U> inline bool operator > (const v2d_generic<T>& lhs, const v2d_generic<U>& rhs)
-	{
-		return lhs.y > rhs.y || (lhs.y == rhs.y && lhs.x > rhs.x);
-	}
+	{ return lhs.y > rhs.y || (lhs.y == rhs.y && lhs.x > rhs.x); }
 
 	typedef v2d_generic<int32_t> vi2d;
 	typedef v2d_generic<uint32_t> vu2d;
@@ -584,16 +673,7 @@ namespace olc
 
 
 
-	// O------------------------------------------------------------------------------O
-	// | olc::HWButton - Represents the state of a hardware button (mouse/key/joy)    |
-	// O------------------------------------------------------------------------------O
-	struct HWButton
-	{
-		bool bPressed = false;	// Set once during the frame the event occurs
-		bool bReleased = false;	// Set once during the frame the event occurs
-		bool bHeld = false;		// Set true for all frames between pressed and released events
-	};
-
+	
 
 
 	// O------------------------------------------------------------------------------O
@@ -648,8 +728,6 @@ namespace olc
 
 	public:
 		olc::rcode LoadFromFile(const std::string& sImageFile, olc::ResourcePack* pack = nullptr);
-		olc::rcode LoadFromPGESprFile(const std::string& sImageFile, olc::ResourcePack* pack = nullptr);
-		olc::rcode SaveToPGESprFile(const std::string& sImageFile);
 
 	public:
 		int32_t width = 0;
@@ -668,7 +746,7 @@ namespace olc
 		Pixel* GetData();
 		olc::Sprite* Duplicate();
 		olc::Sprite* Duplicate(const olc::vi2d& vPos, const olc::vi2d& vSize);
-		Pixel* pColData = nullptr;
+		std::vector<olc::Pixel> pColData;
 		Mode modeSample = Mode::NORMAL;
 
 		static std::unique_ptr<olc::ImageLoader> loader;
@@ -680,7 +758,7 @@ namespace olc
 	class Decal
 	{
 	public:
-		Decal(olc::Sprite* spr, bool filter = false);
+		Decal(olc::Sprite* spr, bool filter = false, bool clamp = true);
 		Decal(const uint32_t nExistingTextureResource, olc::Sprite* spr);
 		virtual ~Decal();
 		void Update();
@@ -708,9 +786,11 @@ namespace olc
 	class Renderable
 	{
 	public:
-		Renderable() = default;
-		olc::rcode Load(const std::string& sFile, ResourcePack* pack = nullptr, bool filter = false);
-		void Create(uint32_t width, uint32_t height, bool filter = false);
+		Renderable() = default;		
+		Renderable(Renderable&& r) : pSprite(std::move(r.pSprite)), pDecal(std::move(r.pDecal)) {}		
+		Renderable(const Renderable&) = delete;
+		olc::rcode Load(const std::string& sFile, ResourcePack* pack = nullptr, bool filter = false, bool clamp = true);
+		void Create(uint32_t width, uint32_t height, bool filter = false, bool clamp = true);
 		olc::Decal* Decal() const;
 		olc::Sprite* Sprite() const;
 
@@ -741,7 +821,7 @@ namespace olc
 		olc::vf2d vScale = { 1, 1 };
 		bool bShow = false;
 		bool bUpdate = false;
-		olc::Sprite* pDrawTarget = nullptr;
+		olc::Renderable pDrawTarget;
 		uint32_t nResID = 0;
 		std::vector<DecalInstance> vecDecalInstance;
 		olc::Pixel tint = olc::WHITE;
@@ -760,7 +840,7 @@ namespace olc
 		virtual void	   SetDecalMode(const olc::DecalMode& mode) = 0;
 		virtual void       DrawLayerQuad(const olc::vf2d& offset, const olc::vf2d& scale, const olc::Pixel tint) = 0;
 		virtual void       DrawDecal(const olc::DecalInstance& decal) = 0;
-		virtual uint32_t   CreateTexture(const uint32_t width, const uint32_t height, const bool filtered = false) = 0;
+		virtual uint32_t   CreateTexture(const uint32_t width, const uint32_t height, const bool filtered = false, const bool clamp = true) = 0;
 		virtual void       UpdateTexture(uint32_t id, olc::Sprite* spr) = 0;
 		virtual void       ReadTexture(uint32_t id, olc::Sprite* spr) = 0;
 		virtual uint32_t   DeleteTexture(const uint32_t id) = 0;
@@ -788,8 +868,7 @@ namespace olc
 
 	class PGEX;
 
-
-
+	// The Static Twins (plus one)
 	static std::unique_ptr<Renderer> renderer;
 	static std::unique_ptr<Platform> platform;
 	static std::map<size_t, uint8_t> mapKeys;
@@ -919,6 +998,14 @@ namespace olc
 		// selected area is (ox,oy) to (ox+w,oy+h)
 		void DrawPartialSprite(int32_t x, int32_t y, Sprite* sprite, int32_t ox, int32_t oy, int32_t w, int32_t h, uint32_t scale = 1, uint8_t flip = olc::Sprite::NONE);
 		void DrawPartialSprite(const olc::vi2d& pos, Sprite* sprite, const olc::vi2d& sourcepos, const olc::vi2d& size, uint32_t scale = 1, uint8_t flip = olc::Sprite::NONE);
+		// Draws a single line of text - traditional monospaced
+		void DrawString(int32_t x, int32_t y, const std::string& sText, Pixel col = olc::WHITE, uint32_t scale = 1);
+		void DrawString(const olc::vi2d& pos, const std::string& sText, Pixel col = olc::WHITE, uint32_t scale = 1);
+		olc::vi2d GetTextSize(const std::string& s);
+		// Draws a single line of text - non-monospaced
+		void DrawStringProp(int32_t x, int32_t y, const std::string& sText, Pixel col = olc::WHITE, uint32_t scale = 1);
+		void DrawStringProp(const olc::vi2d& pos, const std::string& sText, Pixel col = olc::WHITE, uint32_t scale = 1);
+		olc::vi2d GetTextSizeProp(const std::string& s);
 
 		// Decal Quad functions
 		void SetDecalMode(const olc::DecalMode& mode);
@@ -949,26 +1036,22 @@ namespace olc
 		void GradientFillRectDecal(const olc::vf2d& pos, const olc::vf2d& size, const olc::Pixel colTL, const olc::Pixel colBL, const olc::Pixel colBR, const olc::Pixel colTR);
 		// Draws an arbitrary convex textured polygon using GPU
 		void DrawPolygonDecal(olc::Decal* decal, const std::vector<olc::vf2d>& pos, const std::vector<olc::vf2d>& uv, const olc::Pixel tint = olc::WHITE);
-		// Draws a single line of text - traditional monospaced
-		void DrawString(int32_t x, int32_t y, const std::string& sText, Pixel col = olc::WHITE, uint32_t scale = 1);
-		void DrawString(const olc::vi2d& pos, const std::string& sText, Pixel col = olc::WHITE, uint32_t scale = 1);
-		olc::vi2d GetTextSize(const std::string& s);
-
-		// Draws a single line of text - non-monospaced
-		void DrawStringProp(int32_t x, int32_t y, const std::string& sText, Pixel col = olc::WHITE, uint32_t scale = 1);
-		void DrawStringProp(const olc::vi2d& pos, const std::string& sText, Pixel col = olc::WHITE, uint32_t scale = 1);
-		olc::vi2d GetTextSizeProp(const std::string& s);
-
+		// Draws a line in Decal Space
+		void DrawLineDecal(const olc::vf2d& pos1, const olc::vf2d& pos2, Pixel p = olc::WHITE);
+		void DrawRotatedStringDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center = { 0.0f, 0.0f }, const olc::Pixel col = olc::WHITE, const olc::vf2d& scale = { 1.0f, 1.0f });
+		void DrawRotatedStringPropDecal(const olc::vf2d& pos, const std::string& sText, const float fAngle, const olc::vf2d& center = { 0.0f, 0.0f }, const olc::Pixel col = olc::WHITE, const olc::vf2d& scale = { 1.0f, 1.0f });
 		// Clears entire draw target to Pixel
 		void Clear(Pixel p);
 		// Clears the rendering back buffer
 		void ClearBuffer(Pixel p, bool bDepth = true);
+		// Returns the font image
+		olc::Sprite* GetFontSprite();
 
 	public: // Branding
 		std::string sAppName;
 
 	private: // Inner mysterious workings
-		Sprite* pDrawTarget = nullptr;
+		olc::Sprite*     pDrawTarget = nullptr;
 		Pixel::Mode	nPixelMode = Pixel::NORMAL;
 		float		fBlendFactor = 1.0f;
 		olc::vi2d	vScreenSize = { 256, 240 };
@@ -991,9 +1074,8 @@ namespace olc
 		float		fFrameTimer = 1.0f;
 		float		fLastElapsed = 0.0f;
 		int			nFrameCount = 0;
-		Sprite* fontSprite = nullptr;
-		Decal* fontDecal = nullptr;
-		Sprite* pDefaultDrawTarget = nullptr;
+		Sprite*     fontSprite = nullptr;
+		Decal*      fontDecal = nullptr;
 		std::vector<LayerDesc> vLayers;
 		uint8_t		nTargetLayer = 0;
 		uint32_t	nLastFPS = 0;
@@ -1016,9 +1098,6 @@ namespace olc
 		// The main engine thread
 		void		EngineThread();
 
-		// At the very end of this file, chooses which
-		// components to compile
-		void        olc_ConfigureSystem();
 
 		// If anything sets this flag to false, the engine
 		// "should" shut down gracefully
@@ -1038,6 +1117,12 @@ namespace olc
 		void olc_UpdateMouseFocus(bool state);
 		void olc_UpdateKeyFocus(bool state);
 		void olc_Terminate();
+		void olc_Reanimate();
+		bool olc_IsRunning();
+
+		// At the very end of this file, chooses which
+		// components to compile
+		virtual void olc_ConfigureSystem();
 
 		// NOTE: Items Here are to be deprecated, I have left them in for now
 		// in case you are using them, but they will be removed.
@@ -1049,8 +1134,6 @@ namespace olc
 
 	private:
 		std::vector<olc::PGEX*> vExtensions;
-
-
 	};
 
 
@@ -1075,28 +1158,7 @@ namespace olc
 	};
 }
 
+#pragma endregion
+
 #endif // OLC_PGE_DEF
-
-
-
-
-/*
-	Object Oriented Mode
-	~~~~~~~~~~~~~~~~~~~~
-
-	If the olcPixelGameEngine.h is called from several sources it can cause
-	multiple definitions of objects. To prevent this, ONLY ONE of the pathways
-	to including this file must have OLC_PGE_APPLICATION defined before it. This prevents
-	the definitions being duplicated.
-
-	If all else fails, create a file called "olcPixelGameEngine.cpp" with the following
-	two lines. Then you can just #include "olcPixelGameEngine.h" as normal without worrying
-	about defining things. Dont forget to include that cpp file as part of your build!
-
-	#define OLC_PGE_APPLICATION
-	#include "olcPixelGameEngine.h"
-
-*/
-
-
 
