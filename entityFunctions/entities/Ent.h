@@ -16,7 +16,7 @@ protected:
 
     std::string sEntName;
     olc::vi2d decalSourcePos;
-	//olc::vi2d entPositionXY;
+
 	int entZPosition;
 	AKI::I3d position;
 

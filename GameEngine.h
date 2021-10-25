@@ -6,22 +6,39 @@
 #include "EngineUtilSaveLoad.h"
 #include "entityFunctions/entitieshandler.h"
 #include "objectFunctions/objecthandler.h"
+#include "Popup.h"
 
 
-//
+// O----------------------------------------------------O
+// | Other Methods should be able to pause game			|
+// | without having to pass a pointer to the game       |
+// O----------------------------------------------------O
+
+
+int CURRENT_GAMEMODE;
+enum eGameMode {
+	mapview,
+	menu,
+	title,
+	worldCreator,
+	mapinspection,
+	confirm,
+	pause,
+};
+void GAMEMODE_PAUSE() {CURRENT_GAMEMODE = pause;}
+void GAMEMODE_RESUME() {CURRENT_GAMEMODE = pause;}
+
+
+// O----------------------------------------------------O
+// | Game Engine								        |
+// O----------------------------------------------------O
+
 
 //game engine is abstract is the explination I got for why OnUserCreate() must happen
 class GameEngine : public olc::PixelGameEngine
 {
 private:
-	enum eGameMode {
-        mapview,
-		menu,
-		title,
-        worldCreator,
-        mapinspection,
-        confirm,
-	};
+
 
 
 //Classes
@@ -31,6 +48,7 @@ private:
     std::unique_ptr<EntitiesHandler> EntHandler;
 	std::unique_ptr<InspectionCursor> insp;
 	std::shared_ptr<ObjectHandler> ObjHandler;
+	std::shared_ptr<AKI::Popup> popup;
 
 
 	int nLayerBackground = 0;
@@ -63,12 +81,14 @@ private:
 	void DrawScreenBoarder();
 	void DrawChunksToScreen();
 	void UserInput();
+	void GameStateChecks();
 
 public:
 	
-	int CURRENT_GAMEMODE;
+
 	GameEngine();
     virtual bool OnUserCreate() override;
 	virtual bool OnUserUpdate(float fElapsedTime) override;
+
 
 };
