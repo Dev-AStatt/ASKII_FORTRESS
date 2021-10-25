@@ -17,7 +17,7 @@ int main()
 	//There are two variables that are needed at start. The texture pack size PACK_SIZE
 	//and the scale of the game. This scales how may pixles match each pixle of the pack
 	int PACK_SIZE = 16;
-    int PACK_SCALE = 1;
+	int PACK_SCALE = 2;
 
 	//This constructs how big the window will be. 16 is the chunk size; this is fixed through the
 	//code and should not be changed.

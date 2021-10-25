@@ -1,4 +1,4 @@
-#pragma region license_and_help
+//#pragma region license_and_help
 /*
 	olcPixelGameEngine.h
 
@@ -196,9 +196,9 @@
 	~~~~~~
 	David Barr, aka javidx9, \A9OneLoneCoder 2018, 2019, 2020, 2021
 */
-#pragma endregion
+//#pragma endregion
 
-#pragma region version_history
+//#pragma region version_history
 /*
 	2.01: Made renderer and platform static for multifile projects
 	2.02: Added Decal destructor, optimised Pixel constructor
@@ -283,9 +283,9 @@
     !! Apple Platforms will not see these updates immediately - Sorry, I dont have a mac to test... !!
 	!!   Volunteers willing to help appreciated, though PRs are manually integrated with credit     !!
 */
-#pragma endregion
+//#pragma endregion
 
-#pragma region hello_world_example
+//#pragma region hello_world_example
 // O------------------------------------------------------------------------------O
 // | Example "Hello World" Program (main.cpp)                                     |
 // O------------------------------------------------------------------------------O
@@ -330,12 +330,12 @@ int main()
 }
 
 */
-#pragma endregion
+//#pragma endregion
 
 #ifndef OLC_PGE_DEF
 #define OLC_PGE_DEF
 
-#pragma region std_includes
+//#pragma region std_includes
 // O------------------------------------------------------------------------------O
 // | STANDARD INCLUDES                                                            |
 // O------------------------------------------------------------------------------O
@@ -356,14 +356,14 @@ int main()
 #include <algorithm>
 #include <array>
 #include <cstring>
-#pragma endregion
+//#pragma endregion
 
 #define PGE_VER 216
 
 // O------------------------------------------------------------------------------O
 // | COMPILER CONFIGURATION ODDITIES                                              |
 // O------------------------------------------------------------------------------O
-#pragma region compiler_config
+//#pragma region compiler_config
 #define USE_EXPERIMENTAL_FS
 #if defined(_WIN32)
 	#if _MSC_VER >= 1920 && _MSVC_LANG >= 201703L
@@ -494,12 +494,12 @@ int main()
 	#endif
 #endif
 #endif
-#pragma endregion
+//#pragma endregion
 
 // O------------------------------------------------------------------------------O
 // | olcPixelGameEngine INTERFACE DECLARATION                                     |
 // O------------------------------------------------------------------------------O
-#pragma region pge_declaration
+//#pragma region pge_declaration
 namespace olc
 {
 	class PixelGameEngine;
@@ -1158,7 +1158,7 @@ namespace olc
 	};
 }
 
-#pragma endregion
+//#pragma endregion
 
 #endif // OLC_PGE_DEF
 

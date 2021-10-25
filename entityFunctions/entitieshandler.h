@@ -5,6 +5,7 @@
 #include "entities/EntHuman.h"
 #include "mapFunctions/Maps.h"
 #include "objectFunctions/objecthandler.h"
+#include "mapFunctions/MapUtil_I3d.h"
 
 class EntitiesHandler
 {
@@ -16,7 +17,7 @@ private:
     std::vector<std::unique_ptr<Ent>> aliveEnts;
 
     //functions
-    bool olcWithinBounds(olc::vi2d checkpos, olc::vi2d& mapTL, olc::vi2d& mapBR, olc::vi2d& viewOffset);
+	bool olcWithinBounds(AKI::I3d checkpos, olc::vi2d& mapTL, olc::vi2d& mapBR, olc::vi2d& viewOffset);
 
 public:
 	EntitiesHandler(olc::vi2d PS, Maps* m, std::shared_ptr<ObjectHandler> obj, olc::PixelGameEngine* p);

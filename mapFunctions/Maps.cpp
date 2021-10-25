@@ -115,23 +115,23 @@ void Maps::flipTileOnMap(olc::vi2d& insplocXY) {
 }
 
 
-std::vector<int> Maps::viewOfWorld(olc::vi2d& posXY, int posZ,int viewDistance) {
+std::vector<int> Maps::viewOfWorld(AKI::I3d pos,int viewDistance) {
     std::vector<int> vSight;
     //std::vector<olc::vi2d> chunksInView;
     olc::vi2d chunkIDLoc;
     int chunkIndex;
 
-    int yStart = posXY.y - viewDistance;
-    int yEnd = posXY.y + viewDistance;
-    int XStart = posXY.x - viewDistance;
-    int XEnd = posXY.x + viewDistance;
+	int yStart = pos.y - viewDistance;
+	int yEnd = pos.y + viewDistance;
+	int XStart = pos.x - viewDistance;
+	int XEnd = pos.x + viewDistance;
 
     for(int y = yStart; y <= yEnd; ++y) {
         for(int x = XStart; x <= XEnd; ++x) {
             chunkIDLoc = worldPosToChunkXY({x,y});
             chunkIndex = returnVIndexOfChunk(chunkIDLoc);
             if(chunkIndex >= 0) {
-				int temp = vptrActiveChunks[chunkIndex]->SlabIDAtLocation(posZ,y,x);
+				int temp = vptrActiveChunks[chunkIndex]->SlabIDAtLocation(pos.z,y,x);
                 vSight.emplace_back(temp);
             }
 

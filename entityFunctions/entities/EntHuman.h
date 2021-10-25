@@ -9,10 +9,10 @@ public:
     EntHuman() {}
 	EntHuman(olc::vi2d& PS, olc::PixelGameEngine* p, olc::vi2d& posXY, int posZ, std::string n) {
 		constructEntBasics(PS,p);
-
 		decalSourcePos		= { 0,4 };
-		entPositionXY		= posXY;
-		entStepZPosition	= posZ;
+		//entPositionXY		= posXY;
+		//entZPosition		= posZ;
+		position			= {posXY.x, posXY.y, posZ};
 		viewDistance		= 3;
 		thirst				= 100;
 		thirstBurnRate		= 2;
@@ -20,7 +20,8 @@ public:
 		hungerBurnRate		= 1;
 		tint				= olc::WHITE;
 		sEntName			= n;
-		UpdatePosInView();
+		UpdateCoordinatesInView();
+
     }
 
 	virtual bool updateSelf(int tick) override {
@@ -30,7 +31,7 @@ public:
 				//run pathfinding algorithum and return if sucessful
 				bool onAPath = pathfinding();
 				if(!onAPath) {
-					moveSelf(entRand(-1,1),entRand(-1,1));
+					moveSelf(AKIRand(-1,1),AKIRand(-1,1));
 				}
 			}
 			thirst = thirst - thirstBurnRate;
@@ -49,18 +50,18 @@ public:
 		vPriorities.clear();
 		if(thirst < hunger) {
 			if(thirst < 70) {
-				vPriorities.emplace_back(Memory::water);
+				vPriorities.emplace_back(Memories::water);
 			}
 			if(hunger < 70) {
-				vPriorities.emplace_back(Memory::food);
+				vPriorities.emplace_back(Memories::food);
 			}
 		}
 		else {
 			if(hunger < 70) {
-				vPriorities.emplace_back(Memory::food);
+				vPriorities.emplace_back(Memories::food);
 			}
 			if(thirst < 70) {
-				vPriorities.emplace_back(Memory::water);
+				vPriorities.emplace_back(Memories::water);
 			}
 		}
 	}

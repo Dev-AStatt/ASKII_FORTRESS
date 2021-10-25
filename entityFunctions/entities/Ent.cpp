@@ -4,8 +4,9 @@ Ent::Ent(olc::vi2d& PS, olc::PixelGameEngine* p, std::string n) {
 	constructEntBasics(PS,p);
 	//These lines should be overwritten by inheriting classes
 	decalSourcePos		= { 15,3 };
-	entPositionXY		= {1,1};
-	entStepZPosition	= 0;
+	//entPositionXY		= {1,1};
+	entZPosition		= 0;
+	position			= {1,1,0};
 	viewDistance		= 3;
 	thirst				= 100;
 	tint				= olc::WHITE;
@@ -15,62 +16,25 @@ Ent::Ent(olc::vi2d& PS, olc::PixelGameEngine* p, std::string n) {
 void Ent::constructEntBasics(olc::vi2d& PS, olc::PixelGameEngine* p) {
 	PACK_SIZE = PS;
 	pge = p;
-	entHeadZPosition = entStepZPosition + 1;
 	constructDecal();	//construct decal will add decals to Ents
 	cTiles = std::make_unique<TileID::cTileID>(PACK_SIZE,pge);
-	Destination = std::make_unique<Memory::EntDest>();
+	Destination = std::make_unique<Memories::EntDest>();
 
 	alive = true;
 }
 
-//used for update Position in view to check if number is pos
-int notNegativeXY(int x) { if(x >=0) { return x; } else return 0; }
-
-void Ent::UpdatePosInView() {
-	positionsXYInView.clear();
-	for(int y = notNegativeXY(entPositionXY.y - viewDistance); y < entPositionXY.y + viewDistance; ++y) {
-		for(int x = notNegativeXY(entPositionXY.x - viewDistance); x < entPositionXY.x + viewDistance; ++x) {
-			positionsXYInView.emplace_back(olc::vi2d(x,y));
-			//fill objects in view vector with -1 {empty/no item}
-
-		}
-	}
-}
+// O----------------------------------------------------O
+// | Drawing of Entity Code						        |
+// O----------------------------------------------------O
 
 void Ent::constructDecal() {
 		sprTile = std::make_unique<olc::Sprite>("art/Phoebus_16x16_Next.png");
 		decTile = std::make_unique<olc::Decal>(sprTile.get());
 	}
 
-
-int Ent::entRand(int from, int to) {
-	std::random_device rd; // obtain a random number from hardware
-	std::mt19937 gen(rd()); // seed the generator
-	std::uniform_int_distribution<> distr(from, to); // define the range
-	return distr(gen);
-}
-
-void Ent::moveSelf(int x, int y) {
-	//check if tile going to walk on is "walkable"
-	if(watchYourStep(x,y)) {
-		entPositionXY = entPositionXY + olc::vi2d(x,y);
-		UpdatePosInView();
-	}
-}
-
-bool Ent::watchYourStep(int x, int y) {
-	//this function for index is wrong
-	int index = (x+viewDistance) + ((y+viewDistance) * (viewDistance*2 + 1));
-	auto& t = cTiles->vptrTiles[tilesInView[index]];
-	if(t->isWalkable()) {
-		return true;
-	}
-	return false;
-}
-
 void Ent::DrawSelf(int activeZLayer, olc::vi2d& viewOffset) {
-	if(activeZLayer == entStepZPosition) {
-		olc::vi2d entFinalPos = {entPositionXY.x + viewOffset.x,entPositionXY.y + viewOffset.y };
+	if(activeZLayer == position.z) {
+		olc::vi2d entFinalPos = {position.x + viewOffset.x,position.y + viewOffset.y };
 		//the ent pos gets a + 1x1 to adjust for the header bar to match up
 		//with the chunkxyz's so 0x0 is the same 0x0
 		pge->DrawPartialDecal((entFinalPos + olc::vi2d(1,1)) * PACK_SIZE,	//position to draw to
@@ -82,41 +46,134 @@ void Ent::DrawSelf(int activeZLayer, olc::vi2d& viewOffset) {
 	}
 }
 
+// O----------------------------------------------------O
+// | Utilities of Entity Code					        |
+// O----------------------------------------------------O
+
+int Ent::AKIRand(int from, int to) {
+	std::random_device rd; // obtain a random number from hardware
+	std::mt19937 gen(rd()); // seed the generator
+	std::uniform_int_distribution<> distr(from, to); // define the range
+	return distr(gen);
+}
+
+//used for update Position in view to check if number is pos
+int notNegativeXY(int x) { if(x >=0) { return x; } else return 0; }
+
+void Ent::UpdateCoordinatesInView() {
+	positionsXYInView.clear();
+	I3dCoordinatesInView.clear();
+	//loop through coordinates in view in the XY plane
+	for(int y = notNegativeXY(position.y - viewDistance); y <= position.y + viewDistance; ++y) {
+		for(int x = notNegativeXY(position.x - viewDistance); x <= position.x + viewDistance; ++x) {
+			positionsXYInView.emplace_back(olc::vi2d(x,y));
+			I3dCoordinatesInView.emplace_back(AKI::I3d(x,y,position.z));
+
+		}
+	}
+	//update the coordinates that are interactable
+	updateInteractableCoords();
+}
+
+void Ent::updateInteractableCoords() {
+	I3dInteractCoords.clear();
+	//add directly above entity
+	I3dInteractCoords.emplace_back(position.I3d_ZOffset(1));
+	//add 1 space around and the space itself
+	for(int y = notNegativeXY(position.y - 1); y <= position.y + 1; ++y) {
+		for(int x = notNegativeXY(position.x - 1); x <= position.x + 1; ++x) {
+			I3dInteractCoords.emplace_back(AKI::I3d(x,y,position.z));
+		}
+	}
+	//add directly below Entity
+	I3dInteractCoords.emplace_back(position.I3d_ZOffset(-1));
+}
+
+
+
+// O----------------------------------------------------O
+// | End of Utilities Code								|
+// O----------------------------------------------------O
+
+// O----------------------------------------------------O
+// | Movement of Entity Code					        |
+// O----------------------------------------------------O
+
+//takes in the unit vector directions wanting to move. Ex: {-1, 0, 0}
+void Ent::moveSelf(int x, int y ,int z) {
+	//check if tile going to walk on is "walkable"
+	if(watchYourStep({x,y,z})) {
+		position += AKI::I3d(x,y,z);
+		UpdateCoordinatesInView();
+	}
+}
+
+
+//takes in the unit vector directions wanting to move. Ex: {-1, 0, 0}
+bool Ent::watchYourStep(AKI::I3d nPos) {
+	//how many tiles are in a x row for our view distance
+	int numInX = (viewDistance * 2) + 1;
+	//find the center tile that contains our position
+	int centerIndex = (numInX * 3) + viewDistance;
+	//add the change nPos to our center index
+	int index = centerIndex + (nPos.x) + (nPos.y * numInX);
+	auto& t = cTiles->vptrTiles[tilesInView[index]];
+	if(t->isWalkable()) {
+		return true;
+	}
+	return false;
+}
+
+// O----------------------------------------------------O
+// | End Movement of Entity Code				        |
+// O----------------------------------------------------O
+
+
+// O----------------------------------------------------O
+// | Start of Pathfinding Code					        |
+// O----------------------------------------------------O
+
+
 bool Ent::pathfinding() {
 	if((int)vPriorities.size() <= 0) { return false;}
 
 	//look if already has a destination with the same prioirity
 	if(Destination->getPriority() == vPriorities[0]) {
-		if(Destination->arivedAtDest(entPositionXY,entHeadZPosition)) {
+		if(Destination->arivedAtDest(position)) {
 			std::cout << sEntName << " Has Arived At Destination" << '\n';
 		} else {
 			//std::cout << sEntName << " Is Following A Destination" << '\n';
-			moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
+			moveSelfI3d(Destination->directionToDest(position));
 		}
 		return true;
 	}
-	if(vPriorities[0] == Memory::water) {
+	if(vPriorities[0] == Memories::water) {
 		//search for tile returns if tile is even in view
 		if(!searchForTile(TileID::Water)) { return false;}
+
 		std::cout << sEntName << " Has Found Water" << '\n';
+
 		//set destination to new tile found
-		Destination->setNewDest(locateTile(TileID::Water),entStepZPosition,Memory::water,TileID::Water);
+		olc::vi2d tmp = locateTile(TileID::Water);
+
+		Destination->setNewDest({tmp.x,tmp.y,position.z},Memories::water,TileID::Water);
 		//move tward tile
-		moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));
+		moveSelfI3d(Destination->directionToDest(position));
 		return true;
 	}
-	if(vPriorities[0] == Memory::food) {
+	if(vPriorities[0] == Memories::food) {
 		//check to see if there is anything edable in view
 		if(!searchForFood()) { return false;}
 		std::cout << sEntName << " Has Found Food" << '\n';
 		//get location of food
 		olc::vi2d tmp = locationOfFood();
-		Destination->setNewDest(tmp,entStepZPosition,Memory::food,foodIDAt(tmp));	//set destindation of food
-		moveSelfvi2d(Destination->directionToDest(entPositionXY,entStepZPosition));	//Go to food
+		Destination->setNewDest({tmp.x,tmp.y,position.z},Memories::food,foodIDAt(tmp));	//set destindation of food
+		moveSelfI3d(Destination->directionToDest(position));					//Go To Food
 		return true;
 	}
 	return false;
 }
+
 
 int Ent::foodIDAt(olc::vi2d XY) {
 	for(int i = 0; i < (int)objectPtrsInView.size(); ++i) {
@@ -183,18 +240,32 @@ olc::vi2d Ent::locateTile(TileID::TileIDList tileLookingFor) {
 }
 
 bool Ent::closerToEnt(olc::vi2d &oldXY, olc::vi2d &newXY) {
-	olc::vi2d d = entPositionXY - oldXY;
+	olc::vi2d d = olc::vi2d(position.x,position.y) - oldXY;
 	//get the distance to the old match
 	int oldDist = std::abs(d.x) + std::abs(d.y);
-	d = entPositionXY - newXY;
+	d = olc::vi2d(position.x,position.y) - newXY;
 	int newDist = std::abs(d.x) + std::abs(d.y);
 
 	if(newDist < oldDist) { return true; }
 	return false;
 }
 
-//void Ent::giftObjectsInView(std::vector<int> vGivenItems) {
-//	if((int)vGivenItems.size() == (viewDistance*12 + 1)) {
-//		objectsInView = vGivenItems;
-//	}
-//}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

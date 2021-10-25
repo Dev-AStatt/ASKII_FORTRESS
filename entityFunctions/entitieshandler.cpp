@@ -20,8 +20,9 @@ void EntitiesHandler::drawEntities(int activeZLayer, olc::vi2d &mapTL, olc::vi2d
     }
 }
 
-bool EntitiesHandler::olcWithinBounds(olc::vi2d checkpos, olc::vi2d &mapTL, olc::vi2d &mapBR, olc::vi2d& viewOffset) {
-    checkpos = checkpos + viewOffset;
+bool EntitiesHandler::olcWithinBounds(AKI::I3d checkpos, olc::vi2d &mapTL, olc::vi2d &mapBR, olc::vi2d& viewOffset) {
+	checkpos.x = checkpos.x + viewOffset.x;
+	checkpos.y = checkpos.y + viewOffset.x;
 //    mapBR = mapBR + viewOffset;
     if(mapTL.x <= checkpos.x && checkpos.x <= mapBR.x) {
         if(mapTL.y <= checkpos.y && checkpos.y <= mapBR.y) {
@@ -40,7 +41,7 @@ void EntitiesHandler::newGameEntities() {
 void EntitiesHandler::updateEntities(int tick) {
 	for(int i = 0; i < (int)aliveEnts.size(); ++i) {
 		//give view of map
-		aliveEnts[i]->giftOfSight(map->viewOfWorld(aliveEnts[i]->returnPos(),aliveEnts[i]->returnStepZ(),aliveEnts[i]->returnViewDistance()));
+		aliveEnts[i]->giftOfSight(map->viewOfWorld(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
 		//give view of Objects
 		passItemPtrToEnt(i);
 

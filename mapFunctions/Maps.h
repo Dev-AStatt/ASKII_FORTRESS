@@ -3,7 +3,8 @@
 #include "mapFunctions/cChunk.h"
 #include "mapFunctions/MapUtilChunkGen.h"
 #include "TileFunctions/Tiles.h"
-//#include "memory"
+#include "MapUtil_I3d.h"
+
 
 
 //
@@ -63,6 +64,6 @@ public:
     void newMap(int atStartWorldSize);
     void continueMap(int chunkNum,int worldSize, std::vector<uint64_t> newChunk);
 
-    std::vector<int> viewOfWorld(olc::vi2d& posXY, int posZ,int viewDistance);
+	std::vector<int> viewOfWorld(AKI::I3d pos,int viewDistance);
 };
 
