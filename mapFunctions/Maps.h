@@ -55,7 +55,7 @@ public:
 	Maps() {};
 	void changeZLayer(int i);
     //   Size of Texture pack,       Top left x,y of map,    Bottom Right of map,      pixel game engine
-    Maps(olc::vi2d& packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p);
+	Maps(olc::vi2d packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p);
 	void DrawActiveChunks();
 	void changeMapViewOffset(olc::vi2d i);
 	void resetMapViewOffset() { moveViewOffset = { 0,0 }; };

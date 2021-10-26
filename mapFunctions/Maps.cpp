@@ -1,7 +1,7 @@
 #include "Maps.h"
 
 
-Maps::Maps(olc::vi2d& packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p) {
+Maps::Maps(olc::vi2d packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p) {
     PACK_SIZE = packSizeAtStart;
 	pge = p;
 	ChunkGen = std::make_shared<MapUtilChunkGen>();

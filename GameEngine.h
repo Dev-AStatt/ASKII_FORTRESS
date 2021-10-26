@@ -31,6 +31,7 @@ private:
 	std::unique_ptr<InspectionCursor> insp;
 	std::shared_ptr<ObjectHandler> ObjHandler;
 	std::shared_ptr<AKI::Popup> popup;
+	std::unique_ptr<AKI::GameConfig> gameConfig;
 
 
 	int nLayerBackground = 0;
@@ -43,8 +44,7 @@ private:
 	bool flash;
 	bool focusMenu = false;
     bool tickUpdate = false;
-    int PSIZEint;
-    olc::vi2d PACK_SIZE;
+
 	olc::vi2d mapOutline;
 //playable map size
     int chunkSize = 16;

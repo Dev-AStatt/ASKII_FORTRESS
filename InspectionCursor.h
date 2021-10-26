@@ -21,7 +21,7 @@ private:
 
 public:
     InspectionCursor() {};
-    InspectionCursor(olc::vi2d& atStartPS, olc::vi2d& atStartTL,olc::vi2d& atStartBR, olc::PixelGameEngine* p) {
+	InspectionCursor(olc::vi2d atStartPS, olc::vi2d& atStartTL,olc::vi2d& atStartBR, olc::PixelGameEngine* p) {
         PACK_SIZE = atStartPS;
         mapTL = atStartTL;
         mapBR = atStartBR;

@@ -1,20 +1,22 @@
 #pragma once
-//#include "libraries/olcPixelGameEngine.h"
+
 #include "GameConfig.h"
 namespace AKI {
 
 class Popup {
 private:
-	bool		messageUp;
+	bool		messageUp = false;
 	std::string	message;
+	olc::PixelGameEngine* pge;
 
-	//std::unique_ptr<GameConfig> decal;
+	std::shared_ptr<GameConfig> gameConfig;
 
-	//void setup() { decal = std::make_unique<GameConfig>(); }
+	void setup() { gameConfig = std::make_unique<GameConfig>(pge); }
 
 public:
 
 		 Popup()		{}
+		 Popup(olc::PixelGameEngine* p) {pge = p; setup();}
 	bool getMessageUp() {return messageUp;}
 
 	void PopupMessage(std::string m) {
@@ -23,6 +25,13 @@ public:
 	}
 
 	void drawPopup() {
+		int textlines = 1;
+		int t = (gameConfig->getScreenTileH()/2) - textlines;
+		int l = (gameConfig->getScreenTileW()/3);
+		olc::vi2d popupTL = {t,l};
+		olc::vi2d popupBR = {(gameConfig->getScreenTileH()/2) + textlines,(gameConfig->getScreenTileW()/3)*2};
+		pge->FillRect(popupTL.x,popupTL.y,popupBR.x,popupBR.y,olc::BLUE);
+
 
 	}
 

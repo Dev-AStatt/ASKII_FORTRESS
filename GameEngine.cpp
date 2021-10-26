@@ -13,23 +13,23 @@ GameEngine::GameEngine() {
 bool GameEngine::OnUserCreate()
 {
 	CURRENT_GAMEMODE = title;
-	// Set the map outline point from screen width and hight
-	mapOutline.x		=	(ScreenWidth() / 4) - 1;
-	mapOutline.y		=	(ScreenHeight() - (PSIZEint * 32));
-	mapAreaTopLeft		=	{1,1};
-	mapAreaBottomRight	=	{chunkSize * 3, chunkSize * 2};
-	//size of the texture pack in olc::vi2d
-	PSIZEint	= 16;
-	PACK_SIZE = {16,16};
+	//gameConfig sets the generic constants that the game runs on
+	gameConfig = std::make_unique<AKI::GameConfig>(this);
+
+	//This should be cleaned up but is so the game engine can still run
+	mapOutline = gameConfig->getMapOutline();
+	mapAreaBottomRight = gameConfig->getMapBR();
+	mapAreaTopLeft		= gameConfig->getMapTL();
+
 	//Pointer Class
-	chunkMap	=	Maps(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight, this);
+	chunkMap	=	Maps(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight, this);
 	//Unique Pointers
-	popup		=	std::make_shared<AKI::Popup>		();
-	TextDisplay =	std::make_unique<InfoDisplay>		(PSIZEint,mapAreaBottomRight, this);
-	insp		=	std::make_unique<InspectionCursor>	(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight,this);
+	popup		=	std::make_shared<AKI::Popup>		(this);
+	TextDisplay =	std::make_unique<InfoDisplay>		(gameConfig->getPackSizeInt(),mapAreaBottomRight, this);
+	insp		=	std::make_unique<InspectionCursor>	(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight,this);
 	utilSL		=	std::make_unique<EngineUtilSaveLoad>();
-	ObjHandler	=	std::make_shared<ObjectHandler>		(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight,this);
-	EntHandler	=	std::make_unique<EntitiesHandler>	(PACK_SIZE,&chunkMap,ObjHandler,this);
+	ObjHandler	=	std::make_shared<ObjectHandler>		(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight,this);
+	EntHandler	=	std::make_unique<EntitiesHandler>	(gameConfig->getPackSize(),&chunkMap,ObjHandler,this);
 
 
 	return true;
@@ -168,6 +168,7 @@ void GameEngine::CommonRuntimeUpdates() {
     EntHandler->drawEntities(chunkMap.activeZLayer,mapAreaTopLeft,mapAreaBottomRight,chunkMap.moveViewOffset);
 	ObjHandler->drawObjects(chunkMap.activeZLayer,chunkMap.moveViewOffset);
     UserInput();
+	GameStateChecks();
 }
 
 void GameEngine::GameStateChecks() {
@@ -191,7 +192,7 @@ void GameEngine::DrawChunksToScreen() {
 void GameEngine::DrawMapOutline() {
 	DrawScreenBoarder();
 	//This draws the map sepperator from commands
-    FillRect(olc::vi2d(PACK_SIZE.x * 3 * 16 + PSIZEint, 0), olc::vi2d(PSIZEint, ScreenHeight()), olc::DARK_GREY);
+	FillRect(olc::vi2d(gameConfig->getPackSizeInt() * 3 * 16 + gameConfig->getPackSizeInt(), 0), olc::vi2d(gameConfig->getPackSizeInt(), ScreenHeight()), olc::DARK_GREY);
 }
 
 //
@@ -201,22 +202,25 @@ void GameEngine::DrawMapOutline() {
 void GameEngine::DrawScreenBoarder() {
 	Clear(olc::BLANK);
 	//Draws top bar
-    FillRect(olc::vi2d(0, 0), olc::vi2d(ScreenWidth(), PSIZEint), olc::DARK_GREY);
+	FillRect(olc::vi2d(0, 0), olc::vi2d(ScreenWidth(), gameConfig->getPackSizeInt()), olc::DARK_GREY);
 	//Draws Bottom Bar
-    FillRect(olc::vi2d(0, ScreenHeight() - PSIZEint), olc::vi2d(ScreenWidth(), ScreenHeight()), olc::DARK_GREY);
+	FillRect(olc::vi2d(0, ScreenHeight() - gameConfig->getPackSizeInt()), olc::vi2d(ScreenWidth(), ScreenHeight()), olc::DARK_GREY);
 	//Draws Right Bar
-    FillRect(olc::vi2d(0, 0), olc::vi2d(PSIZEint, ScreenHeight()), olc::DARK_GREY);
+	FillRect(olc::vi2d(0, 0), olc::vi2d(gameConfig->getPackSizeInt(), ScreenHeight()), olc::DARK_GREY);
 	//Draws Left Bar
-    FillRect(olc::vi2d(ScreenWidth() - PSIZEint, 0), olc::vi2d(ScreenWidth(), ScreenHeight()), olc::DARK_GREY);
+	FillRect(olc::vi2d(ScreenWidth() - gameConfig->getPackSizeInt(), 0), olc::vi2d(ScreenWidth(), ScreenHeight()), olc::DARK_GREY);
 }
 
 void GameEngine::UserInput(){
     //Get if shift key is held for modifyers
     bool shift = GetKey(olc::Key::SHIFT).bHeld;
 
+
+
     //Toggle Debug info
     if(!focusMenu && GetKey(olc::Key::D).bReleased) {
         bDebugInfo = !bDebugInfo;
+		popup->PopupMessage("dick");
     }
 
 
