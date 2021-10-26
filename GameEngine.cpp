@@ -20,7 +20,7 @@ bool GameEngine::OnUserCreate()
 	mapAreaBottomRight	=	{chunkSize * 3, chunkSize * 2};
 	//size of the texture pack in olc::vi2d
 	PSIZEint	= 16;
-	PACK_SIZE	= { PSIZEint,PSIZEint };
+	PACK_SIZE = {16,16};
 	//Pointer Class
 	chunkMap	=	Maps(PACK_SIZE,mapAreaTopLeft,mapAreaBottomRight, this);
 	//Unique Pointers

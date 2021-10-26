@@ -1,6 +1,6 @@
 #pragma once
-#include "GameEngine.h"
-#include "Tilesets.h"
+//#include "libraries/olcPixelGameEngine.h"
+#include "GameConfig.h"
 namespace AKI {
 
 class Popup {
@@ -8,19 +8,18 @@ private:
 	bool		messageUp;
 	std::string	message;
 
-	std::unique_ptr<Tileset> decal;
+	//std::unique_ptr<GameConfig> decal;
 
-	void setup() { decal = std::make_unique<Tileset>(); }
+	//void setup() { decal = std::make_unique<GameConfig>(); }
 
 public:
 
-		 Popup()		{setup();}
+		 Popup()		{}
 	bool getMessageUp() {return messageUp;}
 
-	void PopupMessage(std::string message) {
+	void PopupMessage(std::string m) {
 		messageUp = true;
-		//this flags the game state as paused
-		GAMEMODE_PAUSE();
+		message = m;
 	}
 
 	void drawPopup() {

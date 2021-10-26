@@ -7,26 +7,8 @@
 #include "entityFunctions/entitieshandler.h"
 #include "objectFunctions/objecthandler.h"
 #include "Popup.h"
+#include "GameConfig.h"
 
-
-// O----------------------------------------------------O
-// | Other Methods should be able to pause game			|
-// | without having to pass a pointer to the game       |
-// O----------------------------------------------------O
-
-
-int CURRENT_GAMEMODE;
-enum eGameMode {
-	mapview,
-	menu,
-	title,
-	worldCreator,
-	mapinspection,
-	confirm,
-	pause,
-};
-void GAMEMODE_PAUSE() {CURRENT_GAMEMODE = pause;}
-void GAMEMODE_RESUME() {CURRENT_GAMEMODE = pause;}
 
 
 // O----------------------------------------------------O
@@ -84,7 +66,26 @@ private:
 	void GameStateChecks();
 
 public:
-	
+	// O----------------------------------------------------O
+	// | Other Methods should be able to pause game			|
+	// | without having to pass a pointer to the game       |
+	// O----------------------------------------------------O
+
+
+	int CURRENT_GAMEMODE;
+	enum eGameMode {
+		mapview,
+		menu,
+		title,
+		worldCreator,
+		mapinspection,
+		confirm,
+		pause,
+	};
+	void GAMEMODE_PAUSE() {CURRENT_GAMEMODE = pause;}
+	void GAMEMODE_RESUME() {CURRENT_GAMEMODE = pause;}
+
+
 
 	GameEngine();
     virtual bool OnUserCreate() override;

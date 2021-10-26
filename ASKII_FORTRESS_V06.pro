@@ -20,11 +20,11 @@ SOURCES += \
 
 HEADERS += \
     EngineUtilSaveLoad.h \
+    GameConfig.h \
     GameEngine.h \
     InfoDisplay.h \
     InspectionCursor.h \
     Popup.h \
-    Tilesets.h \
 	entityFunctions/entities/Ent.h \
     entityFunctions/entities/EntDest.h \
 	entityFunctions/entities/EntHuman.h \
