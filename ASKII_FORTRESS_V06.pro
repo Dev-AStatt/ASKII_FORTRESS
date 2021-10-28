@@ -9,6 +9,7 @@ SOURCES += \
     GameEngine.cpp \
     InfoDisplay.cpp \
     Main.cpp \
+	engine/graphicsengine.cpp \
     entityFunctions/entities/Ent.cpp \
 	entityFunctions/entitieshandler.cpp \
 	libraries/olcPixelGameEngine.cpp \
@@ -25,6 +26,7 @@ HEADERS += \
     InfoDisplay.h \
     InspectionCursor.h \
     Popup.h \
+	engine/graphicsengine.h \
 	entityFunctions/entities/Ent.h \
     entityFunctions/entities/EntDest.h \
 	entityFunctions/entities/EntHuman.h \

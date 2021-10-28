@@ -1,54 +1,38 @@
 #pragma once
-#include "libraries/olcPixelGameEngine.h"
+#include "engine/graphicsengine.h"
 
 class InspectionCursor {
 private:
     olc::vi2d decalSourcePos;
     olc::vi2d inspPosition;
     olc::Pixel tint;
-    olc::vi2d PACK_SIZE;
-    olc::vi2d mapTL;
-    olc::vd2d mapBR;
-    olc::PixelGameEngine* pge;
-    //These are pointers to sprites and Decals
-    std::unique_ptr<olc::Sprite> sprTile;
-    std::unique_ptr<olc::Decal> decTile;
+	std::shared_ptr<AKI::GameConfig> gameConfig;
+	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 
-    void constructDecal() {
-        sprTile = std::make_unique<olc::Sprite>("art/Phoebus_16x16_Next.png");
-        decTile = std::make_unique<olc::Decal>(sprTile.get());
-    }
 
 public:
     InspectionCursor() {};
-	InspectionCursor(olc::vi2d atStartPS, olc::vi2d& atStartTL,olc::vi2d& atStartBR, olc::PixelGameEngine* p) {
-        PACK_SIZE = atStartPS;
-        mapTL = atStartTL;
-        mapBR = atStartBR;
-        pge = p;
-        constructDecal();
+	InspectionCursor(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc) {
+		graphicsEngine = ge;
+		gameConfig = gc;
         inspPosition = {1,1};
         decalSourcePos = { 8,5 };
         tint = olc::YELLOW;
     }
     void moveSelf(int x, int y) {
         //check if the move will put the cursor off of the screen or not
-        if((inspPosition.x + x) >= 0 && (inspPosition.x + x) < mapBR.x) {
+		if((inspPosition.x + x) >= 0 && (inspPosition.x + x) < gameConfig->getMapBR().x) {
             inspPosition.x = inspPosition.x + x;
         }
-        if((inspPosition.y + y) >= 0 && (inspPosition.y + y) < mapBR.y) {
+		if((inspPosition.y + y) >= 0 && (inspPosition.y + y) < gameConfig->getMapBR().y) {
             inspPosition.y = inspPosition.y + y;
         }
-
     }
 
     void DrawSelf() {
-        pge->DrawPartialDecal((inspPosition + mapTL) * PACK_SIZE, decTile.get(), decalSourcePos*PACK_SIZE, PACK_SIZE, olc::vi2d(1, 1), tint);
+		graphicsEngine->drawTile((inspPosition + gameConfig->getMapTL()),decalSourcePos,tint);
     }
 
-    olc::vi2d returnPos() {
-        return inspPosition;
-    }
-
+	olc::vi2d returnPos() { return inspPosition;}
 
 };

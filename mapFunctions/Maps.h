@@ -1,11 +1,8 @@
 #pragma once
-#include "libraries/olcPixelGameEngine.h"
+#include "engine/graphicsengine.h"
 #include "mapFunctions/cChunk.h"
 #include "mapFunctions/MapUtilChunkGen.h"
-#include "TileFunctions/Tiles.h"
 #include "MapUtil_I3d.h"
-
-
 
 //
 //This is a class that is designed to hold pointers to each chunk in the map.
@@ -15,18 +12,13 @@
 class Maps {
 private:
 
-	
-	olc::vi2d PACK_SIZE;
-    olc::vi2d mapTL;
-    olc::vi2d mapBR;
-	olc::PixelGameEngine* pge;
+	//olc::PixelGameEngine* pge;
 	std::shared_ptr<MapUtilChunkGen> ChunkGen;
+	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
+	std::shared_ptr<AKI::GameConfig> gameConfig;
+	std::shared_ptr<TileID::TileManager> tileManager;
 
-    //This is fixed Do not change
-    int chunkSize = 16;
     int currentWorldSize;
-	
-
 
     void mapCreateStartingChunks(int worldsize);
     void makeNewChunk(olc::vi2d newChunkLocation);
@@ -50,12 +42,11 @@ public:
 	//
 	//All of these should be protected
 	//
-
-
 	Maps() {};
+	int getWorldSize() {return currentWorldSize;}
 	void changeZLayer(int i);
     //   Size of Texture pack,       Top left x,y of map,    Bottom Right of map,      pixel game engine
-	Maps(olc::vi2d packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p);
+	Maps(std::shared_ptr<AKI::GraphicsEngine> ge,std::shared_ptr<AKI::GameConfig> gc);
 	void DrawActiveChunks();
 	void changeMapViewOffset(olc::vi2d i);
 	void resetMapViewOffset() { moveViewOffset = { 0,0 }; };

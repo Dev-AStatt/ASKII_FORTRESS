@@ -1,11 +1,12 @@
 #pragma once
-#include "libraries/olcPixelGameEngine.h"
+#include "engine/graphicsengine.h"
 
 class InfoDisplay {
 private:
-	int PACK_SIZE;
+	int packSizeInt;
 	olc::PixelGameEngine* pge;
-
+	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
+	std::shared_ptr<AKI::GameConfig> gameConfig;
 	std::string s;
 	uint32_t gameTick = 0;
 	bool finishedAnimation = false;
@@ -37,7 +38,7 @@ private:
     void debugDrawChunkOffset(olc::vi2d mvo,int menuSpot = 10);
     void DrawString(std::string str,int strPosX, int menuSpot, const olc::Pixel col = olc::WHITE);
 public:
-    InfoDisplay(int packSizeIn,olc::vi2d& mapBR, olc::PixelGameEngine* p);
+	InfoDisplay(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,olc::PixelGameEngine* p);
 	
     void DrawMapViewInfo(bool bDebug,olc::vi2d moveViewOffset, int activeZLayer);
     void DrawMapInspectionViewInfo(olc::vi2d inspPos,bool bDebug,olc::vi2d moveViewOffset, int activeZLayer);
@@ -47,13 +48,13 @@ public:
     int DrawMenu(std::vector<std::string>& menuChoices, olc::vi2d menuPos);
 
 	int mainMenu() {
-        return DrawMenu(mainMenuChoices, {PACK_SIZE * 16,10});
+		return DrawMenu(mainMenuChoices, {packSizeInt * 16,10});
 	}
     int confirmMenu() {
         return DrawMenu(confirmMenuChoices,{mapViewMenuX,2});
     }
     int newGameMenu() {
-        int menuChoice = DrawMenu(WorldSizeMenuChoices, {PACK_SIZE * 16,10});
+		int menuChoice = DrawMenu(WorldSizeMenuChoices, {packSizeInt * 16,10});
         //Return values
         // 0: Tiny World Size:  3x3
         // 1: Small World Size: 9x9

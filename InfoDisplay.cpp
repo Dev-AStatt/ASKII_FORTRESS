@@ -1,17 +1,20 @@
 #include "InfoDisplay.h"
 
-InfoDisplay::InfoDisplay(int packSizeIn,olc::vi2d& mapBR, olc::PixelGameEngine* p) {
-	PACK_SIZE = packSizeIn;
+InfoDisplay::InfoDisplay(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc, olc::PixelGameEngine* p) {
+
 	pge = p;
-    //ActiveMap = m;
+	gameConfig = gc;
+	graphicsEngine = ge;
+	packSizeInt = gc->getPackSizeInt();
+
 	finishedAnimation = false;
-    mapViewMenuX = PACK_SIZE * mapBR.x + (PACK_SIZE * 3);
+	mapViewMenuX = packSizeInt * gameConfig->getMapBR().x + (packSizeInt * 3);
 }
 
 void InfoDisplay::DrawTick(uint32_t tick) {
 	gameTick = tick;
 	s = "t:" + std::to_string(gameTick);
-	pge->DrawStringDecal(olc::vi2d(PACK_SIZE, 5), s);
+	pge->DrawStringDecal(olc::vi2d(packSizeInt, 5), s);
 }
 
 bool InfoDisplay::DrawTitleScreen() {
@@ -31,8 +34,8 @@ bool InfoDisplay::DrawTitleScreen() {
 //
 void InfoDisplay::TitleBoarderAnimation() {
 
-	int tTileMax = pge->ScreenWidth() / PACK_SIZE;
-	int rTileMax = (pge->ScreenHeight() / PACK_SIZE) + tTileMax;
+	int tTileMax = pge->ScreenWidth() / packSizeInt;
+	int rTileMax = (pge->ScreenHeight() / packSizeInt) + tTileMax;
 	int bTileMax = tTileMax + rTileMax;
 	int lTileMax = bTileMax + rTileMax - tTileMax;
 
@@ -52,16 +55,16 @@ void InfoDisplay::TitleBoarderAnimation() {
 	//pge->DrawStringDecal(olc::vi2d(PACK_SIZE * 16 * 3 + (PACK_SIZE * 3), PACK_SIZE * 2), s);
 
 	if (updates <= tTileMax) {
-		pge->FillRect(olc::vi2d(0, 0), olc::vi2d(updates * PACK_SIZE, PACK_SIZE), olc::DARK_GREY);
+		pge->FillRect(olc::vi2d(0, 0), olc::vi2d(updates * packSizeInt, packSizeInt), olc::DARK_GREY);
 	}
 	else if (updates > tTileMax && updates <= rTileMax) {
-		pge->FillRect(olc::vi2d(pge->ScreenWidth() - PACK_SIZE, 0), olc::vi2d(pge->ScreenWidth(), (updates - tTileMax) * PACK_SIZE), olc::DARK_GREY);
+		pge->FillRect(olc::vi2d(pge->ScreenWidth() - packSizeInt, 0), olc::vi2d(pge->ScreenWidth(), (updates - tTileMax) * packSizeInt), olc::DARK_GREY);
 	}
 	else if (updates > rTileMax && updates <= bTileMax) {
-		pge->FillRect(olc::vi2d(pge->ScreenWidth() - ((updates - rTileMax) * PACK_SIZE), pge->ScreenHeight() - PACK_SIZE), olc::vi2d(pge->ScreenWidth(), pge->ScreenHeight()), olc::DARK_GREY);
+		pge->FillRect(olc::vi2d(pge->ScreenWidth() - ((updates - rTileMax) * packSizeInt), pge->ScreenHeight() - packSizeInt), olc::vi2d(pge->ScreenWidth(), pge->ScreenHeight()), olc::DARK_GREY);
 	}
 	else if (updates > bTileMax && updates <= lTileMax) {
-		pge->FillRect(olc::vi2d(0, pge->ScreenHeight() - ((updates - bTileMax) * PACK_SIZE)), olc::vi2d(PACK_SIZE, pge->ScreenHeight()), olc::DARK_GREY);
+		pge->FillRect(olc::vi2d(0, pge->ScreenHeight() - ((updates - bTileMax) * packSizeInt)), olc::vi2d(packSizeInt, pge->ScreenHeight()), olc::DARK_GREY);
 	}
 	if (updates >= lTileMax) {
 		finishedAnimation = true;
@@ -132,7 +135,8 @@ void InfoDisplay::DrawMapViewHotkeys(int menuStart){
 }
 // Uses the Drawstring decal of pge to draw string str at menu spot, and x at strPosX, ::Defaut mapViewMenuX, default white color
 void InfoDisplay::DrawString(std::string str,int strPosX, int menuSpot, const olc::Pixel col) {
-    pge->DrawStringDecal(olc::vi2d(strPosX, PACK_SIZE * menuSpot), str, col);
+	//graphicsEngine->drawString(olc::vi2d(strPosX,menuSpot),str,col);
+	pge->DrawStringDecal(olc::vi2d(strPosX, packSizeInt * menuSpot), str, col);
 }
 
 int InfoDisplay::DrawMenu(std::vector<std::string>& menuChoices, olc::vi2d menuPos) {

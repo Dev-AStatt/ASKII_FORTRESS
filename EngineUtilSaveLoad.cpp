@@ -20,7 +20,7 @@ int EngineUtilSaveLoad::SaveConfig(int worldSize) {
 }
 
 
-bool EngineUtilSaveLoad::saveChunks(int worldSize, Maps* chunkMapToSave) {
+bool EngineUtilSaveLoad::saveChunks(int worldSize, std::shared_ptr<Maps> chunkMapToSave) {
     if(bConfigSaved) {
         std::ofstream fileChunkSave (saveChunksLocation);
         if (fileChunkSave.is_open()) {
@@ -41,7 +41,7 @@ bool EngineUtilSaveLoad::saveChunks(int worldSize, Maps* chunkMapToSave) {
     return false;
 }
 
-bool EngineUtilSaveLoad::loadchunks(Maps* unloadedMap) {
+bool EngineUtilSaveLoad::loadchunks(std::shared_ptr<Maps> unloadedMap) {
 
     int worldsize = loadWorldSize();
     if (worldsize > 0) {
@@ -62,7 +62,7 @@ bool EngineUtilSaveLoad::loadchunks(Maps* unloadedMap) {
     return false;
 }
 
-void EngineUtilSaveLoad::stringChunkToActiveChunk(int chunkNum, int worldsize,std::string sWholeChunk, Maps* unloadedMap) {
+void EngineUtilSaveLoad::stringChunkToActiveChunk(int chunkNum, int worldsize,std::string sWholeChunk, std::shared_ptr<Maps> unloadedMap) {
     //start with an empty chunk
 
     //seperate whole chunk string to pieces

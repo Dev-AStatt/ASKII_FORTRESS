@@ -1,31 +1,33 @@
 #include "entitieshandler.h"
 
-EntitiesHandler::EntitiesHandler(olc::vi2d PS, Maps* m, std::shared_ptr<ObjectHandler> obj, olc::PixelGameEngine* p) {
-    PACK_SIZE = PS;
-    pge = p;
-    map = m;
+EntitiesHandler::EntitiesHandler(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
+								 std::shared_ptr<Maps> chunkman, std::shared_ptr<ObjectHandler> obj) {
+	gameConfig = gc;
+	graphicsEngine = ge;
+	chunkManager = chunkman;
 	ObjHandler = obj;
+	tileManager = std::make_shared<TileID::TileManager>	(gameConfig,graphicsEngine);
 
 }
 
 void EntitiesHandler::newEntity(olc::vi2d posXY, int posZ, std::string n) {
-	aliveEnts.emplace_back(std::make_unique<EntHuman>(PACK_SIZE,pge,posXY,posZ,n));
+	aliveEnts.emplace_back(std::make_unique<EntHuman>(graphicsEngine,gameConfig,tileManager,posXY,posZ,n));
 }
 
-void EntitiesHandler::drawEntities(int activeZLayer, olc::vi2d &mapTL, olc::vi2d &mapBR, olc::vi2d& viewOffset) {
+void EntitiesHandler::drawEntities(int activeZLayer, olc::vi2d& viewOffset) {
     for(int i = 0; i < (int)aliveEnts.size(); ++i) {
-        if(olcWithinBounds(aliveEnts[i]->returnPos(),mapTL,mapBR,viewOffset)) {
+		if(olcWithinBounds(aliveEnts[i]->returnPos(),viewOffset)) {
             aliveEnts[i]->DrawSelf(activeZLayer, viewOffset);
         }
     }
 }
 
-bool EntitiesHandler::olcWithinBounds(AKI::I3d checkpos, olc::vi2d &mapTL, olc::vi2d &mapBR, olc::vi2d& viewOffset) {
+bool EntitiesHandler::olcWithinBounds(AKI::I3d checkpos, olc::vi2d& viewOffset) {
 	checkpos.x = checkpos.x + viewOffset.x;
 	checkpos.y = checkpos.y + viewOffset.x;
 //    mapBR = mapBR + viewOffset;
-    if(mapTL.x <= checkpos.x && checkpos.x <= mapBR.x) {
-        if(mapTL.y <= checkpos.y && checkpos.y <= mapBR.y) {
+	if(gameConfig->getMapTL().x <= checkpos.x && checkpos.x <= gameConfig->getMapBR().x) {
+		if(gameConfig->getMapTL().y <= checkpos.y && checkpos.y <= gameConfig->getMapBR().y) {
             return true;
         }
     }
@@ -41,7 +43,7 @@ void EntitiesHandler::newGameEntities() {
 void EntitiesHandler::updateEntities(int tick) {
 	for(int i = 0; i < (int)aliveEnts.size(); ++i) {
 		//give view of map
-		aliveEnts[i]->giftOfSight(map->viewOfWorld(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
+		aliveEnts[i]->giftOfSight(chunkManager->viewOfWorld(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
 		//give view of Objects
 		passItemPtrToEnt(i);
 

@@ -1,10 +1,10 @@
 #include "Ent.h"
 
-Ent::Ent(olc::vi2d& PS, olc::PixelGameEngine* p, std::string n) {
-	constructEntBasics(PS,p);
+Ent::Ent(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
+		 std::shared_ptr<TileID::TileManager> tm, std::string n) {
+	constructEntBasics(tm,ge,gc);
 	//These lines should be overwritten by inheriting classes
 	decalSourcePos		= { 15,3 };
-	//entPositionXY		= {1,1};
 	entZPosition		= 0;
 	position			= {1,1,0};
 	viewDistance		= 3;
@@ -13,13 +13,12 @@ Ent::Ent(olc::vi2d& PS, olc::PixelGameEngine* p, std::string n) {
 	sEntName			= n;
 }
 
-void Ent::constructEntBasics(olc::vi2d& PS, olc::PixelGameEngine* p) {
-	PACK_SIZE = PS;
-	pge = p;
-	constructDecal();	//construct decal will add decals to Ents
-	cTiles = std::make_unique<TileID::cTileID>(PACK_SIZE,pge);
+void Ent::constructEntBasics(std::shared_ptr<TileID::TileManager> tm,
+							 std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc) {
+	gameConfig = gc;
+	graphicsEngine = ge;
+	tileManager = tm;
 	Destination = std::make_unique<Memories::EntDest>();
-
 	alive = true;
 }
 
@@ -27,22 +26,14 @@ void Ent::constructEntBasics(olc::vi2d& PS, olc::PixelGameEngine* p) {
 // | Drawing of Entity Code						        |
 // O----------------------------------------------------O
 
-void Ent::constructDecal() {
-		sprTile = std::make_unique<olc::Sprite>("art/Phoebus_16x16_Next.png");
-		decTile = std::make_unique<olc::Decal>(sprTile.get());
-	}
-
 void Ent::DrawSelf(int activeZLayer, olc::vi2d& viewOffset) {
 	if(activeZLayer == position.z) {
 		olc::vi2d entFinalPos = {position.x + viewOffset.x,position.y + viewOffset.y };
 		//the ent pos gets a + 1x1 to adjust for the header bar to match up
 		//with the chunkxyz's so 0x0 is the same 0x0
-		pge->DrawPartialDecal((entFinalPos + olc::vi2d(1,1)) * PACK_SIZE,	//position to draw to
-							  decTile.get(),
-							  decalSourcePos*PACK_SIZE,
-							  PACK_SIZE,
-							  olc::vi2d(1, 1),								//scale
-							  tint);
+		entFinalPos = entFinalPos + olc::vi2d(1,1);
+		graphicsEngine->drawTile(entFinalPos,decalSourcePos,tint);
+
 	}
 }
 
@@ -117,7 +108,7 @@ bool Ent::watchYourStep(AKI::I3d nPos) {
 	int centerIndex = (numInX * 3) + viewDistance;
 	//add the change nPos to our center index
 	int index = centerIndex + (nPos.x) + (nPos.y * numInX);
-	auto& t = cTiles->vptrTiles[tilesInView[index]];
+	auto& t = tileManager->vptrTiles[tilesInView[index]];
 	if(t->isWalkable()) {
 		return true;
 	}
