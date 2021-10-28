@@ -43,4 +43,4 @@ HEADERS += \
 
 
 DISTFILES += \
-    art/Phoebus_16x16_Next.png
+	art/Phoebus_16x16_Next.png

@@ -83,7 +83,7 @@ public:
 		pause,
 	};
 	void GAMEMODE_PAUSE() {CURRENT_GAMEMODE = pause;}
-	void GAMEMODE_RESUME() {CURRENT_GAMEMODE = pause;}
+	void GAMEMODE_RESUME() {CURRENT_GAMEMODE = mapview;}
 
 
 

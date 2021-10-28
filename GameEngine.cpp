@@ -66,8 +66,10 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
 	// O----------------------------------------------------O
 	// | Title Screen								        |
 	// O----------------------------------------------------O
-    case title:
-        if (TextDisplay->DrawTitleScreen()) {
+	case title:
+		//commented out to remove title screen
+		//if (TextDisplay->DrawTitleScreen()) {
+		if(true) {
             DrawScreenBoarder();
 
             //this is the title menu and case is the
@@ -236,7 +238,9 @@ void GameEngine::UserInput(){
     if(shift) { offset = 10;}
     else {offset = 1;}
 
-    //MapView Checks for input
+	// O--------------------------------------------------------O
+	// | MapView Checks for input								|
+	// O--------------------------------------------------------O
     if (!focusMenu && CURRENT_GAMEMODE == mapview) {
         if (GetKey(olc::Key::UP).bReleased) {
             chunkMap.changeMapViewOffset({ 0,offset });
@@ -257,7 +261,10 @@ void GameEngine::UserInput(){
             CURRENT_GAMEMODE = confirm;
         }
     }
-    //Toggle Inspection mode
+	// O--------------------------------------------------------O
+	// | Inspection mode checks for input						|
+	// O--------------------------------------------------------O
+
     if (GetKey(olc::Key::I).bReleased) {
         togglegamemode();
     }
@@ -280,7 +287,13 @@ void GameEngine::UserInput(){
             chunkMap.flipTileOnMap(pos);
         }
     }
-
+	// O--------------------------------------------------------O
+	// | Pause Checks for input									|
+	// O--------------------------------------------------------O
+	if (GetKey(olc::Key::ENTER).bReleased && CURRENT_GAMEMODE == pause) {
+		popup->closeMessage();
+		GAMEMODE_RESUME();
+	}
 }
 
 void GameEngine::togglegamemode() {
