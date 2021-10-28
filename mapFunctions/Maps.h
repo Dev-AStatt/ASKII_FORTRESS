@@ -1,5 +1,6 @@
 #pragma once
 #include "libraries/olcPixelGameEngine.h"
+#include "engine/graphicsengine.h"
 #include "mapFunctions/cChunk.h"
 #include "mapFunctions/MapUtilChunkGen.h"
 #include "TileFunctions/Tiles.h"
@@ -21,6 +22,8 @@ private:
     olc::vi2d mapBR;
 	olc::PixelGameEngine* pge;
 	std::shared_ptr<MapUtilChunkGen> ChunkGen;
+	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
+	std::shared_ptr<AKI::GameConfig> gameConfig;
 
     //This is fixed Do not change
     int chunkSize = 16;
@@ -55,7 +58,7 @@ public:
 	Maps() {};
 	void changeZLayer(int i);
     //   Size of Texture pack,       Top left x,y of map,    Bottom Right of map,      pixel game engine
-	Maps(olc::vi2d packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p);
+	Maps(olc::vi2d packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR, olc::PixelGameEngine* p,std::shared_ptr<AKI::GraphicsEngine> ge,std::shared_ptr<AKI::GameConfig> gc);
 	void DrawActiveChunks();
 	void changeMapViewOffset(olc::vi2d i);
 	void resetMapViewOffset() { moveViewOffset = { 0,0 }; };

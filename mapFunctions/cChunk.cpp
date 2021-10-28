@@ -1,9 +1,14 @@
 #include "cChunk.h"
 
 
-cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::shared_ptr<MapUtilChunkGen> cg) {
-    loadTypicalData(packSizeAtStart,atStartMapTL, atStartMapBR, p, id);
+cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR,
+			   olc::PixelGameEngine* p, uint64_t id, std::shared_ptr<MapUtilChunkGen> cg,
+			   std::shared_ptr<AKI::GameConfig> gc, std::shared_ptr<AKI::GraphicsEngine> ge) {
+	gameConfig = gc;
+	graphicsEngine = ge;
+	loadTypicalData(packSizeAtStart,atStartMapTL, atStartMapBR, p, id);
 	ChunkGen = cg;
+
 
 	FullChunkIDs = ChunkGen->GenerateChunkStruct();
 
@@ -23,7 +28,7 @@ void cChunk::loadTypicalData(olc::vi2d &packSizeAtStart, olc::vi2d &atStartMapTL
     pge = p;
     ChunkID = id;
     decryptIDtoYX();
-    cTiles = std::make_unique<TileID::cTileID>(PACK_SIZE,pge);
+	cTiles = std::make_unique<TileID::TileManager>(PACK_SIZE,pge,gameConfig,graphicsEngine);
 
 }
 

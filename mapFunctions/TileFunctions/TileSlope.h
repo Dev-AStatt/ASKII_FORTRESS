@@ -17,11 +17,11 @@ public:
 	bool slopeDirectionIs(int s) {if(s == sDirection){return true;} else {return false; }}
 
 	//stuff that each slope must construct
-	void basicSlopeConstructor(olc::vi2d& PS, olc::PixelGameEngine* p,
+	void basicSlopeConstructor(std::shared_ptr<AKI::GraphicsEngine> ge,
 							   olc::vi2d source, std::string name,
 							   SlopeD s, olc::Pixel c = olc::GREY,bool mine = true) {
-		PACK_SIZE		= PS;
-		pge				= p;
+
+		graphicsEngine = ge;
 		decalSourcePos	= source;
 		sTileName		= name;
 		tint			= c;
@@ -34,29 +34,29 @@ public:
 
 class TileSlopeNorth : public TileSlope {
 public:
-	TileSlopeNorth(olc::vi2d& PS, olc::PixelGameEngine* p) {
-		basicSlopeConstructor(PS,p,{14,1},"Slope North", SlopeD::North);
+	TileSlopeNorth(std::shared_ptr<AKI::GraphicsEngine> ge) {
+		basicSlopeConstructor(ge,{14,1},"Slope North", SlopeD::North);
 	}
 };
 
 class TileSlopeSouth : public TileSlope {
 public:
-	TileSlopeSouth(olc::vi2d& PS, olc::PixelGameEngine* p) {
-		basicSlopeConstructor(PS,p,{15,1},"Slope South",SlopeD::South);
+	TileSlopeSouth(std::shared_ptr<AKI::GraphicsEngine> ge) {
+		basicSlopeConstructor(ge,{15,1},"Slope South",SlopeD::South);
 	}
 };
 
 class TileSlopeEast : public TileSlope {
 public:
-	TileSlopeEast(olc::vi2d& PS, olc::PixelGameEngine* p) {
-		basicSlopeConstructor(PS,p,{0,1},"Slope East",SlopeD::East);
+	TileSlopeEast(std::shared_ptr<AKI::GraphicsEngine> ge) {
+		basicSlopeConstructor(ge,{0,1},"Slope East",SlopeD::East);
 		}
 };
 
 class TileSlopeWest : public TileSlope {
 public:
-	TileSlopeWest(olc::vi2d& PS, olc::PixelGameEngine* p) {
-		basicSlopeConstructor(PS,p,{1,1},"Slope West",SlopeD::West);
+	TileSlopeWest(std::shared_ptr<AKI::GraphicsEngine> ge) {
+		basicSlopeConstructor(ge,{1,1},"Slope West",SlopeD::West);
 
 	}
 };

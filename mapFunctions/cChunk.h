@@ -24,14 +24,16 @@ private:
 	ChunkDataStruct FullChunkIDs;
 	std::vector<std::unique_ptr<Tile>> vptrTiles;
 	std::shared_ptr<MapUtilChunkGen> ChunkGen;
-
+	olc::PixelGameEngine* pge;
+	std::unique_ptr<TileID::TileManager> cTiles;
+	std::shared_ptr<AKI::GameConfig> gameConfig;
+	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 
 	olc::vi2d PACK_SIZE;
     olc::vi2d mapTL; //map area Top Left
     olc::vi2d mapBR; //map area bottom right
 	olc::vi2d vTileFinalPosition;
-	olc::PixelGameEngine* pge;
-    std::unique_ptr<TileID::cTileID> cTiles;
+
 
     //loads typical data that is needed no mater how class is created
     void loadTypicalData(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id);
@@ -51,8 +53,12 @@ public:
 	long getChunkPosY() {return chunkPositionY;};
 
     //Creating New Chunk, will call chunk generator for new
-	cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id,std::shared_ptr<MapUtilChunkGen> cg);
+	cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR,
+		   olc::PixelGameEngine* p, uint64_t id,std::shared_ptr<MapUtilChunkGen> cg,
+		   std::shared_ptr<AKI::GameConfig> gc, std::shared_ptr<AKI::GraphicsEngine> ge);
     //Will load passed in chunk by being given tileset
+	//	THIS IS BROKEN AND NEEDS TO BE FIXED ONCE REFACTOR IS DONE
+	// // // // // // // // // // //
 	cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::vector<uint64_t> chunkToLoad, std::shared_ptr<MapUtilChunkGen> cg);
 	void DrawChunk(int zLayer, olc::vi2d& moveViewOffset);
 	//Returns the pointer of the Slab at location z, olc(y,x)

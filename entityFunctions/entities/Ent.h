@@ -35,7 +35,7 @@ protected:
     //These are pointers to sprites and Decals
 	std::unique_ptr<olc::Sprite>		sprTile;
 	std::unique_ptr<olc::Decal>			decTile;
-	std::unique_ptr<TileID::cTileID>	cTiles;
+	std::unique_ptr<TileID::TileManager>	cTiles;
 	std::unique_ptr<Memories::EntDest>	Destination;
 
 	std::vector<int> vPriorities;

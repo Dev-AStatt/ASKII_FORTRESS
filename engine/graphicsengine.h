@@ -27,7 +27,7 @@ public:
 	//Draw tile will draw the tile at position decalPos on the tilesheet
 	//at location in tilespace tilePos
 	//
-	void drawTile(olc::vi2d tilePos, olc::vi2d& decalPos);
+	void drawTile(olc::vi2d tilePos, olc::vi2d& decalPos, olc::Pixel col = olc::WHITE);
 };
 
 
