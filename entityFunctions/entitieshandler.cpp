@@ -1,8 +1,7 @@
 #include "entitieshandler.h"
 
-EntitiesHandler::EntitiesHandler(Maps* m, std::shared_ptr<ObjectHandler> obj,
-								 std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc) {
-
+EntitiesHandler::EntitiesHandler(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
+								 Maps* m, std::shared_ptr<ObjectHandler> obj) {
 	gameConfig = gc;
 	graphicsEngine = ge;
     map = m;

@@ -22,8 +22,8 @@ private:
 	bool olcWithinBounds(AKI::I3d checkpos, olc::vi2d& mapTL, olc::vi2d& mapBR, olc::vi2d& viewOffset);
 
 public:
-	EntitiesHandler(Maps* m, std::shared_ptr<ObjectHandler> obj,
-					std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc);
+	EntitiesHandler(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
+					Maps* m, std::shared_ptr<ObjectHandler> obj);
 
 	void newEntity(olc::vi2d posXY, int posZ, std::string n);
     void newGameEntities();

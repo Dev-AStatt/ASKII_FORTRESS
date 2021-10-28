@@ -28,8 +28,8 @@ bool GameEngine::OnUserCreate()
 	TextDisplay		= std::make_unique<InfoDisplay>		(gameConfig->getPackSizeInt(),mapAreaBottomRight, this);
 	insp			= std::make_unique<InspectionCursor>	(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight,this);
 	utilSL			= std::make_unique<EngineUtilSaveLoad>();
-	ObjHandler		= std::make_shared<ObjectHandler>		(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight,this);
-	EntHandler		= std::make_unique<EntitiesHandler>	(&chunkMap,ObjHandler,graphicsEngine,gameConfig);
+	ObjHandler		= std::make_shared<ObjectHandler>		(graphicsEngine,gameConfig);
+	EntHandler		= std::make_unique<EntitiesHandler>		(graphicsEngine,gameConfig,&chunkMap,ObjHandler);
 
 
 	return true;
