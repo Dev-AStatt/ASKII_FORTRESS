@@ -14,22 +14,22 @@ bool GameEngine::OnUserCreate()
 {
 	CURRENT_GAMEMODE = title;
 	//gameConfig sets the generic constants that the game runs on
-	gameConfig = std::make_unique<AKI::GameConfig>(this);
+	gameConfig = std::make_shared<AKI::GameConfig>(this);
 
 	//This should be cleaned up but is so the game engine can still run
 	mapOutline = gameConfig->getMapOutline();
 	mapAreaBottomRight = gameConfig->getMapBR();
 	mapAreaTopLeft		= gameConfig->getMapTL();
 
-	//Pointer Class
-	chunkMap	=	Maps(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight, this);
-	//Unique Pointers
-	popup		=	std::make_shared<AKI::Popup>		(this);
-	TextDisplay =	std::make_unique<InfoDisplay>		(gameConfig->getPackSizeInt(),mapAreaBottomRight, this);
-	insp		=	std::make_unique<InspectionCursor>	(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight,this);
-	utilSL		=	std::make_unique<EngineUtilSaveLoad>();
-	ObjHandler	=	std::make_shared<ObjectHandler>		(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight,this);
-	EntHandler	=	std::make_unique<EntitiesHandler>	(gameConfig->getPackSize(),&chunkMap,ObjHandler,this);
+
+	graphicsEngine	= std::make_shared<AKI::GraphicsEngine> (gameConfig,this);
+	chunkMap		= Maps(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight, this);
+	popup			= std::make_shared<AKI::Popup>		(graphicsEngine,gameConfig);
+	TextDisplay		= std::make_unique<InfoDisplay>		(gameConfig->getPackSizeInt(),mapAreaBottomRight, this);
+	insp			= std::make_unique<InspectionCursor>	(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight,this);
+	utilSL			= std::make_unique<EngineUtilSaveLoad>();
+	ObjHandler		= std::make_shared<ObjectHandler>		(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight,this);
+	EntHandler		= std::make_unique<EntitiesHandler>	(gameConfig->getPackSize(),&chunkMap,ObjHandler,this);
 
 
 	return true;

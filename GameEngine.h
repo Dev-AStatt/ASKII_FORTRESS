@@ -8,6 +8,7 @@
 #include "objectFunctions/objecthandler.h"
 #include "Popup.h"
 #include "GameConfig.h"
+#include "engine/graphicsengine.h"
 
 
 
@@ -31,7 +32,8 @@ private:
 	std::unique_ptr<InspectionCursor> insp;
 	std::shared_ptr<ObjectHandler> ObjHandler;
 	std::shared_ptr<AKI::Popup> popup;
-	std::unique_ptr<AKI::GameConfig> gameConfig;
+	std::shared_ptr<AKI::GameConfig> gameConfig;
+	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 
 
 	int nLayerBackground = 0;
