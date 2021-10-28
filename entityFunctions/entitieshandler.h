@@ -11,7 +11,7 @@ class EntitiesHandler
 {
 private:
 
-    Maps* map;
+	std::shared_ptr<Maps> chunkManager;
 	std::shared_ptr<ObjectHandler> ObjHandler;
     std::vector<std::unique_ptr<Ent>> aliveEnts;
 	std::shared_ptr<TileID::TileManager> tileManager;
@@ -23,7 +23,7 @@ private:
 
 public:
 	EntitiesHandler(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
-					Maps* m, std::shared_ptr<ObjectHandler> obj);
+					std::shared_ptr<Maps> chunkman, std::shared_ptr<ObjectHandler> obj);
 
 	void newEntity(olc::vi2d posXY, int posZ, std::string n);
     void newGameEntities();

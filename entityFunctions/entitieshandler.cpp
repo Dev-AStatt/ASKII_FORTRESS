@@ -1,10 +1,10 @@
 #include "entitieshandler.h"
 
 EntitiesHandler::EntitiesHandler(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
-								 Maps* m, std::shared_ptr<ObjectHandler> obj) {
+								 std::shared_ptr<Maps> chunkman, std::shared_ptr<ObjectHandler> obj) {
 	gameConfig = gc;
 	graphicsEngine = ge;
-    map = m;
+	chunkManager = chunkman;
 	ObjHandler = obj;
 	tileManager = std::make_shared<TileID::TileManager>	(gameConfig,graphicsEngine);
 
@@ -43,7 +43,7 @@ void EntitiesHandler::newGameEntities() {
 void EntitiesHandler::updateEntities(int tick) {
 	for(int i = 0; i < (int)aliveEnts.size(); ++i) {
 		//give view of map
-		aliveEnts[i]->giftOfSight(map->viewOfWorld(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
+		aliveEnts[i]->giftOfSight(chunkManager->viewOfWorld(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
 		//give view of Objects
 		passItemPtrToEnt(i);
 

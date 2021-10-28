@@ -25,11 +25,11 @@ public:
     //returns 1 if save was sucsessful
     //returns -1 if save failed
     //returns -2 if saveconfig flag was not set
-    bool saveChunks(int worldSize, Maps* chunkMapToSave);
+	bool saveChunks(int worldSize, std::shared_ptr<Maps> chunkMapToSave);
 
-    bool loadchunks(Maps* unloadedMap);
+	bool loadchunks(std::shared_ptr<Maps> unloadedMap);
 
-    void stringChunkToActiveChunk(int chunkNum, int worldsize, std::string sWholeChunk, Maps* unloadedMap);
+	void stringChunkToActiveChunk(int chunkNum, int worldsize, std::string sWholeChunk, std::shared_ptr<Maps> unloadedMap);
 
     std::vector<uint64_t> intToUint(std::vector<std::string> vect_s);
 

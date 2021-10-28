@@ -25,7 +25,7 @@ private:
 
 
 //Classes
-	Maps chunkMap;
+	std::shared_ptr<Maps> chunkManager;
 	std::unique_ptr<InfoDisplay> TextDisplay;
     std::unique_ptr<EngineUtilSaveLoad> utilSL;
     std::unique_ptr<EntitiesHandler> EntHandler;
