@@ -11,7 +11,7 @@ void GraphicsEngine::drawString(int posX, int posY,std::string str,int offsetX, 
 	pge->DrawStringDecal(olc::vi2d(posX,posY) * gameConfig->getPackSize() + olc::vi2d(offsetX,offsetY), str, col);
 }
 
-void GraphicsEngine::drawString(olc::vi2d pos,std::string str,olc::vi2d offset, olc::Pixel col) {
+void GraphicsEngine::drawString(olc::vi2d pos,std::string str, olc::Pixel col,olc::vi2d offset) {
 	pge->DrawStringDecal(pos * gameConfig->getPackSize() + offset, str, col);
 }
 

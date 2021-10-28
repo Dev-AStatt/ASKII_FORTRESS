@@ -23,11 +23,10 @@ bool GameEngine::OnUserCreate()
 
 
 	graphicsEngine	= std::make_shared<AKI::GraphicsEngine> (gameConfig,this);
-	chunkManager		= std::make_shared<Maps>(graphicsEngine,gameConfig);
-	//chunkMap		= Maps(graphicsEngine,gameConfig);
+	chunkManager	= std::make_shared<Maps>(graphicsEngine,gameConfig);
 	popup			= std::make_shared<AKI::Popup>		(graphicsEngine,gameConfig);
-	TextDisplay		= std::make_unique<InfoDisplay>		(gameConfig->getPackSizeInt(),mapAreaBottomRight, this);
-	insp			= std::make_unique<InspectionCursor>	(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight,this);
+	TextDisplay		= std::make_unique<InfoDisplay>		(graphicsEngine,gameConfig,this);
+	insp			= std::make_unique<InspectionCursor>	(graphicsEngine,gameConfig);
 	utilSL			= std::make_unique<EngineUtilSaveLoad>();
 	ObjHandler		= std::make_shared<ObjectHandler>		(graphicsEngine,gameConfig);
 	EntHandler		= std::make_unique<EntitiesHandler>		(graphicsEngine,gameConfig,chunkManager,ObjHandler);

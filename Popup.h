@@ -67,9 +67,9 @@ public:
 	}
 
 	void drawColoredClose(olc::vi2d pos) {
-		graphicsEngine->drawString(pos,sPress,{4,4});
-		graphicsEngine->drawString(pos + olc::vi2d(3,0),sEnter,{4,4},olc::GREEN);
-		graphicsEngine->drawString(pos + olc::vi2d(6,0),sClose,{4,4});
+		graphicsEngine->drawString(pos,sPress,olc::WHITE,{4,4});
+		graphicsEngine->drawString(pos + olc::vi2d(3,0),sEnter,olc::GREEN,{4,4});
+		graphicsEngine->drawString(pos + olc::vi2d(6,0),sClose,olc::WHITE,{4,4});
 	}
 };
 }
