@@ -24,19 +24,21 @@ private:
 	ChunkDataStruct FullChunkIDs;
 	std::vector<std::unique_ptr<Tile>> vptrTiles;
 	std::shared_ptr<MapUtilChunkGen> ChunkGen;
-	olc::PixelGameEngine* pge;
-	std::unique_ptr<TileID::TileManager> cTiles;
+	//olc::PixelGameEngine* pge;
+	std::shared_ptr<TileID::TileManager> tileManager;
 	std::shared_ptr<AKI::GameConfig> gameConfig;
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 
-	olc::vi2d PACK_SIZE;
-    olc::vi2d mapTL; //map area Top Left
-    olc::vi2d mapBR; //map area bottom right
+//    olc::vi2d mapTL; //map area Top Left
+//    olc::vi2d mapBR; //map area bottom right
 	olc::vi2d vTileFinalPosition;
 
 
     //loads typical data that is needed no mater how class is created
-    void loadTypicalData(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id);
+	void loadTypicalData(uint64_t id, std::shared_ptr<MapUtilChunkGen> gen,
+						 std::shared_ptr<AKI::GameConfig> gconf,
+						 std::shared_ptr<AKI::GraphicsEngine> graph,
+						 std::shared_ptr<TileID::TileManager> tm);
     //VectorID takes in the z and y coordinate that is understood
 	//for a 3d object and translates that into the 1d Vector
 	int vectorID(int z, int y) { return (z * 32 + y); };
@@ -53,13 +55,14 @@ public:
 	long getChunkPosY() {return chunkPositionY;};
 
     //Creating New Chunk, will call chunk generator for new
-	cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR,
-		   olc::PixelGameEngine* p, uint64_t id,std::shared_ptr<MapUtilChunkGen> cg,
-		   std::shared_ptr<AKI::GameConfig> gc, std::shared_ptr<AKI::GraphicsEngine> ge);
+	cChunk(uint64_t id,std::shared_ptr<MapUtilChunkGen> gen,
+		   std::shared_ptr<AKI::GameConfig> gconf, std::shared_ptr<AKI::GraphicsEngine> graph,
+		   std::shared_ptr<TileID::TileManager> tm);
     //Will load passed in chunk by being given tileset
-	//	THIS IS BROKEN AND NEEDS TO BE FIXED ONCE REFACTOR IS DONE
-	// // // // // // // // // // //
-	cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::vector<uint64_t> chunkToLoad, std::shared_ptr<MapUtilChunkGen> cg);
+
+	cChunk(uint64_t id, std::vector<uint64_t> chunkToLoad, std::shared_ptr<MapUtilChunkGen> gen,
+		   std::shared_ptr<AKI::GameConfig> gconf, std::shared_ptr<AKI::GraphicsEngine> graph,
+		   std::shared_ptr<TileID::TileManager> tm);
 	void DrawChunk(int zLayer, olc::vi2d& moveViewOffset);
 	//Returns the pointer of the Slab at location z, olc(y,x)
 	std::unique_ptr<Tile>& SlabPtrAtLocation(int zLayer, olc::vi2d yx);

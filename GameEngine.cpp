@@ -23,7 +23,7 @@ bool GameEngine::OnUserCreate()
 
 
 	graphicsEngine	= std::make_shared<AKI::GraphicsEngine> (gameConfig,this);
-	chunkMap		= Maps(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight, this,graphicsEngine,gameConfig);
+	chunkMap		= Maps(graphicsEngine,gameConfig);
 	popup			= std::make_shared<AKI::Popup>		(graphicsEngine,gameConfig);
 	TextDisplay		= std::make_unique<InfoDisplay>		(gameConfig->getPackSizeInt(),mapAreaBottomRight, this);
 	insp			= std::make_unique<InspectionCursor>	(gameConfig->getPackSize(),mapAreaTopLeft,mapAreaBottomRight,this);

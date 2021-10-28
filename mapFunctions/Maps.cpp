@@ -1,16 +1,12 @@
 #include "Maps.h"
 
 
-Maps::Maps(olc::vi2d packSizeAtStart, olc::vi2d& atStartMapTL, olc::vi2d& atStartMapBR,
-		   olc::PixelGameEngine* p,std::shared_ptr<AKI::GraphicsEngine> ge,
-		   std::shared_ptr<AKI::GameConfig> gc) {
-    PACK_SIZE = packSizeAtStart;
-	pge = p;
+Maps::Maps(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc) {
 	graphicsEngine = ge;
 	gameConfig = gc;
-	ChunkGen = std::make_shared<MapUtilChunkGen>();
-    mapTL = atStartMapTL;
-    mapBR = atStartMapBR;
+	//create the two functions maps needs
+	ChunkGen	= std::make_shared<MapUtilChunkGen>		();
+	tileManager = std::make_shared<TileID::TileManager>	(gameConfig,graphicsEngine);
 
 
 }
@@ -29,7 +25,7 @@ void Maps::continueMap(int chunkNum, int worldSize, std::vector<uint64_t> newChu
         //
         //Right here call cChunk and make new chunk with id and vect
         //
-		vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, locationHex, newChunk,ChunkGen));
+		vptrActiveChunks.emplace_back(std::make_unique<cChunk>(locationHex, newChunk,ChunkGen,gameConfig,graphicsEngine,tileManager));
 
         if(chunkNum == (worldSize*worldSize) -1) {
             currentWorldSize = worldSize;
@@ -61,7 +57,7 @@ void Maps::mapCreateStartingChunks(int worldsize) {
 void Maps::makeNewChunk(olc::vi2d newChunkLocation) {
     // get the hex value for cChunk for an id
     uint64_t locationHex = olcTo64Hex(newChunkLocation);
-	vptrActiveChunks.emplace_back(std::make_unique<cChunk>(PACK_SIZE, mapTL,mapBR, pge, locationHex,ChunkGen,gameConfig,graphicsEngine));
+	vptrActiveChunks.emplace_back(std::make_unique<cChunk>(locationHex,ChunkGen,gameConfig,graphicsEngine,tileManager));
 }
 
 uint64_t Maps::olcTo64Hex (olc::vi2d olcvi2d) {
@@ -101,10 +97,11 @@ void Maps::changeMapViewOffset(olc::vi2d i) {
 //it will flip the tile that the curser was pointing at.
 void Maps::flipTileOnMap(olc::vi2d& insplocXY) {
     //this produces the relative chunk the insp is pointing at in x,y
-    int chunkX = ((-1)*moveViewOffset.x + insplocXY.x) / chunkSize;
-    int chunkY = ((-1)*moveViewOffset.y + insplocXY.y) / chunkSize;
-    int tileX = ((-1)*moveViewOffset.x + insplocXY.x) % chunkSize;
-    int tileY = ((-1)*moveViewOffset.y + insplocXY.y) % chunkSize;
+
+	int chunkX = ((-1)*moveViewOffset.x + insplocXY.x) / gameConfig->getChunkSize();
+	int chunkY = ((-1)*moveViewOffset.y + insplocXY.y) / gameConfig->getChunkSize();
+	int tileX = ((-1)*moveViewOffset.x + insplocXY.x) % gameConfig->getChunkSize();
+	int tileY = ((-1)*moveViewOffset.y + insplocXY.y) % gameConfig->getChunkSize();
 
     int chunkToPoint = 0;
     if(mapLoaded) {
@@ -146,7 +143,7 @@ std::vector<int> Maps::viewOfWorld(AKI::I3d pos,int viewDistance) {
 
 
 olc::vi2d Maps::worldPosToChunkXY(olc::vi2d worldPos) {
-    olc::vi2d chunkXY = {worldPos.x / chunkSize,worldPos.y / chunkSize};
+	olc::vi2d chunkXY = {worldPos.x / gameConfig->getChunkSize(),worldPos.y / gameConfig->getChunkSize()};
     return chunkXY;
 }
 

@@ -30,9 +30,7 @@ private:
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 public:
 	TileManager();
-	TileManager(olc::vi2d PS, olc::PixelGameEngine* p,std::shared_ptr<AKI::GameConfig> gc,std::shared_ptr<AKI::GraphicsEngine> ge) {
-        PACK_SIZE = PS;
-        pge = p;
+	TileManager(std::shared_ptr<AKI::GameConfig> gc,std::shared_ptr<AKI::GraphicsEngine> ge) {
 		graphicsEngine = ge;
 		gameConfig = gc;
         fillvptrTiles();

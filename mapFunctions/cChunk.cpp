@@ -1,35 +1,32 @@
 #include "cChunk.h"
 
 
-cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR,
-			   olc::PixelGameEngine* p, uint64_t id, std::shared_ptr<MapUtilChunkGen> cg,
-			   std::shared_ptr<AKI::GameConfig> gc, std::shared_ptr<AKI::GraphicsEngine> ge) {
-	gameConfig = gc;
-	graphicsEngine = ge;
-	loadTypicalData(packSizeAtStart,atStartMapTL, atStartMapBR, p, id);
-	ChunkGen = cg;
+cChunk::cChunk(uint64_t id, std::shared_ptr<MapUtilChunkGen> gen,
+			   std::shared_ptr<AKI::GameConfig> gconf, std::shared_ptr<AKI::GraphicsEngine> graph,std::shared_ptr<TileID::TileManager> tm) {
 
-
+	loadTypicalData(id,gen,gconf,graph,tm);
 	FullChunkIDs = ChunkGen->GenerateChunkStruct();
 
 }
 
-cChunk::cChunk(olc::vi2d& packSizeAtStart,olc::vi2d& atStartMapTL,olc::vi2d& atStartMapBR, olc::PixelGameEngine* p, uint64_t id, std::vector<uint64_t> chunkToLoad, std::shared_ptr<MapUtilChunkGen> cg) {
-    loadTypicalData(packSizeAtStart,atStartMapTL, atStartMapBR, p, id);
-	ChunkGen = cg;
+cChunk::cChunk(uint64_t id, std::vector<uint64_t> chunkToLoad, std::shared_ptr<MapUtilChunkGen> gen,
+			   std::shared_ptr<AKI::GameConfig> gconf, std::shared_ptr<AKI::GraphicsEngine> graph,
+			   std::shared_ptr<TileID::TileManager> tm) {
+	loadTypicalData(id,gen,gconf,graph,tm);
     FullChunkIDs.slabs = chunkToLoad;
 }
 
 //Stuff that needs to be loaded if a new chunk or a loaded chunk is made
-void cChunk::loadTypicalData(olc::vi2d &packSizeAtStart, olc::vi2d &atStartMapTL, olc::vi2d &atStartMapBR, olc::PixelGameEngine *p, uint64_t id) {
-    PACK_SIZE = packSizeAtStart;
-    mapTL = atStartMapTL;
-    mapBR = atStartMapBR;
-    pge = p;
-    ChunkID = id;
-    decryptIDtoYX();
-	cTiles = std::make_unique<TileID::TileManager>(PACK_SIZE,pge,gameConfig,graphicsEngine);
-
+void cChunk::loadTypicalData(uint64_t id, std::shared_ptr<MapUtilChunkGen> cg,
+							 std::shared_ptr<AKI::GameConfig> gc,
+							 std::shared_ptr<AKI::GraphicsEngine> ge,
+							 std::shared_ptr<TileID::TileManager> tm) {
+	ChunkID = id;
+	gameConfig = gc;
+	graphicsEngine = ge;
+	tileManager = tm;
+	ChunkGen = cg;
+	decryptIDtoYX();
 }
 
 
@@ -70,7 +67,7 @@ int cChunk::InfillIDAtLocation(int zLayer, int yCol, int xRow) {
 //returns a pointer to a tile that is at the location of z, vi2d(yx)
 std::unique_ptr<Tile>& cChunk::SlabPtrAtLocation(int zLayer, olc::vi2d yx) {
 	//call TileIDAtLoc and return a pointer at that loc
-	std::unique_ptr<Tile>& t = cTiles->vptrTiles[SlabIDAtLocation(zLayer, yx.y, yx.x)];
+	std::unique_ptr<Tile>& t = tileManager->vptrTiles[SlabIDAtLocation(zLayer, yx.y, yx.x)];
 	return t;
 
 }
@@ -78,7 +75,7 @@ std::unique_ptr<Tile>& cChunk::SlabPtrAtLocation(int zLayer, olc::vi2d yx) {
 //returns a pointer to a tile that is at the location of z, vi2d(yx)
 std::unique_ptr<Tile>& cChunk::InfillPtrAtLocation(int zLayer, olc::vi2d yx) {
 	//call TileIDAtLoc and return a pointer at that loc
-	std::unique_ptr<Tile>& t = cTiles->vptrTiles[InfillIDAtLocation(zLayer, yx.y, yx.x)];
+	std::unique_ptr<Tile>& t = tileManager->vptrTiles[InfillIDAtLocation(zLayer, yx.y, yx.x)];
 	return t;
 
 }
@@ -96,7 +93,7 @@ void cChunk::decryptIDtoYX() {
 void cChunk::DrawChunk(int zLayer, olc::vi2d& moveViewOffset) {
 	for (int y = 0; y < 16; ++y) {
 		for (int x = 0; x < 16; ++x) {
-			auto& t = cTiles->vptrTiles[SlabIDAtLocation(zLayer, y, x)];
+			auto& t = tileManager->vptrTiles[SlabIDAtLocation(zLayer, y, x)];
 			if (t) {							//the + 1 on the X, Y is to add space for the header
 				vTileFinalPosition = {x + (int)(chunkPositionX * 16) + 1 + moveViewOffset.x,(y + (int)(chunkPositionY * 16) + 1) + moveViewOffset.y };
 				//make sure adjusted position is on screen
@@ -111,8 +108,8 @@ void cChunk::DrawChunk(int zLayer, olc::vi2d& moveViewOffset) {
 bool cChunk::checkIfOnScreen(olc::vi2d& newPos) {
     //if position to draw is greater than the top left map corner x
     //and smaller than the bottom rght corner x
-    if (newPos.x >= mapTL.x && newPos.x <= mapBR.x) {
-        if (newPos.y >= mapTL.y && newPos.y <= mapBR.y) {
+	if (newPos.x >= gameConfig->getMapTL().x && newPos.x <= gameConfig->getMapBR().x) {
+		if (newPos.y >= gameConfig->getMapTL().y && newPos.y <= gameConfig->getMapBR().y) {
 			return true;
 		}
 		else return false;
