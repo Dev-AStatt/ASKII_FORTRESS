@@ -22,8 +22,6 @@ class GameEngine : public olc::PixelGameEngine
 {
 private:
 
-
-
 //Classes
 	std::shared_ptr<Maps> chunkManager;
 	std::unique_ptr<InfoDisplay> TextDisplay;

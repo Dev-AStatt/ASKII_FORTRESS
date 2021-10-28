@@ -13,7 +13,15 @@ GameEngine::GameEngine() {
 bool GameEngine::OnUserCreate()
 {
 	CURRENT_GAMEMODE = title;
-	//gameConfig sets the generic constants that the game runs on
+	/*
+	Setting up all the classes that the game engine will use
+
+	Game Config:	What will manage all of the game variables that many classes need to view.
+	Util Save Load: Class that is in charge of the I/O for saving and loading games. [IN PROGRESS]
+	Graphics:		Graphics engine to communicate between ASKII and PGE.
+	Chunk Manager:	Holds all the chunks of the game, completes map opperations.
+	Popup:			Handles any game information that needs to be displayed as a notification
+	*/
 	gameConfig		= std::make_shared<AKI::GameConfig>(this);
 	utilSL			= std::make_unique<EngineUtilSaveLoad>();
 	graphicsEngine	= std::make_shared<AKI::GraphicsEngine> (gameConfig,this);
