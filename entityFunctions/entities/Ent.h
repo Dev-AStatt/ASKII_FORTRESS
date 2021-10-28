@@ -1,6 +1,5 @@
 #pragma once
 #include <random>
-#include "libraries/olcPixelGameEngine.h"
 #include "mapFunctions/MapUtil_I3d.h"
 #include "mapFunctions/MapUtilTileIDList.h"
 #include "entityFunctions/entities/EntDest.h"
@@ -25,18 +24,13 @@ protected:
 	int thirstBurnRate;
 	int hunger;
 	int hungerBurnRate;
-
-
-
     olc::Pixel tint;
-    olc::vi2d PACK_SIZE;
-    olc::PixelGameEngine* pge;
 
-    //These are pointers to sprites and Decals
-	std::unique_ptr<olc::Sprite>		sprTile;
-	std::unique_ptr<olc::Decal>			decTile;
-	std::unique_ptr<TileID::TileManager>	cTiles;
+	std::shared_ptr<TileID::TileManager>tileManager;
 	std::unique_ptr<Memories::EntDest>	Destination;
+	std::shared_ptr<AKI::GameConfig> gameConfig;
+	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
+
 
 	std::vector<int> vPriorities;
 
@@ -55,12 +49,11 @@ protected:
 	// O----------------------------------------------------O
 
 	//Basics that need to be loaded for every Ent and inheritors
-	void constructEntBasics(olc::vi2d& PS, olc::PixelGameEngine* p);
+	void constructEntBasics(std::shared_ptr<TileID::TileManager> tm,
+							std::shared_ptr<AKI::GraphicsEngine> ge,
+							std::shared_ptr<AKI::GameConfig> gc);
 	//Randomizer function with default inputs
 	int AKIRand(int from, int to);
-	//full sprite tile with art, and put into decTile to be used by drawing
-	void constructDecal();
-
 	//will construct a AKI::I3D of what is in view
 	void UpdateCoordinatesInView();
 	//Create vector of tiles that Ent Can interact with
@@ -83,7 +76,8 @@ protected:
 public:
 	bool alive;
     Ent() {};
-	Ent(olc::vi2d& PS, olc::PixelGameEngine* p, std::string n);
+	Ent(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
+		std::shared_ptr<TileID::TileManager> tm, std::string n);
 
 	std::string returnName()				{return "";}
 	int returnStepZ()						{return entZPosition;}
@@ -91,7 +85,7 @@ public:
 	int getViewDistance()					{return viewDistance;}
 	std::vector<olc::vi2d> getPosInView()	{return positionsXYInView;}
 	AKI::I3d& returnPos()					{return position;}
-	virtual bool updateSelf(int tick)		{return true;};
+	virtual bool updateSelf(int tick)		{if(tick>0) {return true;} return true;};
 
 
 	virtual void moveSelf(int x, int y, int z = 0);

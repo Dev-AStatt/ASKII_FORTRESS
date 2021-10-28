@@ -35,12 +35,12 @@ public:
 		gameConfig = gc;
         fillvptrTiles();
     }
-	TileManager(olc::vi2d PS, olc::PixelGameEngine* p) {
-		PACK_SIZE = PS;
-		pge = p;
+//	TileManager(olc::vi2d PS, olc::PixelGameEngine* p) {
+//		PACK_SIZE = PS;
+//		pge = p;
 
-		fillvptrTiles();
-	}
+//		fillvptrTiles();
+//	}
     std::vector<std::unique_ptr<Tile>> vptrTiles;
 
     void fillvptrTiles() {

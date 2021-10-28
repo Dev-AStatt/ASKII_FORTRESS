@@ -7,11 +7,13 @@ private:
 
 public:
     EntHuman() {}
-	EntHuman(olc::vi2d& PS, olc::PixelGameEngine* p, olc::vi2d& posXY, int posZ, std::string n) {
-		constructEntBasics(PS,p);
+	EntHuman(std::shared_ptr<AKI::GraphicsEngine> ge,
+			 std::shared_ptr<AKI::GameConfig> gc,
+			 std::shared_ptr<TileID::TileManager> tm,
+			 olc::vi2d& posXY, int posZ, std::string n) {
+		constructEntBasics(tm,ge,gc);
 		decalSourcePos		= { 0,4 };
-		//entPositionXY		= posXY;
-		//entZPosition		= posZ;
+
 		position			= {posXY.x, posXY.y, posZ};
 		viewDistance		= 3;
 		thirst				= 100;

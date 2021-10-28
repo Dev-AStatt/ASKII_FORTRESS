@@ -1,15 +1,18 @@
 #include "entitieshandler.h"
 
-EntitiesHandler::EntitiesHandler(olc::vi2d PS, Maps* m, std::shared_ptr<ObjectHandler> obj, olc::PixelGameEngine* p) {
-    PACK_SIZE = PS;
-    pge = p;
+EntitiesHandler::EntitiesHandler(Maps* m, std::shared_ptr<ObjectHandler> obj,
+								 std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc) {
+
+	gameConfig = gc;
+	graphicsEngine = ge;
     map = m;
 	ObjHandler = obj;
+	tileManager = std::make_shared<TileID::TileManager>	(gameConfig,graphicsEngine);
 
 }
 
 void EntitiesHandler::newEntity(olc::vi2d posXY, int posZ, std::string n) {
-	aliveEnts.emplace_back(std::make_unique<EntHuman>(PACK_SIZE,pge,posXY,posZ,n));
+	aliveEnts.emplace_back(std::make_unique<EntHuman>(graphicsEngine,gameConfig,tileManager,posXY,posZ,n));
 }
 
 void EntitiesHandler::drawEntities(int activeZLayer, olc::vi2d &mapTL, olc::vi2d &mapBR, olc::vi2d& viewOffset) {
