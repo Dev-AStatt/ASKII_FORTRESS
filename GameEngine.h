@@ -36,23 +36,14 @@ private:
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 
 
-	int nLayerBackground = 0;
+
 	//30 ticks per second.
 	uint32_t gameTick = 0;
 	float stopwatch = 0;
 
-//Constants for UpdateFlashPlayer through calls.
-	float timeAcc;
-	bool flash;
-	bool focusMenu = false;
-    bool tickUpdate = false;
+	bool tickUpdate = false;
+	int worldSize;
 
-	olc::vi2d mapOutline;
-//playable map size
-    int chunkSize = 16;
-    int worldSize;
-	olc::vi2d mapAreaTopLeft;
-    olc::vi2d mapAreaBottomRight;
 //debug functions
     bool bDebugInfo = false;
 

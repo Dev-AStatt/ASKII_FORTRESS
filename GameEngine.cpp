@@ -14,23 +14,15 @@ bool GameEngine::OnUserCreate()
 {
 	CURRENT_GAMEMODE = title;
 	//gameConfig sets the generic constants that the game runs on
-	gameConfig = std::make_shared<AKI::GameConfig>(this);
-
-	//This should be cleaned up but is so the game engine can still run
-	mapOutline = gameConfig->getMapOutline();
-	mapAreaBottomRight = gameConfig->getMapBR();
-	mapAreaTopLeft		= gameConfig->getMapTL();
-
-
-	graphicsEngine	= std::make_shared<AKI::GraphicsEngine> (gameConfig,this);
-	chunkManager	= std::make_shared<Maps>(graphicsEngine,gameConfig);
-	popup			= std::make_shared<AKI::Popup>		(graphicsEngine,gameConfig);
-	TextDisplay		= std::make_unique<InfoDisplay>		(graphicsEngine,gameConfig,this);
-	insp			= std::make_unique<InspectionCursor>	(graphicsEngine,gameConfig);
+	gameConfig		= std::make_shared<AKI::GameConfig>(this);
 	utilSL			= std::make_unique<EngineUtilSaveLoad>();
+	graphicsEngine	= std::make_shared<AKI::GraphicsEngine> (gameConfig,this);
+	chunkManager	= std::make_shared<Maps>				(graphicsEngine,gameConfig);
+	popup			= std::make_shared<AKI::Popup>			(graphicsEngine,gameConfig);
+	TextDisplay		= std::make_unique<InfoDisplay>			(graphicsEngine,gameConfig,this);
+	insp			= std::make_unique<InspectionCursor>	(graphicsEngine,gameConfig);
 	ObjHandler		= std::make_shared<ObjectHandler>		(graphicsEngine,gameConfig);
 	EntHandler		= std::make_unique<EntitiesHandler>		(graphicsEngine,gameConfig,chunkManager,ObjHandler);
-
 
 	return true;
 }
@@ -101,7 +93,7 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
 	// | World Creator Screen with options for world settings	|
 	// O--------------------------------------------------------O
     case worldCreator:
-        worldSize = TextDisplay->newGameMenu();
+		worldSize = TextDisplay->newGameMenu();
         if (worldSize > 0) {
             //create new map
 			chunkManager->newMap(worldSize);
@@ -167,7 +159,7 @@ void GameEngine::CommonRuntimeUpdates() {
     DrawMapOutline();
     DrawChunksToScreen();
     ActionUpdates();
-	EntHandler->drawEntities(chunkManager->activeZLayer,mapAreaTopLeft,mapAreaBottomRight,chunkManager->moveViewOffset);
+	EntHandler->drawEntities(chunkManager->activeZLayer,chunkManager->moveViewOffset);
 	ObjHandler->drawObjects(chunkManager->activeZLayer,chunkManager->moveViewOffset);
     UserInput();
 	GameStateChecks();
@@ -220,7 +212,7 @@ void GameEngine::UserInput(){
 
 
     //Toggle Debug info
-    if(!focusMenu && GetKey(olc::Key::D).bReleased) {
+	if(GetKey(olc::Key::D).bReleased) {
         bDebugInfo = !bDebugInfo;
 		popup->PopupMessage("dick");
     }
@@ -241,7 +233,7 @@ void GameEngine::UserInput(){
 	// O--------------------------------------------------------O
 	// | MapView Checks for input								|
 	// O--------------------------------------------------------O
-    if (!focusMenu && CURRENT_GAMEMODE == mapview) {
+	if (CURRENT_GAMEMODE == mapview) {
         if (GetKey(olc::Key::UP).bReleased) {
 			chunkManager->changeMapViewOffset({ 0,offset });
         }
@@ -269,7 +261,7 @@ void GameEngine::UserInput(){
         togglegamemode();
     }
     //Inspection Mode Checks for input
-    if (!focusMenu && CURRENT_GAMEMODE == mapinspection) {
+	if (CURRENT_GAMEMODE == mapinspection) {
         if (GetKey(olc::Key::UP).bReleased) {
             insp->moveSelf(0,-1 * offset);
         }

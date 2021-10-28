@@ -19,7 +19,7 @@ private:
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 
     //functions
-	bool olcWithinBounds(AKI::I3d checkpos, olc::vi2d& mapTL, olc::vi2d& mapBR, olc::vi2d& viewOffset);
+	bool olcWithinBounds(AKI::I3d checkpos, olc::vi2d& viewOffset);
 
 public:
 	EntitiesHandler(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
@@ -27,7 +27,7 @@ public:
 
 	void newEntity(olc::vi2d posXY, int posZ, std::string n);
     void newGameEntities();
-    void drawEntities(int activeZLayer,olc::vi2d& mapTL, olc::vi2d& mapBR, olc::vi2d& viewOffset);
+	void drawEntities(int activeZLayer,olc::vi2d& viewOffset);
     void updateEntities(int tick);
 	void passItemPtrToEnt(int entIndex);
 };

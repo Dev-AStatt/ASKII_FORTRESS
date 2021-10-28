@@ -43,6 +43,7 @@ public:
 	//All of these should be protected
 	//
 	Maps() {};
+	int getWorldSize() {return currentWorldSize;}
 	void changeZLayer(int i);
     //   Size of Texture pack,       Top left x,y of map,    Bottom Right of map,      pixel game engine
 	Maps(std::shared_ptr<AKI::GraphicsEngine> ge,std::shared_ptr<AKI::GameConfig> gc);
