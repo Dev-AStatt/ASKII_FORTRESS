@@ -32,12 +32,12 @@ void cChunk::loadTypicalData(uint64_t id, std::shared_ptr<MapUtilChunkGen> cg,
 
 //Takes in the z,y,x coordinates of a tile and returns the TileID
 int cChunk::SlabIDAtLocation(int zLayer, int yRow, int xCol) {
-	return FullChunkIDs.slabIDAt(zLayer,yRow,xCol);
+	return FullChunkIDs.getSlabIDAt(zLayer,yRow,xCol);
 }
 
 //Takes in the z,y,x coordinates of a tile and returns the TileID
 int cChunk::InfillIDAtLocation(int zLayer, int yRow, int xCol) {
-	return FullChunkIDs.infillIDAt(zLayer,yRow,xCol);
+	return FullChunkIDs.getInfillIDAt(zLayer,yRow,xCol);
 }
 
 //returns a pointer to a tile that is at the location of z, vi2d(yx)
@@ -100,7 +100,7 @@ void cChunk::SlabReplacement(TileID::TileIDList newTile, int x, int y, int z) {
 }
 
 void cChunk::InfillReplacement(TileID::TileIDList newTile, int x, int y, int z) {
-	FullChunkIDs.fillSingleinfill(z,y,x,newTile);
+	FullChunkIDs.fillSingleInfill(z,y,x,newTile);
 	//FullChunkIDs.infill = ChunkGen->editchunkSingleTile(FullChunkIDs.slabs,x,y,z,newTile);
 }
 
