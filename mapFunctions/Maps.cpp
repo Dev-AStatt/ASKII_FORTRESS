@@ -35,7 +35,7 @@ void Maps::continueMap(int chunkNum, int worldSize, std::vector<uint64_t> newChu
     }
 }
 
-
+//
 //Creates the first 3x3 chunk area
 void Maps::mapCreateStartingChunks(int worldsize) {
     //

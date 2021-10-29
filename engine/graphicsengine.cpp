@@ -34,7 +34,7 @@ void GraphicsEngine::drawTile(olc::vi2d tilePos, olc::vi2d& decalPos, olc::Pixel
 }
 
 void GraphicsEngine::addDebugString(std::string str) {
-	if(debugStrings.size() > 1) {
+	if(debugStrings.size() > 6) {
 		debugStrings.clear();
 	}
 

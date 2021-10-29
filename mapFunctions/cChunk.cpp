@@ -31,37 +31,13 @@ void cChunk::loadTypicalData(uint64_t id, std::shared_ptr<MapUtilChunkGen> cg,
 
 
 //Takes in the z,y,x coordinates of a tile and returns the TileID
-int cChunk::SlabIDAtLocation(int zLayer, int yCol, int xRow) {
-	//Is x in Y[even] or Y[odd]
-	if (xRow < 8) { yCol = yCol * 2; };
-	if (xRow > 7) { yCol = (yCol * 2) + 1; };
-
-	//calculate the bitshifting needed to move x to LSB
-	int bitshift = 56 - (xRow * 8);
-
-	bitshiftedIDtmp = FullChunkIDs.slabs[vectorID(zLayer,yCol)] >> bitshift;
-    bitshiftedIDtmp &= extractor;
-    //if the above line creats an error in shifting bits. the below line was
-    //what was there origninally. I think it means the same thing.
-    //bitshiftedIDtmp = bitshiftedIDtmp &= extractor;
-	return (int)bitshiftedIDtmp;
+int cChunk::SlabIDAtLocation(int zLayer, int yRow, int xCol) {
+	return FullChunkIDs.slabIDAt(zLayer,yRow,xCol);
 }
 
 //Takes in the z,y,x coordinates of a tile and returns the TileID
-int cChunk::InfillIDAtLocation(int zLayer, int yCol, int xRow) {
-	//Is x in Y[even] or Y[odd]
-	if (xRow < 8) { yCol = yCol * 2; };
-	if (xRow > 7) { yCol = (yCol * 2) + 1; };
-
-	//calculate the bitshifting needed to move x to LSB
-	int bitshift = 56 - (xRow * 8);
-
-	bitshiftedIDtmp = FullChunkIDs.inFill[vectorID(zLayer,yCol)] >> bitshift;
-	bitshiftedIDtmp &= extractor;
-	//if the above line creats an error in shifting bits. the below line was
-	//what was there origninally. I think it means the same thing.
-	//bitshiftedIDtmp = bitshiftedIDtmp &= extractor;
-	return (int)bitshiftedIDtmp;
+int cChunk::InfillIDAtLocation(int zLayer, int yRow, int xCol) {
+	return FullChunkIDs.infillIDAt(zLayer,yRow,xCol);
 }
 
 //returns a pointer to a tile that is at the location of z, vi2d(yx)
@@ -119,11 +95,13 @@ bool cChunk::checkIfOnScreen(olc::vi2d& newPos) {
 
 //call chunk gen passing the current chunk and return it with edits
 void cChunk::SlabReplacement(TileID::TileIDList newTile, int x, int y, int z) {
-	FullChunkIDs.slabs = ChunkGen->editchunkSingleTile(FullChunkIDs.slabs,x,y,z,newTile);
+	FullChunkIDs.fillSingleSlab(z,y,x,newTile);
+	//FullChunkIDs.slabs = ChunkGen->editchunkSingleTile(FullChunkIDs.slabs,x,y,z,newTile);
 }
 
 void cChunk::InfillReplacement(TileID::TileIDList newTile, int x, int y, int z) {
-	FullChunkIDs.inFill = ChunkGen->editchunkSingleTile(FullChunkIDs.slabs,x,y,z,newTile);
+	FullChunkIDs.fillSingleinfill(z,y,x,newTile);
+	//FullChunkIDs.infill = ChunkGen->editchunkSingleTile(FullChunkIDs.slabs,x,y,z,newTile);
 }
 
 std::string cChunk::compileChunkToString(int i) {

@@ -24,15 +24,11 @@ private:
 	ChunkDataStruct FullChunkIDs;
 	std::vector<std::unique_ptr<Tile>> vptrTiles;
 	std::shared_ptr<MapUtilChunkGen> ChunkGen;
-	//olc::PixelGameEngine* pge;
 	std::shared_ptr<TileID::TileManager> tileManager;
 	std::shared_ptr<AKI::GameConfig> gameConfig;
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 
-//    olc::vi2d mapTL; //map area Top Left
-//    olc::vi2d mapBR; //map area bottom right
 	olc::vi2d vTileFinalPosition;
-
 
     //loads typical data that is needed no mater how class is created
 	void loadTypicalData(uint64_t id, std::shared_ptr<MapUtilChunkGen> gen,
@@ -75,8 +71,8 @@ public:
     std::string compileChunkToString(int i);
     //returns the int of MapUtilTileIDList enum for the tile at
     //location z,y,x
-	int SlabIDAtLocation(int zLayer, int yCol, int xRow);
-	int InfillIDAtLocation(int zLayer, int yCol, int xRow);
+	int SlabIDAtLocation(int zLayer, int yRow, int xCol);
+	int InfillIDAtLocation(int zLayer, int yRow, int xCol);
 
 };
 
