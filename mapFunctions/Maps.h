@@ -11,7 +11,6 @@
 class Maps {
 private:
 
-	//olc::PixelGameEngine* pge;
 	std::shared_ptr<MapUtilChunkGen> ChunkGen;
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 	std::shared_ptr<AKI::GameConfig> gameConfig;
@@ -20,9 +19,7 @@ private:
     int currentWorldSize;
 
     void mapCreateStartingChunks(int worldsize);
-    void makeNewChunk(olc::vi2d newChunkLocation);
-    //used for the creation of a new chunk.
-    uint64_t olcTo64Hex (olc::vi2d olcvi2d);
+
     //takes a xy position in the world and returns
     //the chunk x and chunk y in an olc::vi2d
     olc::vi2d worldPosToChunkXY(olc::vi2d worldPos);
@@ -32,9 +29,9 @@ private:
     bool vi2dInVector(std::vector<olc::vi2d> vect, olc::vi2d check);
 public:
 	//
-	//Convert this to shared pointers and create get functions to protect chunks
+	// create get functions to protect chunks
 	//
-    std::vector<std::unique_ptr<cChunk>> vptrActiveChunks;
+	std::vector<std::shared_ptr<cChunk>> vptrActiveChunks;
 	bool mapLoaded = false;
 	int activeZLayer;
 	olc::vi2d moveViewOffset = { 0,0 };

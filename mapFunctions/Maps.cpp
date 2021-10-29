@@ -5,10 +5,8 @@ Maps::Maps(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameCon
 	graphicsEngine = ge;
 	gameConfig = gc;
 	//create the two functions maps needs
-	ChunkGen	= std::make_shared<MapUtilChunkGen>		();
 	tileManager = std::make_shared<TileID::TileManager>	(gameConfig,graphicsEngine);
-
-
+	ChunkGen	= std::make_shared<MapUtilChunkGen>		(graphicsEngine,gameConfig,tileManager);
 }
 
 void Maps::newMap(int atStartWorldSize) {
@@ -22,68 +20,24 @@ void Maps::continueMap(int chunkNum, int worldSize, std::vector<uint64_t> newChu
 	//commented out becasue we havnt changed the save load from when we changed
 	//how the chunks are layed in memory
 
-    if (chunkNum < worldSize*worldSize) {
-        olc::vi2d newChunkLocation;
-        newChunkLocation = {chunkNum % worldSize, chunkNum/worldSize};
-        uint64_t locationHex = olcTo64Hex(newChunkLocation);
-        //
-        //Right here call cChunk and make new chunk with id and vect
-        //
-		//vptrActiveChunks.emplace_back(std::make_unique<cChunk>(locationHex, newChunk,ChunkGen,gameConfig,graphicsEngine,tileManager));
-
-        if(chunkNum == (worldSize*worldSize) -1) {
-            currentWorldSize = worldSize;
-            mapLoaded = true;
-            activeZLayer = 11;
-        }
-    }
 }
 
 //
 //Creates the first 3x3 chunk area
 void Maps::mapCreateStartingChunks(int worldsize) {
-    //
-    //Chunks in x---->
-    //          y
-    //          |
-    //          V
-
-    for (int x = 0; x < worldsize; ++x) {
-        for (int y = 0; y < worldsize; ++y) {
-            //new chunk location {x,y}
-            makeNewChunk({x,y});
-        }
-    }
+	vptrActiveChunks = ChunkGen->makeWorld(worldsize);
 	mapLoaded = true;
 }
 
-//creates a new chunk at passed location {x,y}
-void Maps::makeNewChunk(olc::vi2d newChunkLocation) {
-    // get the hex value for cChunk for an id
-    uint64_t locationHex = olcTo64Hex(newChunkLocation);
-	vptrActiveChunks.emplace_back(std::make_unique<cChunk>(locationHex,ChunkGen->GenerateChunkStruct(locationHex),
-														   gameConfig,graphicsEngine,tileManager));
-}
-
-uint64_t Maps::olcTo64Hex (olc::vi2d olcvi2d) {
-    uint64_t bitshiftedIDtmp = (uint64_t)olcvi2d.y;
-    uint64_t olcTo64Hex = bitshiftedIDtmp << 32;
-    olcTo64Hex = olcTo64Hex + olcvi2d.x;
-    return olcTo64Hex;
-}
 
 void Maps::DrawActiveChunks() {
-	 
     for (size_t c = 0; c < vptrActiveChunks.size(); ++c) {
-	
 		vptrActiveChunks[c]->DrawChunk(activeZLayer, moveViewOffset);
-
 	}
 }
 
 void Maps::changeZLayer(int i) {
 	if (mapLoaded) {
-
         if (0 <= activeZLayer + i && activeZLayer + i < 15) {
 			activeZLayer = activeZLayer + i;
 		}
@@ -128,9 +82,9 @@ std::vector<int> Maps::viewOfWorld(AKI::I3d pos,int viewDistance) {
     int chunkIndex;
 
 	int yStart = pos.y - viewDistance;
-	int yEnd = pos.y + viewDistance;
+	int yEnd   = pos.y + viewDistance;
 	int XStart = pos.x - viewDistance;
-	int XEnd = pos.x + viewDistance;
+	int XEnd   = pos.x + viewDistance;
 
     for(int y = yStart; y <= yEnd; ++y) {
         for(int x = XStart; x <= XEnd; ++x) {
