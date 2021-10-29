@@ -148,6 +148,7 @@ bool GameEngine::OnUserUpdate(float fElapsedTime)
 	// O--------------------------------------------------------O
 	case pause:
 		CommonRuntimeUpdates();
+		//DrawScreenBoarder();
 		popup->drawPopup();
 		if(!popup->getMessageUp()) {CURRENT_GAMEMODE = mapview;}
 	break;

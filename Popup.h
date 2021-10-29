@@ -7,6 +7,7 @@ namespace AKI {
 class Popup {
 private:
 	bool		messageUp = false;
+	olc::vi2d backgroundPos = {11,2};
 	std::string	message;
 
 	olc::vi2d blackTile = {0,2};
