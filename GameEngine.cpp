@@ -30,7 +30,7 @@ bool GameEngine::OnUserCreate()
 	TextDisplay		= std::make_unique<InfoDisplay>			(graphicsEngine,gameConfig,this);
 	insp			= std::make_unique<InspectionCursor>	(graphicsEngine,gameConfig);
 	ObjHandler		= std::make_shared<ObjectHandler>		(graphicsEngine,gameConfig);
-	EntHandler		= std::make_unique<EntitiesHandler>		(graphicsEngine,gameConfig,chunkManager,ObjHandler);
+	EntHandler		= std::make_unique<EntitiesHandler>		(graphicsEngine,gameConfig,chunkManager,ObjHandler,popup);
 
 	return true;
 }

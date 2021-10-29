@@ -1,11 +1,12 @@
 #include "entitieshandler.h"
 
 EntitiesHandler::EntitiesHandler(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
-								 std::shared_ptr<Maps> chunkman, std::shared_ptr<ObjectHandler> obj) {
+								 std::shared_ptr<Maps> chunkman, std::shared_ptr<ObjectHandler> obj, std::shared_ptr<AKI::Popup> pop) {
 	gameConfig = gc;
 	graphicsEngine = ge;
 	chunkManager = chunkman;
 	ObjHandler = obj;
+	popup = pop;
 	tileManager = std::make_shared<TileID::TileManager>	(gameConfig,graphicsEngine);
 
 }
@@ -52,6 +53,9 @@ void EntitiesHandler::updateEntities(int tick) {
 
 		//check if entity is still alive
 		if(!aliveEnts[i]->alive) {
+			std::string s = " Has Died";
+			s = aliveEnts[i]->returnName() + s;
+			popup->PopupMessage(s);
 			//this is to delete unique pointer from vector after ent dies
 			aliveEnts.erase(aliveEnts.begin() + i);
 		}

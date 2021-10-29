@@ -64,6 +64,7 @@ public:
 		}
 
 		drawColoredClose({xy.x + 1,xy.y +lengthWidth.y});
+		graphicsEngine->drawString({xy.x + 1,xy.y + 1},message,olc::CYAN);
 
 	}
 
