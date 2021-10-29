@@ -79,7 +79,7 @@ public:
 	Ent(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
 		std::shared_ptr<TileID::TileManager> tm, std::string n);
 
-	std::string returnName()				{return "";}
+	std::string returnName()				{return sEntName;}
 	int returnStepZ()						{return entZPosition;}
 	int returnViewDistance()				{return viewDistance;}
 	int getViewDistance()					{return viewDistance;}

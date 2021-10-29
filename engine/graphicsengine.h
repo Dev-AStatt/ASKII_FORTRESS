@@ -11,12 +11,17 @@ namespace AKI {
 
 class GraphicsEngine {
 private:
+	uint32_t tick = 0;
 	olc::PixelGameEngine* pge;
 	std::shared_ptr<GameConfig> gameConfig;
+
+	int debugCount = 0;
+	std::vector<std::string> debugStrings;
 
 public:
 	GraphicsEngine() {}
 	GraphicsEngine(std::shared_ptr<GameConfig> ge, olc::PixelGameEngine* p);
+	void updateTick(uint32_t t);
 	//
 	//position passed in for string is in tilespace and default white color
 	//offset will default to {0,0}, if you need to nudge text outside of tile use offset
@@ -28,6 +33,8 @@ public:
 	//at location in tilespace tilePos
 	//
 	void drawTile(olc::vi2d tilePos, olc::vi2d& decalPos, olc::Pixel col = olc::WHITE);
+
+	void addDebugString(std::string str);
 };
 
 

@@ -170,9 +170,11 @@ void GameEngine::CommonRuntimeUpdates() {
     ActionUpdates();
 	EntHandler->drawEntities(chunkManager->activeZLayer,chunkManager->moveViewOffset);
 	ObjHandler->drawObjects(chunkManager->activeZLayer,chunkManager->moveViewOffset);
+	graphicsEngine->updateTick(gameTick);
     UserInput();
 	GameStateChecks();
 }
+
 
 void GameEngine::GameStateChecks() {
 	if(popup->getMessageUp()) {GAMEMODE_PAUSE();}

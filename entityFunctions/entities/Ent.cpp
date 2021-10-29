@@ -80,12 +80,6 @@ void Ent::updateInteractableCoords() {
 	I3dInteractCoords.emplace_back(position.I3d_ZOffset(-1));
 }
 
-
-
-// O----------------------------------------------------O
-// | End of Utilities Code								|
-// O----------------------------------------------------O
-
 // O----------------------------------------------------O
 // | Movement of Entity Code					        |
 // O----------------------------------------------------O
@@ -95,6 +89,11 @@ void Ent::moveSelf(int x, int y ,int z) {
 	//check if tile going to walk on is "walkable"
 	if(watchYourStep({x,y,z})) {
 		position += AKI::I3d(x,y,z);
+		std::string s = sEntName + " Moved to Pos: {" +
+						std::to_string(position.x) + "," +
+						std::to_string(position.y) + "," +
+						std::to_string(position.z) + "}";
+		graphicsEngine->addDebugString(s);
 		UpdateCoordinatesInView();
 	}
 }
