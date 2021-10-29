@@ -18,6 +18,10 @@ void Maps::newMap(int atStartWorldSize) {
 }
 
 void Maps::continueMap(int chunkNum, int worldSize, std::vector<uint64_t> newChunk) {
+	//If you ever wonder why this isnt working its because the chunk creation is
+	//commented out becasue we havnt changed the save load from when we changed
+	//how the chunks are layed in memory
+
     if (chunkNum < worldSize*worldSize) {
         olc::vi2d newChunkLocation;
         newChunkLocation = {chunkNum % worldSize, chunkNum/worldSize};
@@ -25,7 +29,7 @@ void Maps::continueMap(int chunkNum, int worldSize, std::vector<uint64_t> newChu
         //
         //Right here call cChunk and make new chunk with id and vect
         //
-		vptrActiveChunks.emplace_back(std::make_unique<cChunk>(locationHex, newChunk,ChunkGen,gameConfig,graphicsEngine,tileManager));
+		//vptrActiveChunks.emplace_back(std::make_unique<cChunk>(locationHex, newChunk,ChunkGen,gameConfig,graphicsEngine,tileManager));
 
         if(chunkNum == (worldSize*worldSize) -1) {
             currentWorldSize = worldSize;
@@ -57,7 +61,8 @@ void Maps::mapCreateStartingChunks(int worldsize) {
 void Maps::makeNewChunk(olc::vi2d newChunkLocation) {
     // get the hex value for cChunk for an id
     uint64_t locationHex = olcTo64Hex(newChunkLocation);
-	vptrActiveChunks.emplace_back(std::make_unique<cChunk>(locationHex,ChunkGen,gameConfig,graphicsEngine,tileManager));
+	vptrActiveChunks.emplace_back(std::make_unique<cChunk>(locationHex,ChunkGen->GenerateChunkStruct(locationHex),
+														   gameConfig,graphicsEngine,tileManager));
 }
 
 uint64_t Maps::olcTo64Hex (olc::vi2d olcvi2d) {

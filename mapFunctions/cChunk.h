@@ -1,6 +1,5 @@
 #pragma once
 #include "MapUtilTileIDList.h"
-#include "MapUtilChunkGen.h"
 #include "ChunkDataStruct.h"
 
 class cChunk {
@@ -22,19 +21,11 @@ private:
 	ChunkDataStruct FullChunkIDs;
 	std::vector<std::unique_ptr<Tile>> vptrTiles;
 
-	std::shared_ptr<MapUtilChunkGen> ChunkGen;
 	std::shared_ptr<TileID::TileManager> tileManager;
 	std::shared_ptr<AKI::GameConfig> gameConfig;
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 
 	olc::vi2d vTileFinalPosition;
-
-    //loads typical data that is needed no mater how class is created
-	void loadTypicalData(uint64_t id, std::shared_ptr<MapUtilChunkGen> gen,
-						 std::shared_ptr<AKI::GameConfig> gconf,
-						 std::shared_ptr<AKI::GraphicsEngine> graph,
-						 std::shared_ptr<TileID::TileManager> tm);
-
 
 	//void takes the chunk ID passed into the constructor
 	//and translates that into the chunks global y,x position.
@@ -44,14 +35,9 @@ private:
 	bool checkIfOnScreen(olc::vi2d& newPos);
 public:
     //Creating New Chunk, will call chunk generator for new
-	cChunk(uint64_t id,std::shared_ptr<MapUtilChunkGen> gen,
-		   std::shared_ptr<AKI::GameConfig> gconf, std::shared_ptr<AKI::GraphicsEngine> graph,
-		   std::shared_ptr<TileID::TileManager> tm);
-    //Will load passed in chunk by being given tileset
+	cChunk(uint64_t id, ChunkDataStruct &passedInChunk, std::shared_ptr<AKI::GameConfig> gconf,
+		   std::shared_ptr<AKI::GraphicsEngine> graph, std::shared_ptr<TileID::TileManager> tm);
 
-	cChunk(uint64_t id, std::vector<uint64_t> chunkToLoad, std::shared_ptr<MapUtilChunkGen> gen,
-		   std::shared_ptr<AKI::GameConfig> gconf, std::shared_ptr<AKI::GraphicsEngine> graph,
-		   std::shared_ptr<TileID::TileManager> tm);
 
 	~cChunk() {}
 

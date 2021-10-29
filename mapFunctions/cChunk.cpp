@@ -1,32 +1,16 @@
 #include "cChunk.h"
 
 
-cChunk::cChunk(uint64_t id, std::shared_ptr<MapUtilChunkGen> gen,
-			   std::shared_ptr<AKI::GameConfig> gconf, std::shared_ptr<AKI::GraphicsEngine> graph,std::shared_ptr<TileID::TileManager> tm) {
+cChunk::cChunk(uint64_t id, ChunkDataStruct& passedInChunk, std::shared_ptr<AKI::GameConfig> gconf,
+			   std::shared_ptr<AKI::GraphicsEngine> graph, std::shared_ptr<TileID::TileManager> tm) {
 
-	loadTypicalData(id,gen,gconf,graph,tm);
-	FullChunkIDs = ChunkGen->GenerateChunkStruct();
-
-}
-
-cChunk::cChunk(uint64_t id, std::vector<uint64_t> chunkToLoad, std::shared_ptr<MapUtilChunkGen> gen,
-			   std::shared_ptr<AKI::GameConfig> gconf, std::shared_ptr<AKI::GraphicsEngine> graph,
-			   std::shared_ptr<TileID::TileManager> tm) {
-	loadTypicalData(id,gen,gconf,graph,tm);
-    FullChunkIDs.slabs = chunkToLoad;
-}
-
-//Stuff that needs to be loaded if a new chunk or a loaded chunk is made
-void cChunk::loadTypicalData(uint64_t id, std::shared_ptr<MapUtilChunkGen> cg,
-							 std::shared_ptr<AKI::GameConfig> gc,
-							 std::shared_ptr<AKI::GraphicsEngine> ge,
-							 std::shared_ptr<TileID::TileManager> tm) {
+	FullChunkIDs = passedInChunk;
 	ChunkID = id;
-	gameConfig = gc;
-	graphicsEngine = ge;
+	gameConfig = gconf;
+	graphicsEngine = graph;
 	tileManager = tm;
-	ChunkGen = cg;
 	decryptIDtoYX();
+
 }
 
 
