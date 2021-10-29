@@ -31,34 +31,25 @@ void cChunk::loadTypicalData(uint64_t id, std::shared_ptr<MapUtilChunkGen> cg,
 
 
 //Takes in the z,y,x coordinates of a tile and returns the TileID
-int cChunk::SlabIDAtLocation(int zLayer, int yRow, int xCol) {
-	return FullChunkIDs.getSlabIDAt(zLayer,yRow,xCol);
+int cChunk::getSlabIDAt(int zLayer, int yRow, int xCol) {
+	if(withinChunk(zLayer,yRow,xCol)) {
+		return FullChunkIDs.getSlabIDAt(zLayer,yRow,xCol);
+	}
+	else return -1;
 }
 
 //Takes in the z,y,x coordinates of a tile and returns the TileID
-int cChunk::InfillIDAtLocation(int zLayer, int yRow, int xCol) {
-	return FullChunkIDs.getInfillIDAt(zLayer,yRow,xCol);
+int cChunk::getInfillIDAt(int zLayer, int yRow, int xCol) {
+	if(withinChunk(zLayer,yRow,xCol)) {
+		return FullChunkIDs.getInfillIDAt(zLayer,yRow,xCol);
+	} else return -1;
 }
 
-//returns a pointer to a tile that is at the location of z, vi2d(yx)
-std::unique_ptr<Tile>& cChunk::SlabPtrAtLocation(int zLayer, olc::vi2d yx) {
-	//call TileIDAtLoc and return a pointer at that loc
-	std::unique_ptr<Tile>& t = tileManager->vptrTiles[SlabIDAtLocation(zLayer, yx.y, yx.x)];
-	return t;
 
-}
-
-//returns a pointer to a tile that is at the location of z, vi2d(yx)
-std::unique_ptr<Tile>& cChunk::InfillPtrAtLocation(int zLayer, olc::vi2d yx) {
-	//call TileIDAtLoc and return a pointer at that loc
-	std::unique_ptr<Tile>& t = tileManager->vptrTiles[InfillIDAtLocation(zLayer, yx.y, yx.x)];
-	return t;
-
-}
 
 void cChunk::decryptIDtoYX() {
 	//shift bits right until just MSB 8 are left
-	bitshiftedIDtmp = ChunkID >> 32;
+	uint64_t bitshiftedIDtmp = ChunkID >> 32;
 	chunkPositionY = (long)bitshiftedIDtmp;
 	//and with FF to remove all MSB8 and leave LSB
 	bitshiftedIDtmp = 0x00000000FFFFFFFF;
@@ -69,7 +60,7 @@ void cChunk::decryptIDtoYX() {
 void cChunk::DrawChunk(int zLayer, olc::vi2d& moveViewOffset) {
 	for (int y = 0; y < 16; ++y) {
 		for (int x = 0; x < 16; ++x) {
-			auto& t = tileManager->vptrTiles[SlabIDAtLocation(zLayer, y, x)];
+			auto& t = tileManager->vptrTiles[getSlabIDAt(zLayer, y, x)]; //if getSlabID returns -1 your intruble.
 			if (t) {							//the + 1 on the X, Y is to add space for the header
 				vTileFinalPosition = {x + (int)(chunkPositionX * 16) + 1 + moveViewOffset.x,(y + (int)(chunkPositionY * 16) + 1) + moveViewOffset.y };
 				//make sure adjusted position is on screen
@@ -96,12 +87,10 @@ bool cChunk::checkIfOnScreen(olc::vi2d& newPos) {
 //call chunk gen passing the current chunk and return it with edits
 void cChunk::SlabReplacement(TileID::TileIDList newTile, int x, int y, int z) {
 	FullChunkIDs.fillSingleSlab(z,y,x,newTile);
-	//FullChunkIDs.slabs = ChunkGen->editchunkSingleTile(FullChunkIDs.slabs,x,y,z,newTile);
 }
 
 void cChunk::InfillReplacement(TileID::TileIDList newTile, int x, int y, int z) {
 	FullChunkIDs.fillSingleInfill(z,y,x,newTile);
-	//FullChunkIDs.infill = ChunkGen->editchunkSingleTile(FullChunkIDs.slabs,x,y,z,newTile);
 }
 
 std::string cChunk::compileChunkToString(int i) {

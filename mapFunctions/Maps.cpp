@@ -132,7 +132,7 @@ std::vector<int> Maps::viewOfWorld(AKI::I3d pos,int viewDistance) {
             chunkIDLoc = worldPosToChunkXY({x,y});
             chunkIndex = returnVIndexOfChunk(chunkIDLoc);
             if(chunkIndex >= 0) {
-				int temp = vptrActiveChunks[chunkIndex]->SlabIDAtLocation(pos.z,y,x);
+				int temp = vptrActiveChunks[chunkIndex]->getSlabIDAt(pos.z,y,x);
                 vSight.emplace_back(temp);
             }
 
