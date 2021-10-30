@@ -34,12 +34,10 @@ protected:
 	std::unique_ptr<EntSight> sight;
 	std::vector<int> vPriorities;
 
-    //field of view
-	std::vector<int>		tilesInView;
-	std::vector<AKI::I3d>	I3dCoordinatesInView;
+
 	std::vector<AKI::I3d>	I3dInteractCoords;
 
-	std::vector<olc::vi2d>	positionsXYInView;
+
 	std::vector<std::shared_ptr<Object>> objectPtrsInView;
 
 
@@ -64,14 +62,6 @@ protected:
 	bool searchForFood();
 	olc::vi2d locationOfFood();
 	int foodIDAt(olc::vi2d XY);
-	//returns true if tile is in view
-	bool searchForTile(TileID::TileIDList tileLookingFor);
-	//returns the 2d coord of tile
-	olc::vi2d locateTile(TileID::TileIDList tileLookingFor);
-	//will compare old and new vi2d and retrun true if new is closer
-	bool closerToEnt(olc::vi2d& old, olc::vi2d& newXY);
-	//returns true if you can walk on tile in the x,y direction
-	bool watchYourStep(AKI::I3d nPos);
 
 	//used for update Position in view to check if number is pos
 	int notNegativeXY(int x) { if(x >=0) { return x; } else return 0; }
@@ -87,7 +77,7 @@ public:
 	int returnStepZ()						{return entZPosition;}
 	int returnViewDistance()				{return viewDistance;}
 	int getViewDistance()					{return viewDistance;}
-	std::vector<olc::vi2d> getPosInView()	{return positionsXYInView;}
+	//std::vector<olc::vi2d> getPosInView()	{return positionsXYInView;}
 	AKI::I3d& returnPos()					{return position;}
 	virtual bool updateSelf(int tick)		{if(tick>0) {return true;} return true;};
 

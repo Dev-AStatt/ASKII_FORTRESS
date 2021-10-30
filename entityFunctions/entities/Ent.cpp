@@ -20,7 +20,7 @@ void Ent::constructEntBasics(std::shared_ptr<TileID::TileManager> tm,
 	tileManager = tm;
 	Destination = std::make_unique<Memories::EntDest>();
 	alive = true;
-	sight = std::make_unique<EntSight>(tileManager);
+	sight = std::make_unique<EntSight>(viewDistance,tileManager);
 }
 
 // O----------------------------------------------------O
@@ -51,14 +51,12 @@ int Ent::AKIRand(int from, int to) {
 
 
 void Ent::UpdateCoordinatesInView() {
-	positionsXYInView.clear();
-	I3dCoordinatesInView.clear();
+
 	//loop through coordinates in view in the XY plane
 	for(int y = notNegativeXY(position.y - viewDistance); y <= position.y + viewDistance; ++y) {
 		for(int x = notNegativeXY(position.x - viewDistance); x <= position.x + viewDistance; ++x) {
-			positionsXYInView.emplace_back(olc::vi2d(x,y));
-			I3dCoordinatesInView.emplace_back(AKI::I3d(x,y,position.z));
 
+			sight->addCoordsInView({x,y,position.z});
 		}
 	}
 	//update the coordinates that are interactable
@@ -86,7 +84,7 @@ void Ent::updateInteractableCoords() {
 //takes in the unit vector directions wanting to move. Ex: {-1, 0, 0}
 void Ent::moveSelf(int x, int y ,int z) {
 	//check if tile going to walk on is "walkable"
-	if(watchYourStep({x,y,z})) {
+	if(sight->watchYourStep({x,y,z})) {
 		position += AKI::I3d(x,y,z);
 		std::string s = sEntName + " Moved to Pos: {" +
 						std::to_string(position.x) + "," +
@@ -96,24 +94,6 @@ void Ent::moveSelf(int x, int y ,int z) {
 		UpdateCoordinatesInView();
 	}
 }
-
-
-//takes in the unit vector directions wanting to move. Ex: {-1, 0, 0}
-bool Ent::watchYourStep(AKI::I3d nPos) {
-	//how many tiles are in a x row for our view distance
-	int numInX = (viewDistance * 2) + 1;
-	//find the center tile that contains our position
-	int centerIndex = (numInX * 3) + viewDistance;
-	//add the change nPos to our center index
-	int index = centerIndex + (nPos.x) + (nPos.y * numInX);
-
-	auto& t = tileManager->vptrTiles[tilesInView[index]];
-	if(t->isWalkable()) {
-		return true;
-	}
-	return false;
-}
-
 // O----------------------------------------------------O
 // | End Movement of Entity Code				        |
 // O----------------------------------------------------O
@@ -139,14 +119,14 @@ bool Ent::pathfinding() {
 	}
 	if(vPriorities[0] == Memories::water) {
 		//search for tile returns if tile is even in view
-		if(!searchForTile(TileID::Water)) { return false;}
+		if(!sight->isSlabInView(TileID::Water)) { return false;}
 
 		std::cout << sEntName << " Has Found Water" << '\n';
 
 		//set destination to new tile found
-		olc::vi2d tmp = locateTile(TileID::Water);
+		AKI::I3d tmp = sight->locateTile(TileID::Water,position);
 
-		Destination->setNewDest({tmp.x,tmp.y,position.z},Memories::water,TileID::Water);
+		Destination->setNewDest(tmp,Memories::water,TileID::Water);
 		//move tward tile
 		moveSelfI3d(Destination->directionToDest(position));
 		return true;
@@ -186,54 +166,25 @@ bool Ent::searchForFood() {
 }
 
 olc::vi2d Ent::locationOfFood() {
-	olc::vi2d closest, tmp;
+	AKI::I3d closest, tmp;
 	for(int i = 0; i < (int)objectPtrsInView.size(); ++i) {
 		if(objectPtrsInView[i]->isEdable()) {
-			closest = {objectPtrsInView[i]->getXPos(),objectPtrsInView[i]->getYPos()};
+			closest = {objectPtrsInView[i]->getXPos(),objectPtrsInView[i]->getYPos(),position.z};
 		}
 	}
 	for(int i = 0; i < (int)objectPtrsInView.size(); ++i) {
 		if(objectPtrsInView[i]->isEdable()) {
-			tmp = {objectPtrsInView[i]->getXPos(),objectPtrsInView[i]->getYPos()};
-			if(closerToEnt(closest,tmp)) {
+			tmp = {objectPtrsInView[i]->getXPos(),objectPtrsInView[i]->getYPos(),position.z};
+			if(sight->closerToEnt(closest,tmp,position)) {
 				closest = tmp;
 			}
 		}
 	}
 	std::cout << sEntName << " Found Food At: " << "{" << std::to_string(closest.x)<< ", " << std::to_string(closest.y) << "}" << '\n';
-	return closest;
-}
-
-bool Ent::searchForTile(TileID::TileIDList tileLookingFor) {
-	return sight->isSlabInView(tileLookingFor);
+	return {closest.x,closest.y};
 }
 
 
-//will currently return 0,0 if no tile is found
-olc::vi2d Ent::locateTile(TileID::TileIDList tileLookingFor) {
-	olc::vi2d closest = {-200,-200}, temp;
-	for (int i = 0; i < (int)tilesInView.size(); ++i) {
-		if(tilesInView[i] == tileLookingFor) {
-			temp = positionsXYInView[i];
-			if(closerToEnt(closest,temp)) {
-				closest = temp;
-			}
-		}
-	}
-	std::cout << sEntName << " Found Tile At: " << "{" << std::to_string(closest.x)<< ", " << std::to_string(closest.y) << "}" << '\n';
-	return closest;
-}
-
-bool Ent::closerToEnt(olc::vi2d &oldXY, olc::vi2d &newXY) {
-	olc::vi2d d = olc::vi2d(position.x,position.y) - oldXY;
-	//get the distance to the old match
-	int oldDist = std::abs(d.x) + std::abs(d.y);
-	d = olc::vi2d(position.x,position.y) - newXY;
-	int newDist = std::abs(d.x) + std::abs(d.y);
-
-	if(newDist < oldDist) { return true; }
-	return false;
-}
 
 
 
