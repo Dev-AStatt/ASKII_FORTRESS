@@ -80,7 +80,7 @@ public:
 	//std::vector<olc::vi2d> getPosInView()	{return positionsXYInView;}
 	AKI::I3d& returnPos()					{return position;}
 	virtual bool updateSelf(int tick)		{if(tick>0) {return true;} return true;};
-
+	std::vector<AKI::I3d>& getCordsInView() {return sight->getCordsInView();}
 
 	virtual void moveSelf(int x, int y, int z = 0);
 	//just translates a moveself with vi2d to moveself

@@ -75,7 +75,7 @@ void Maps::flipTileOnMap(olc::vi2d& insplocXY) {
 }
 
 
-std::vector<int> Maps::viewOfWorld(AKI::I3d pos,int viewDistance) {
+std::vector<int> Maps::viewOfWorldSlabs(AKI::I3d pos,int viewDistance) {
     std::vector<int> vSight;
     //std::vector<olc::vi2d> chunksInView;
     olc::vi2d chunkIDLoc;
@@ -100,6 +100,31 @@ std::vector<int> Maps::viewOfWorld(AKI::I3d pos,int viewDistance) {
     return vSight;
 }
 
+
+std::vector<int> Maps::viewOfWorldInfill(AKI::I3d pos,int viewDistance) {
+	std::vector<int> vSight;
+	//std::vector<olc::vi2d> chunksInView;
+	olc::vi2d chunkIDLoc;
+	int chunkIndex;
+
+	int yStart = pos.y - viewDistance;
+	int yEnd   = pos.y + viewDistance;
+	int XStart = pos.x - viewDistance;
+	int XEnd   = pos.x + viewDistance;
+
+	for(int y = yStart; y <= yEnd; ++y) {
+		for(int x = XStart; x <= XEnd; ++x) {
+			chunkIDLoc = worldPosToChunkXY({x,y});
+			chunkIndex = returnVIndexOfChunk(chunkIDLoc);
+			if(chunkIndex >= 0) {
+				int temp = vptrActiveChunks[chunkIndex]->getInfillIDAt(pos.z,y,x);
+				vSight.emplace_back(temp);
+			}
+
+		}
+	}
+	return vSight;
+}
 
 olc::vi2d Maps::worldPosToChunkXY(olc::vi2d worldPos) {
 	olc::vi2d chunkXY = {worldPos.x / gameConfig->getChunkSize(),worldPos.y / gameConfig->getChunkSize()};

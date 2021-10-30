@@ -51,6 +51,7 @@ public:
     void newMap(int atStartWorldSize);
     void continueMap(int chunkNum,int worldSize, std::vector<uint64_t> newChunk);
 
-	std::vector<int> viewOfWorld(AKI::I3d pos,int viewDistance);
+	std::vector<int> viewOfWorldSlabs(AKI::I3d pos,int viewDistance);
+	std::vector<int> viewOfWorldInfill(AKI::I3d pos,int viewDistance);
 };
 

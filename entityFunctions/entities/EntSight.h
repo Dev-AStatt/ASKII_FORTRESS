@@ -35,6 +35,7 @@ public:
 	void clearInfillInView(){infillInView.clear();}
 	void setSlabsInView( std::vector<int> vSight) {slabsInView = vSight;}
 	void setInfillInView(std::vector<int> vSight) {infillInView = vSight;}
+	std::vector<AKI::I3d>& getCordsInView() {return I3dCoordinatesInView;}
 
 	void addCoordsInView(AKI::I3d pos) {I3dCoordinatesInView.emplace_back(pos);}
 
