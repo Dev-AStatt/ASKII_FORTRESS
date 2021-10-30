@@ -6,7 +6,7 @@
 
 class EntSight {
 private:
-	int viewDistance;
+	int viewDistance = 0;
 	std::shared_ptr<TileID::TileManager> tileManager;
 
 	std::vector<int> slabsInView;
@@ -18,15 +18,20 @@ private:
 public:
 	EntSight(int vd, std::shared_ptr<TileID::TileManager> tm) {
 		tileManager = tm;
-		viewDistance = vd;
+		if(vd > 0 && vd < 100) {
+			viewDistance = vd;
+		}else {
+			std::cout << "Why did someone pass a broken view distance" << '\n';
+		}
+
 	}
-	int getSlabIDInView(  int index) {
-		if(index < (int)slabsInView.size()) {
+	int getSlabIDInView(int index) {
+		if(index < (int)slabsInView.size() && index >= 0) {
 			return slabsInView[index];
 		} else return 0;
 	}
 	int getinfillIDInView(int index) {
-		if(index < (int)slabsInView.size()) {
+		if(index < (int)slabsInView.size() && index >= 0) {
 			return infillInView[index];
 		} else return 0;
 	}
@@ -90,7 +95,7 @@ public:
 		auto& f = tileManager->vptrTiles[getinfillIDInView(index)];
 
 		auto& t = tileManager->vptrTiles[getSlabIDInView(index)];
-		if(t->isWalkable() && f->isSolid()) {
+		if(t->isWalkable() && !f->isSolid()) {
 			return true;
 		}
 		return false;

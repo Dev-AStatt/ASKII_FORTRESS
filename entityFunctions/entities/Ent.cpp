@@ -11,6 +11,7 @@ Ent::Ent(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfi
 	thirst				= 100;
 	tint				= olc::WHITE;
 	sEntName			= n;
+	sight = std::make_unique<EntSight>(viewDistance,tileManager);
 }
 
 void Ent::constructEntBasics(std::shared_ptr<TileID::TileManager> tm,
@@ -20,7 +21,7 @@ void Ent::constructEntBasics(std::shared_ptr<TileID::TileManager> tm,
 	tileManager = tm;
 	Destination = std::make_unique<Memories::EntDest>();
 	alive = true;
-	sight = std::make_unique<EntSight>(viewDistance,tileManager);
+
 }
 
 // O----------------------------------------------------O
