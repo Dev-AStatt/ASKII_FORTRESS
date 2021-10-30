@@ -20,6 +20,7 @@ void Ent::constructEntBasics(std::shared_ptr<TileID::TileManager> tm,
 	tileManager = tm;
 	Destination = std::make_unique<Memories::EntDest>();
 	alive = true;
+	sight = std::make_unique<EntSight>(tileManager);
 }
 
 // O----------------------------------------------------O
@@ -48,8 +49,6 @@ int Ent::AKIRand(int from, int to) {
 	return distr(gen);
 }
 
-//used for update Position in view to check if number is pos
-int notNegativeXY(int x) { if(x >=0) { return x; } else return 0; }
 
 void Ent::UpdateCoordinatesInView() {
 	positionsXYInView.clear();
@@ -107,6 +106,7 @@ bool Ent::watchYourStep(AKI::I3d nPos) {
 	int centerIndex = (numInX * 3) + viewDistance;
 	//add the change nPos to our center index
 	int index = centerIndex + (nPos.x) + (nPos.y * numInX);
+
 	auto& t = tileManager->vptrTiles[tilesInView[index]];
 	if(t->isWalkable()) {
 		return true;
@@ -205,12 +205,7 @@ olc::vi2d Ent::locationOfFood() {
 }
 
 bool Ent::searchForTile(TileID::TileIDList tileLookingFor) {
-	for (int i = 0; i < (int)tilesInView.size(); ++i) {
-		if(tilesInView[i] == tileLookingFor) {
-			return true;
-		}
-	}
-	return false;
+	return sight->isSlabInView(tileLookingFor);
 }
 
 

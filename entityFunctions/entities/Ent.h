@@ -3,6 +3,7 @@
 #include "mapFunctions/MapUtilTileIDList.h"
 #include "entityFunctions/entities/EntDest.h"
 #include "objectFunctions/objecthandler.h"
+#include "EntSight.h"
 
 ///
 /// \brief The Ent class currently is not used for anything in this project
@@ -30,7 +31,7 @@ protected:
 	std::shared_ptr<AKI::GameConfig> gameConfig;
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 
-
+	std::unique_ptr<EntSight> sight;
 	std::vector<int> vPriorities;
 
     //field of view
@@ -72,6 +73,10 @@ protected:
 	//returns true if you can walk on tile in the x,y direction
 	bool watchYourStep(AKI::I3d nPos);
 
+	//used for update Position in view to check if number is pos
+	int notNegativeXY(int x) { if(x >=0) { return x; } else return 0; }
+
+
 public:
 	bool alive;
     Ent() {};
@@ -93,7 +98,8 @@ public:
 	void moveSelfI3d(AKI::I3d XYZ)	{moveSelf(XYZ.x,XYZ.y,XYZ.z);}
 
 	virtual void DrawSelf(int activeZLayer, olc::vi2d& viewOffset);
-	virtual void giftOfSight(std::vector<int> vSight) {tilesInView = vSight;}
+	virtual void giftOfSightSlabs(std::vector<int> vSight) {sight->setSlabsInView(vSight);}
+	virtual void giftOfSightInfill(std::vector<int> vSight) {sight->setInfillInView(vSight);}
 	virtual void giftObjectsInView(std::vector<std::shared_ptr<Object>> vPSight) {objectPtrsInView = vPSight;}
 
 
