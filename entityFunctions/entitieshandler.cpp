@@ -45,8 +45,7 @@ void EntitiesHandler::updateEntities(int tick) {
 	for(int i = 0; i < (int)aliveEnts.size(); ++i) {
 		//give view of map
 		updateSight(i);
-//		aliveEnts[i]->giftOfSightSlabs(chunkManager->getSlabsInView(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
-//		aliveEnts[i]->giftOfSightInfill(chunkManager->getInfillInView(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
+
 		//give view of Objects
 		passItemPtrToEnt(i);
 
@@ -74,22 +73,24 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 }
 
 
-void EntitiesHandler::updateSight(int entIndex) {
+ void EntitiesHandler::updateSight(int entIndex) {
 	//first we need to get the fist parent node for the Data structure,
 	//we need the position, slab, and infill int's.
 
 	//get the ent starting position
 	AKI::I3d entStartingPos = aliveEnts[entIndex]->returnPos();
 
-	Node source(chunkManager->getBlockFromWorldPos(entStartingPos),entStartingPos);
+	std::shared_ptr<Node> source;
+	source = std::make_shared<Node>(chunkManager->getBlockFromWorldPos(entStartingPos),entStartingPos);
+
 
 	for(int y = entStartingPos.y - 1; y <= entStartingPos.y + 1; ++y) {
-		for(int x = entStartingPos.x - 1; y <= entStartingPos.x + 1; ++x) {
+		for(int x = entStartingPos.x - 1; x <= entStartingPos.x + 1; ++x) {
 			AKI::I3d newPos = {x,y,entStartingPos.z};
-			source.newChild(chunkManager->getBlockFromWorldPos(newPos),newPos);
+			source->newChild(chunkManager->getBlockFromWorldPos(newPos),newPos);
 		}
 	}
-	return;
+	aliveEnts[entIndex]->setSightNodeSource(source);
 }
 
 

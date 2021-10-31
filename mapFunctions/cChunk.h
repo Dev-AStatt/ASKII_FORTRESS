@@ -39,6 +39,7 @@ public:
 		   std::shared_ptr<AKI::GraphicsEngine> graph, std::shared_ptr<TileID::TileManager> tm);
 
 
+
 	~cChunk() {}
 
 	//Return functions for fetching class data

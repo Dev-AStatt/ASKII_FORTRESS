@@ -82,7 +82,8 @@ public:
 	AKI::I3d& returnPos()					{return position;}
 	virtual bool updateSelf(int tick)		{if(tick>0) {return true;} return true;};
 	std::vector<AKI::I3d>& getCordsInView() {return sight->getCordsInView();}
-	Node* getNodeSource()					{return sight->sightNodeSource;}
+	std::shared_ptr<Node>& getNodeSource()	{return sight->sightTree;}
+	void setSightNodeSource(std::shared_ptr<Node> s) {sight->sightTree = s;}
 
 	virtual void moveSelf(int x, int y, int z = 0);
 	//just translates a moveself with vi2d to moveself
@@ -90,8 +91,6 @@ public:
 	void moveSelfI3d(AKI::I3d XYZ)	{moveSelf(XYZ.x,XYZ.y,XYZ.z);}
 
 	virtual void DrawSelf(int activeZLayer, olc::vi2d& viewOffset);
-	virtual void giftOfSightSlabs(std::vector<int> vSight) {sight->setSlabsInView(vSight);}
-	virtual void giftOfSightInfill(std::vector<int> vSight) {sight->setInfillInView(vSight);}
 	virtual void giftObjectsInView(std::vector<std::shared_ptr<Object>> vPSight) {objectPtrsInView = vPSight;}
 
 

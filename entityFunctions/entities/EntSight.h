@@ -17,7 +17,7 @@ private:
 	std::vector<std::shared_ptr<Object>> objectPtrsInView;
 
 public:
-	Node* sightNodeSource;
+	std::shared_ptr<Node> sightTree;
 	EntSight(int vd, std::shared_ptr<TileID::TileManager> tm) {
 		tileManager = tm;
 		if(vd > 0 && vd < 100) {
