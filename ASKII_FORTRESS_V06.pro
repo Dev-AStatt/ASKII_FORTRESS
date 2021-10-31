@@ -30,12 +30,12 @@ HEADERS += \
 	entityFunctions/entities/Ent.h \
     entityFunctions/entities/EntDest.h \
 	entityFunctions/entities/EntHuman.h \
+    entityFunctions/entities/EntSight.h \
 	entityFunctions/entitieshandler.h \
 	libraries/olcPixelGameEngine.h \
     mapFunctions/ChunkDataStruct.h \
     mapFunctions/MapUtilChunkGen.h \
     mapFunctions/MapUtilTileIDList.h \
-    mapFunctions/MapUtil_I3d.h \
     mapFunctions/Maps.h \
     mapFunctions/TileFunctions/TileSlope.h \
     mapFunctions/TileFunctions/Tiles.h \

@@ -44,7 +44,8 @@ void EntitiesHandler::newGameEntities() {
 void EntitiesHandler::updateEntities(int tick) {
 	for(int i = 0; i < (int)aliveEnts.size(); ++i) {
 		//give view of map
-		aliveEnts[i]->giftOfSight(chunkManager->viewOfWorld(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
+		aliveEnts[i]->giftOfSightSlabs(chunkManager->viewOfWorldSlabs(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
+		aliveEnts[i]->giftOfSightInfill(chunkManager->viewOfWorldInfill(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
 		//give view of Objects
 		passItemPtrToEnt(i);
 
@@ -64,9 +65,9 @@ void EntitiesHandler::updateEntities(int tick) {
 
 void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 	std::vector<std::shared_ptr<Object>> tmp;
-	std::vector<olc::vi2d> vPos = aliveEnts[entIndex]->getPosInView();
+	std::vector<AKI::I3d> vPos = aliveEnts[entIndex]->getCordsInView();
 	//tmp = ObjHandler->fillVectWithObjPtrs(vPos,aliveEnts[entIndex]->returnStepZ());
-	tmp = ObjHandler->fillVectWithObjPtrs(vPos,aliveEnts[entIndex]->returnStepZ());
+	tmp = ObjHandler->fillVectWithObjPtrs(vPos);
 	aliveEnts[entIndex]->giftObjectsInView(tmp);
 
 }

@@ -59,12 +59,12 @@ int ObjectHandler::ItemIDAtPosition(AKI::I3d pos) {
 
 
 
-std::vector<std::shared_ptr<Object>> ObjectHandler::fillVectWithObjPtrs(std::vector<olc::vi2d> &vectPosXY, int z) {
+std::vector<std::shared_ptr<Object>> ObjectHandler::fillVectWithObjPtrs(std::vector<AKI::I3d>& vectPos) {
 	std::vector<std::shared_ptr<Object>> tmp;
-	for(int i = 0; i < (int)vectPosXY.size(); ++i) {
+	for(int i = 0; i < (int)vectPos.size(); ++i) {
 		//if(ItemIDAtPosition(vectPosXY[i],z) != -1) {
-		if(ItemIDAtPosition({vectPosXY[i].x,vectPosXY[i].y,z}) != -1) {
-			std::shared_ptr<Object> check = getObjPtrAt({vectPosXY[i].x,vectPosXY[i].y,z});
+		if(ItemIDAtPosition({vectPos[i].x,vectPos[i].y,vectPos[i].z}) != -1) {
+			std::shared_ptr<Object> check = getObjPtrAt({vectPos[i].x,vectPos[i].y,vectPos[i].z});
 			if(check != nullptr) {
 				tmp.emplace_back(check);
 			}

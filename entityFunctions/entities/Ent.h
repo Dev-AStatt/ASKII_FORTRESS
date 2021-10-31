@@ -1,9 +1,9 @@
 #pragma once
 #include <random>
-#include "mapFunctions/MapUtil_I3d.h"
 #include "mapFunctions/MapUtilTileIDList.h"
 #include "entityFunctions/entities/EntDest.h"
 #include "objectFunctions/objecthandler.h"
+#include "EntSight.h"
 
 ///
 /// \brief The Ent class currently is not used for anything in this project
@@ -31,15 +31,13 @@ protected:
 	std::shared_ptr<AKI::GameConfig> gameConfig;
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 
-
+	std::unique_ptr<EntSight> sight;
 	std::vector<int> vPriorities;
 
-    //field of view
-	std::vector<int>		tilesInView;
-	std::vector<AKI::I3d>	I3dCoordinatesInView;
+
 	std::vector<AKI::I3d>	I3dInteractCoords;
 
-	std::vector<olc::vi2d>	positionsXYInView;
+
 	std::vector<std::shared_ptr<Object>> objectPtrsInView;
 
 
@@ -64,14 +62,10 @@ protected:
 	bool searchForFood();
 	olc::vi2d locationOfFood();
 	int foodIDAt(olc::vi2d XY);
-	//returns true if tile is in view
-	bool searchForTile(TileID::TileIDList tileLookingFor);
-	//returns the 2d coord of tile
-	olc::vi2d locateTile(TileID::TileIDList tileLookingFor);
-	//will compare old and new vi2d and retrun true if new is closer
-	bool closerToEnt(olc::vi2d& old, olc::vi2d& newXY);
-	//returns true if you can walk on tile in the x,y direction
-	bool watchYourStep(AKI::I3d nPos);
+
+	//used for update Position in view to check if number is pos
+	int notNegativeXY(int x) { if(x >=0) { return x; } else return 0; }
+
 
 public:
 	bool alive;
@@ -83,10 +77,10 @@ public:
 	int returnStepZ()						{return entZPosition;}
 	int returnViewDistance()				{return viewDistance;}
 	int getViewDistance()					{return viewDistance;}
-	std::vector<olc::vi2d> getPosInView()	{return positionsXYInView;}
+	//std::vector<olc::vi2d> getPosInView()	{return positionsXYInView;}
 	AKI::I3d& returnPos()					{return position;}
 	virtual bool updateSelf(int tick)		{if(tick>0) {return true;} return true;};
-
+	std::vector<AKI::I3d>& getCordsInView() {return sight->getCordsInView();}
 
 	virtual void moveSelf(int x, int y, int z = 0);
 	//just translates a moveself with vi2d to moveself
@@ -94,7 +88,8 @@ public:
 	void moveSelfI3d(AKI::I3d XYZ)	{moveSelf(XYZ.x,XYZ.y,XYZ.z);}
 
 	virtual void DrawSelf(int activeZLayer, olc::vi2d& viewOffset);
-	virtual void giftOfSight(std::vector<int> vSight) {tilesInView = vSight;}
+	virtual void giftOfSightSlabs(std::vector<int> vSight) {sight->setSlabsInView(vSight);}
+	virtual void giftOfSightInfill(std::vector<int> vSight) {sight->setInfillInView(vSight);}
 	virtual void giftObjectsInView(std::vector<std::shared_ptr<Object>> vPSight) {objectPtrsInView = vPSight;}
 
 

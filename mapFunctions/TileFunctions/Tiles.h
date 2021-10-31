@@ -13,6 +13,7 @@ public:
 	}
 	std::string returnName()	{ return "";}
 	bool isWalkable()			{ return walkable;}
+	bool isSolid()				{ return solid; }
 	virtual void DrawSelf(const olc::vi2d& pos) {
 		graphicsEngine->drawTile(pos,decalSourcePos,tint);
 	}
@@ -27,6 +28,7 @@ protected:
 	std::unique_ptr<olc::Decal> decTile;
 	bool mineable = false;
     bool walkable = true;
+	bool solid = true;
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 
 	void constructDecal() {
@@ -59,6 +61,7 @@ public:
 		sTileName = "Air";
 		tint = olc::BLACK;
         walkable = false;
+		solid = false;
 	}
 };
 
@@ -70,6 +73,7 @@ public:
 		sTileName = "Water";
 		tint = olc::BLUE;
         walkable = false;
+		solid = false;
 	}
 };
 

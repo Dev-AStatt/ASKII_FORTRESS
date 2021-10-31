@@ -1,68 +1,101 @@
 #pragma once
 #include "MapUtilTileIDList.h"
 #include "ChunkDataStruct.h"
-
-
-///
-/// Chunk Orgonization. Vector <z> Vector <Y> = 0xFF for X
-/// Y is a 31 entery vector as it holds Y1.0 for x0 -> x7, and Y1.5 for x8-x15 
-/// Y even numbers hold comumn numbers and odd are second set of x's for evens
-/// 
+#include "cChunk.h"
 
 
 class MapUtilChunkGen {
 private:
-	//new chunk that is 16x33 of 0's
-	std::vector<uint64_t> newChunkSlab = std::vector<uint64_t>(511, 0);
+
+	//the two of these are needed to give to cChunk
+	std::shared_ptr<AKI::GraphicsEngine>	graphicsEngine;
+	std::shared_ptr<AKI::GameConfig>		gameConfig;
+	std::shared_ptr<TileID::TileManager>	tileManager;
+
 	ChunkDataStruct newChunkStruct;
-	//Temporary or Maluable Values
-	uint64_t unitTileId = 0;
-	int bitshift = 0;
-	//bitshiftedIDtmp is used to hold the bitshifted value
-	uint64_t bitshiftedIDtmp = 0;
+	std::vector<std::shared_ptr<cChunk>> vptrActiveChunks;
 
-
-	int vectorID(int z, int y) { return (z * 32 + y); };
 	//Creates stone from z[0] to z[10] then a dirt island.
-	void CreateFlatWorldSlabs();
-	void CreateFlatWorldInfill();
-	//
-	// FillChunkZLayer will take a Z layer value and a tile id and
-	// fill that layer with all tiles of that ID
-	//
-	void FillChunkZLayer(int zLayerToFill, int tileID);
-	//
-	//Function takes Z, y, x coordinate and changes tile at single location.
-	//
-	void FillSingleTile(int zLayer, int yCol, int xRow, int tileID);
-	//
-	//Function to fill an X row with a single tile type.
-	//zLayerToFill is the z layer of chunk, yColToFil is the litteral Y value of the column [0-15].
-	//function will do both y0 and y1 for the whole 128 bit row.
-	// 	   Ex: yColToFill = 1. will fill y[2] and y[3].
-	//
-	void FillChunkXRow(int zLayer, int yColToFill, int tileIDToFill);
+	void CreateDebugWorld() {
+		for (int z = 0; z < 11; ++z) {
+			//FillChunkZLayer(z, TileID::Stone);
+			newChunkStruct.fillZLayerBlocks(z,TileID::Stone);
+		}
 
-	//More Inifficient version of Fill Chunk XRow. Same thing for Y
-	void FillChunkYCol(int zLayer, int xRowToFill, int tileIDToFill);
+		newChunkStruct.fillXColBlocks(11,0,TileID::Dirt);
+		newChunkStruct.fillXColBlocks(11,1,TileID::Dirt);
+		newChunkStruct.fillXColSlabs(12,0,TileID::Grass);
+		newChunkStruct.fillXColSlabs(12,1,TileID::Grass);
+		newChunkStruct.fillXColBlocks(11,2,TileID::SlopeSouth);
+		for(int i = 3; i <= 12; ++i) {
+			newChunkStruct.fillXColSlabs(11,i,TileID::Grass);
+		}
+		newChunkStruct.fillXColBlocks(11,13,TileID::SlopeNorth);
+		newChunkStruct.fillXColBlocks(11,14,TileID::Dirt);
+		newChunkStruct.fillXColBlocks(11,15,TileID::Dirt);
+		newChunkStruct.fillXColSlabs(12,14,TileID::Grass);
+		newChunkStruct.fillXColSlabs(12,15,TileID::Grass);
 
+		newChunkStruct.fillSingleSlab(12,2,15, TileID::Water);
+		newChunkStruct.fillSingleSlab(12,3,15, TileID::Water);
+		newChunkStruct.fillSingleSlab(12,2,0, TileID::Water);
+		newChunkStruct.fillSingleSlab(12,3,0, TileID::Water);
+
+		//newChunkStruct.fillSingleSlab(11,idxy.y+1,idxy.x+1, TileID::Water);
+
+	}
+	olc::vi2d decryptIDtoXY(u_int64_t ChunkID) {
+		//shift bits right until just MSB 8 are left
+		uint64_t bitshiftedIDtmp = ChunkID >> 32;
+		olc::vi2d tmp;
+		tmp.y = (int)bitshiftedIDtmp;
+		//and with FF to remove all MSB8 and leave LSB
+		bitshiftedIDtmp = 0x00000000FFFFFFFF;
+		tmp.x = (int)(ChunkID &= bitshiftedIDtmp);
+		return tmp;
+	}
+
+	uint64_t olcTo64Hex (olc::vi2d olcvi2d) {
+		uint64_t bitshiftedIDtmp = (uint64_t)olcvi2d.y;
+		uint64_t olcTo64Hex = bitshiftedIDtmp << 32;
+		olcTo64Hex = olcTo64Hex + olcvi2d.x;
+		return olcTo64Hex;
+	}
 
 public:
-	//
-	//Generates a new chunk and returns hard copy. 
-	//
-	std::vector<uint64_t> GenerateChunk();
+	MapUtilChunkGen(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc, std::shared_ptr<TileID::TileManager> tm) {
+		graphicsEngine = ge;
+		gameConfig = gc;
+		tileManager = tm;
 
-	//
-	//Generates a new chunk and returns hard copy.
-	//
-	ChunkDataStruct GenerateChunkStruct();
+	}
+	//returns a referance to the chunk created here. to be
+	ChunkDataStruct& GenerateChunkStruct() {
+		CreateDebugWorld();
+		return newChunkStruct;
+	}
 
-    //
-    //Takes the input of a already created chunk and will fill the single tile with a new tile
-    //
-    std::vector<uint64_t> editchunkSingleTile(std::vector<uint64_t> activeChunk, int x, int y, int z, TileID::TileIDList newTile);
+	std::vector<std::shared_ptr<cChunk>>& makeWorld(int worldsize) {
+		//
+		//Chunks in x---->
+		//          y
+		//          |
+		//          V
 
+		for (int x = 0; x < worldsize; ++x) {
+			for (int y = 0; y < worldsize; ++y) {
+				//compress the xy world position to a uint64 to be used as a chunk ID/chunk location
+				uint64_t locationHex = olcTo64Hex({x,y});
+				vptrActiveChunks.emplace_back(std::make_shared<cChunk>(locationHex,GenerateChunkStruct(),
+																	   gameConfig,graphicsEngine,tileManager));
+			}
+		}
+		return vptrActiveChunks;
+	}
 
 
 };
+
+
+
+

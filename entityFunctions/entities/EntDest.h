@@ -1,5 +1,5 @@
 #pragma once
-#include "mapFunctions/MapUtil_I3d.h"
+#include "GameConfig.h"
 
 //
 // This is a class to hold the active destination for ents

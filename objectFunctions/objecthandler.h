@@ -1,6 +1,5 @@
 #pragma once
 #include "engine/graphicsengine.h"
-#include "mapFunctions/MapUtil_I3d.h"
 #include "Object.h"
 
 class ObjectHandler {
@@ -36,7 +35,7 @@ public:
 	void drawObjects(int activeZLayer,olc::vi2d& viewOffset);
 	int ItemIDAtPosition(AKI::I3d pos);
 
-	std::vector<std::shared_ptr<Object>> fillVectWithObjPtrs(std::vector<olc::vi2d>& vectPosXY, int z);
+	std::vector<std::shared_ptr<Object>> fillVectWithObjPtrs(std::vector<AKI::I3d>& vectPos);
 	std::shared_ptr<Object> getObjPtrAt(AKI::I3d pos);
 
 };

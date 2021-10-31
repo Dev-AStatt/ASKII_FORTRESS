@@ -1,6 +1,5 @@
 #pragma once
 #include "MapUtilTileIDList.h"
-#include "MapUtilChunkGen.h"
 #include "ChunkDataStruct.h"
 
 class cChunk {
@@ -11,8 +10,6 @@ private:
 	///   [  y   ][   x  ] of global chunk position.
 	///
 	uint64_t ChunkID;
-	uint64_t extractor = 0xFF;
-	uint64_t bitshiftedIDtmp;
 	long chunkPositionY;
 	long chunkPositionX;
 	
@@ -23,25 +20,12 @@ private:
 //
 	ChunkDataStruct FullChunkIDs;
 	std::vector<std::unique_ptr<Tile>> vptrTiles;
-	std::shared_ptr<MapUtilChunkGen> ChunkGen;
-	//olc::PixelGameEngine* pge;
+
 	std::shared_ptr<TileID::TileManager> tileManager;
 	std::shared_ptr<AKI::GameConfig> gameConfig;
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 
-//    olc::vi2d mapTL; //map area Top Left
-//    olc::vi2d mapBR; //map area bottom right
 	olc::vi2d vTileFinalPosition;
-
-
-    //loads typical data that is needed no mater how class is created
-	void loadTypicalData(uint64_t id, std::shared_ptr<MapUtilChunkGen> gen,
-						 std::shared_ptr<AKI::GameConfig> gconf,
-						 std::shared_ptr<AKI::GraphicsEngine> graph,
-						 std::shared_ptr<TileID::TileManager> tm);
-    //VectorID takes in the z and y coordinate that is understood
-	//for a 3d object and translates that into the 1d Vector
-	int vectorID(int z, int y) { return (z * 32 + y); };
 
 	//void takes the chunk ID passed into the constructor
 	//and translates that into the chunks global y,x position.
@@ -50,33 +34,42 @@ private:
 	//is contained in the window. false if it lays outside map view.
 	bool checkIfOnScreen(olc::vi2d& newPos);
 public:
+    //Creating New Chunk, will call chunk generator for new
+	cChunk(uint64_t id, ChunkDataStruct &passedInChunk, std::shared_ptr<AKI::GameConfig> gconf,
+		   std::shared_ptr<AKI::GraphicsEngine> graph, std::shared_ptr<TileID::TileManager> tm);
+
+
+	~cChunk() {}
+
 	//Return functions for fetching class data
 	long getChunkPosX() {return chunkPositionX;};
 	long getChunkPosY() {return chunkPositionY;};
+	//returns the int of MapUtilTileIDList enum for the tile at
+	//location z,y,x
+	int getSlabIDAt(  AKI::I3d pos) {return getSlabIDAt(  pos.z,pos.y,pos.x);}
+	int getInfillIDAt(AKI::I3d pos) {return getInfillIDAt(pos.z,pos.y,pos.x);}
+	int getSlabIDAt(int zLayer, int yRow, int xCol);
+	int getInfillIDAt(int zLayer, int yRow, int xCol);
 
-    //Creating New Chunk, will call chunk generator for new
-	cChunk(uint64_t id,std::shared_ptr<MapUtilChunkGen> gen,
-		   std::shared_ptr<AKI::GameConfig> gconf, std::shared_ptr<AKI::GraphicsEngine> graph,
-		   std::shared_ptr<TileID::TileManager> tm);
-    //Will load passed in chunk by being given tileset
-
-	cChunk(uint64_t id, std::vector<uint64_t> chunkToLoad, std::shared_ptr<MapUtilChunkGen> gen,
-		   std::shared_ptr<AKI::GameConfig> gconf, std::shared_ptr<AKI::GraphicsEngine> graph,
-		   std::shared_ptr<TileID::TileManager> tm);
 	void DrawChunk(int zLayer, olc::vi2d& moveViewOffset);
-	//Returns the pointer of the Slab at location z, olc(y,x)
-	std::unique_ptr<Tile>& SlabPtrAtLocation(int zLayer, olc::vi2d yx);
-	//Returns the pointer of the Infill at location z, olc(y,x)
-	std::unique_ptr<Tile>& InfillPtrAtLocation(int zLayer, olc::vi2d yx);
+
 	//takes input of tile and position and edits the chunk slab
 	void SlabReplacement(TileID::TileIDList newTile, int x, int y, int z);
 	//takes input of tile and position and edits the chunk Infill
 	void InfillReplacement(TileID::TileIDList newTile, int x, int y, int z);
     std::string compileChunkToString(int i);
-    //returns the int of MapUtilTileIDList enum for the tile at
-    //location z,y,x
-	int SlabIDAtLocation(int zLayer, int yCol, int xRow);
-	int InfillIDAtLocation(int zLayer, int yCol, int xRow);
+
+
+
+	//function will check to make sure input values are within the
+	//real values that can be used.
+	bool withinChunk(AKI::I3d pos) {return withinChunk(pos.z,pos.y,pos.z);}
+	bool withinChunk(int z, int y = 0, int x = 0) {
+		if(z < 0 || z > 15) { return false; }
+		if(y < 0 || y > 15) { return false; }
+		if(x < 0 || x > 15) { return false; }
+		return true;
+	}
 
 };
 

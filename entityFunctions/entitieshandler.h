@@ -4,7 +4,6 @@
 #include "entities/EntHuman.h"
 #include "mapFunctions/Maps.h"
 #include "objectFunctions/objecthandler.h"
-#include "mapFunctions/MapUtil_I3d.h"
 #include "mapFunctions/MapUtilTileIDList.h"
 #include "Popup.h"
 
