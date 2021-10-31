@@ -117,7 +117,10 @@ std::vector<int> Maps::viewOfWorldInfill(AKI::I3d pos,int viewDistance) {
 			chunkIDLoc = worldPosToChunkXY({x,y});
 			chunkIndex = returnVIndexOfChunk(chunkIDLoc);
 			if(chunkIndex >= 0) {
-				int temp = vptrActiveChunks[chunkIndex]->getInfillIDAt(pos.z,y,x);
+//RIGHT HERE SOMETHING IS WRONG. IF Y>15 it returns the wrong value
+				int correctedX = x % 16;
+				int correctedY = y % 16;
+				int temp = vptrActiveChunks[chunkIndex]->getInfillIDAt(pos.z,correctedY,correctedX);
 				vSight.emplace_back(temp);
 			}
 

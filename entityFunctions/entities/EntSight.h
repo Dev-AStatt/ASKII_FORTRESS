@@ -46,14 +46,8 @@ public:
 
 	bool isSlabInView(TileID::TileIDList tileLookingFor) {
 		std::vector<int>::iterator it = std::find(slabsInView.begin(), slabsInView.end(), tileLookingFor);
-		if (it != slabsInView.end()) {
-			std::cout << "Element Found ID:" << std::endl;
-			return true;
-		}
-		else {
-			std::cout << "Element Not Found" << std::endl;
-			return false;
-		}
+		if (it != slabsInView.end()) {return true;}
+		else {return false;	}
 	}
 
 
