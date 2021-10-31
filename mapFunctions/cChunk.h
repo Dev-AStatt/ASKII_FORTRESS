@@ -48,6 +48,9 @@ public:
 	//location z,y,x
 	int getSlabIDAt(  AKI::I3d pos) {return getSlabIDAt(  pos.z,pos.y,pos.x);}
 	int getInfillIDAt(AKI::I3d pos) {return getInfillIDAt(pos.z,pos.y,pos.x);}
+	AKI::Block getBlockIDAt(AKI::I3d pos) {
+		return {getSlabIDAt(pos.z,pos.y,pos.x),getInfillIDAt(pos.z,pos.y,pos.x)};
+	}
 	int getSlabIDAt(int zLayer, int yRow, int xCol);
 	int getInfillIDAt(int zLayer, int yRow, int xCol);
 

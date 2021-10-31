@@ -3,6 +3,7 @@
 #include "mapFunctions/cChunk.h"
 #include "mapFunctions/MapUtilChunkGen.h"
 
+
 //
 //This is a class that is designed to hold pointers to each chunk in the map.
 //Should be built to include all edits to maps as well.
@@ -20,12 +21,7 @@ private:
 
     void mapCreateStartingChunks(int worldsize);
 
-    //takes a xy position in the world and returns
-    //the chunk x and chunk y in an olc::vi2d
-    olc::vi2d worldPosToChunkXY(olc::vi2d worldPos);
 
-    //takes in the id xy of a chunk and returns position in vptrActiveChunks
-    int returnVIndexOfChunk(olc::vi2d XY);
     bool vi2dInVector(std::vector<olc::vi2d> vect, olc::vi2d check);
 public:
 	//
@@ -51,9 +47,17 @@ public:
     void newMap(int atStartWorldSize);
     void continueMap(int chunkNum,int worldSize, std::vector<uint64_t> newChunk);
 
+	//takes a xy position in the world and returns
+	//the chunk x and chunk y in an olc::vi2d
+	olc::vi2d worldPosToChunkXY(olc::vi2d worldPos);
+
+	//takes in the id xy of a chunk and returns position in vptrActiveChunks
+	int returnVIndexOfChunk(olc::vi2d XY);
 
 	std::vector<int> getSlabsInView(AKI::I3d pos,int viewDistance) {return getInViewBool(pos,viewDistance,true,false);}
 	std::vector<int> getInfillInView(AKI::I3d pos,int viewDistance){return getInViewBool(pos,viewDistance,false,true);}
+
+	AKI::Block getBlockFromWorldPos(AKI::I3d worldPos);
 
 private:
 	std::vector<int> getInViewBool(AKI::I3d pos, int viewDistance, bool bSlabs, bool bInfill);

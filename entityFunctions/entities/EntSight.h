@@ -2,6 +2,7 @@
 #include "mapFunctions/MapUtilTileIDList.h"
 #include "GameConfig.h"
 #include "objectFunctions/objecthandler.h"
+#include "TreeDataStructure.h"
 
 
 class EntSight {
@@ -16,6 +17,7 @@ private:
 	std::vector<std::shared_ptr<Object>> objectPtrsInView;
 
 public:
+	Node* sightNodeSource;
 	EntSight(int vd, std::shared_ptr<TileID::TileManager> tm) {
 		tileManager = tm;
 		if(vd > 0 && vd < 100) {
@@ -25,6 +27,8 @@ public:
 		}
 
 	}
+
+
 	int getSlabIDInView(int index) {
 		if(index < (int)slabsInView.size() && index >= 0) {
 			return slabsInView[index];

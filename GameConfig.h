@@ -68,4 +68,15 @@ struct I3d {
 
 };
 
+//struct is the block [infill + slab] tile ID's. This needs to be passed around often enough
+struct Block {
+	int slab;
+	int infill;
+
+	Block(int s, int i) {slab = s; infill = i;}
+	Block() : slab(0), infill(0) {}
+};
+
 }
+
+

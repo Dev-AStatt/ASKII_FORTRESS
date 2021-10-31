@@ -4,6 +4,7 @@
 #include "entityFunctions/entities/EntDest.h"
 #include "objectFunctions/objecthandler.h"
 #include "EntSight.h"
+#include "TreeDataStructure.h"
 
 ///
 /// \brief The Ent class currently is not used for anything in this project
@@ -81,6 +82,7 @@ public:
 	AKI::I3d& returnPos()					{return position;}
 	virtual bool updateSelf(int tick)		{if(tick>0) {return true;} return true;};
 	std::vector<AKI::I3d>& getCordsInView() {return sight->getCordsInView();}
+	Node* getNodeSource()					{return sight->sightNodeSource;}
 
 	virtual void moveSelf(int x, int y, int z = 0);
 	//just translates a moveself with vi2d to moveself

@@ -5,17 +5,16 @@
 #include <GameConfig.h>
 
 struct Node {
-	int slabID;
-	int infillID;
+	AKI::Block block;
 	AKI::I3d location;
 	std::vector<Node*> children;
 
-	Node(int nSlab, int nInfill) {
-		this->slabID = nSlab;
-		this->infillID = nInfill;
+	Node(AKI::Block b, AKI::I3d pos) {
+		this->block = b;
+		this->location = pos;
 	}
-	void newChild(int nSlab, int nInfill) {
-		this->children.emplace_back(new Node(nSlab,nInfill));
+	void newChild(AKI::Block b, AKI::I3d pos) {
+		this->children.emplace_back(new Node(b,pos));
 	}
 	bool hasChildren() {
 		if(children.size() > 0) {return true;}

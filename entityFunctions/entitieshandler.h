@@ -6,6 +6,7 @@
 #include "objectFunctions/objecthandler.h"
 #include "mapFunctions/MapUtilTileIDList.h"
 #include "Popup.h"
+#include "entities/TreeDataStructure.h"
 
 class EntitiesHandler
 {
@@ -31,5 +32,6 @@ public:
 	void drawEntities(int activeZLayer,olc::vi2d& viewOffset);
     void updateEntities(int tick);
 	void passItemPtrToEnt(int entIndex);
+	void updateSight(int entIndex);
 };
 
