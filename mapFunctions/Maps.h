@@ -51,7 +51,11 @@ public:
     void newMap(int atStartWorldSize);
     void continueMap(int chunkNum,int worldSize, std::vector<uint64_t> newChunk);
 
-	std::vector<int> viewOfWorldSlabs(AKI::I3d pos,int viewDistance);
-	std::vector<int> viewOfWorldInfill(AKI::I3d pos,int viewDistance);
+
+	std::vector<int> getSlabsInView(AKI::I3d pos,int viewDistance) {return getInViewBool(pos,viewDistance,true,false);}
+	std::vector<int> getInfillInView(AKI::I3d pos,int viewDistance){return getInViewBool(pos,viewDistance,false,true);}
+
+private:
+	std::vector<int> getInViewBool(AKI::I3d pos, int viewDistance, bool bSlabs, bool bInfill);
 };
 

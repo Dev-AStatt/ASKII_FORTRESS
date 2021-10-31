@@ -44,8 +44,8 @@ void EntitiesHandler::newGameEntities() {
 void EntitiesHandler::updateEntities(int tick) {
 	for(int i = 0; i < (int)aliveEnts.size(); ++i) {
 		//give view of map
-		aliveEnts[i]->giftOfSightSlabs(chunkManager->viewOfWorldSlabs(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
-		aliveEnts[i]->giftOfSightInfill(chunkManager->viewOfWorldInfill(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
+		aliveEnts[i]->giftOfSightSlabs(chunkManager->getSlabsInView(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
+		aliveEnts[i]->giftOfSightInfill(chunkManager->getInfillInView(aliveEnts[i]->returnPos(),aliveEnts[i]->returnViewDistance()));
 		//give view of Objects
 		passItemPtrToEnt(i);
 

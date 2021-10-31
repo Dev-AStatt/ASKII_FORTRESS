@@ -31,6 +31,7 @@ HEADERS += \
     entityFunctions/entities/EntDest.h \
 	entityFunctions/entities/EntHuman.h \
     entityFunctions/entities/EntSight.h \
+    entityFunctions/entities/TreeDataStructure.h \
 	entityFunctions/entitieshandler.h \
 	libraries/olcPixelGameEngine.h \
     mapFunctions/ChunkDataStruct.h \

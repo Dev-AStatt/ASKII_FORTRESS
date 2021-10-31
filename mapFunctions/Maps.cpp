@@ -74,74 +74,6 @@ void Maps::flipTileOnMap(olc::vi2d& insplocXY) {
     }
 }
 
-
-std::vector<int> Maps::viewOfWorldSlabs(AKI::I3d pos,int viewDistance) {
-    std::vector<int> vSight;
-    //std::vector<olc::vi2d> chunksInView;
-    olc::vi2d chunkIDLoc;
-    int chunkIndex;
-
-	int yStart = pos.y - viewDistance;
-	int yEnd   = pos.y + viewDistance;
-	int XStart = pos.x - viewDistance;
-	int XEnd   = pos.x + viewDistance;
-
-    for(int y = yStart; y <= yEnd; ++y) {
-        for(int x = XStart; x <= XEnd; ++x) {
-            chunkIDLoc = worldPosToChunkXY({x,y});
-            chunkIndex = returnVIndexOfChunk(chunkIDLoc);
-            if(chunkIndex >= 0) {
-				int temp = vptrActiveChunks[chunkIndex]->getSlabIDAt(pos.z,y,x);
-                vSight.emplace_back(temp);
-            }
-
-        }
-    }
-    return vSight;
-}
-
-
-std::vector<int> Maps::viewOfWorldInfill(AKI::I3d pos,int viewDistance) {
-	std::vector<int> vSight;
-	//std::vector<olc::vi2d> chunksInView;
-	olc::vi2d chunkIDLoc;
-	int chunkIndex;
-
-	int yStart = pos.y - viewDistance;
-	int yEnd   = pos.y + viewDistance;
-	int XStart = pos.x - viewDistance;
-	int XEnd   = pos.x + viewDistance;
-
-	for(int y = yStart; y <= yEnd; ++y) {
-		for(int x = XStart; x <= XEnd; ++x) {
-			chunkIDLoc = worldPosToChunkXY({x,y});
-			chunkIndex = returnVIndexOfChunk(chunkIDLoc);
-			if(chunkIndex >= 0) {
-//RIGHT HERE SOMETHING IS WRONG. IF Y>15 it returns the wrong value
-				int correctedX = x % 16;
-				int correctedY = y % 16;
-				int temp = vptrActiveChunks[chunkIndex]->getInfillIDAt(pos.z,correctedY,correctedX);
-				vSight.emplace_back(temp);
-			}
-
-		}
-	}
-	return vSight;
-}
-
-olc::vi2d Maps::worldPosToChunkXY(olc::vi2d worldPos) {
-	olc::vi2d chunkXY = {worldPos.x / gameConfig->getChunkSize(),worldPos.y / gameConfig->getChunkSize()};
-    return chunkXY;
-}
-
-int Maps::returnVIndexOfChunk(olc::vi2d XY) {
-    int r = XY.x + (XY.y*currentWorldSize);
-    if(r >= 0 && r <= (int)vptrActiveChunks.size()) {
-        return r;
-    }
-    else return -1;
-}
-
 bool Maps::vi2dInVector(std::vector<olc::vi2d> vect, olc::vi2d check) {
 
     for(int i = 0; i < (int)vect.size(); ++i) {
@@ -156,8 +88,56 @@ bool Maps::vi2dInVector(std::vector<olc::vi2d> vect, olc::vi2d check) {
 
 
 
+// O----------------------------------------------------O
+// | Functions for creating world views for Ents		|
+// O----------------------------------------------------O
+
+std::vector<int> Maps::getInViewBool(AKI::I3d pos, int viewDistance, bool bSlabs, bool bInfill) {
+	std::vector<int> vSight;
+	olc::vi2d chunkIDLoc;
+	int chunkIndex, temp = 0;
+
+	int yStart = pos.y - viewDistance;
+	int yEnd   = pos.y + viewDistance;
+	int XStart = pos.x - viewDistance;
+	int XEnd   = pos.x + viewDistance;
+
+	for(int y = yStart; y <= yEnd; ++y) {
+		for(int x = XStart; x <= XEnd; ++x) {
+			chunkIDLoc = worldPosToChunkXY({x,y});
+			chunkIndex = returnVIndexOfChunk(chunkIDLoc);
+			if(chunkIndex < 0) { break;}
+			int correctedX = x % 16;
+			int correctedY = y % 16;
 
 
+
+//			if(bSlabs) {
+//				temp = vptrActiveChunks[chunkIndex]->getSlabIDAt(pos.z,correctedY,correctedX);
+//			}
+//			if(bInfill) {
+//				temp = vptrActiveChunks[chunkIndex]->getInfillIDAt(pos.z,correctedY,correctedX);
+//			}
+//			if(temp == -1) {std::cout << "WE ARE STILL GETTING -1 ERRORS" << '\n';}
+			vSight.emplace_back(temp);
+		}
+	}
+	return vSight;
+}
+
+
+olc::vi2d Maps::worldPosToChunkXY(olc::vi2d worldPos) {
+	olc::vi2d chunkXY = {worldPos.x / gameConfig->getChunkSize(),worldPos.y / gameConfig->getChunkSize()};
+	return chunkXY;
+}
+
+int Maps::returnVIndexOfChunk(olc::vi2d XY) {
+	int r = XY.x + (XY.y*currentWorldSize);
+	if(r >= 0 && r <= (int)vptrActiveChunks.size()) {
+		return r;
+	}
+	else return -1;
+}
 
 
 
