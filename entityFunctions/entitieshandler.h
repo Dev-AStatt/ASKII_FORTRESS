@@ -23,6 +23,8 @@ private:
     //functions
 	bool olcWithinBounds(AKI::I3d checkpos, olc::vi2d& viewOffset);
 
+	void addChildren(std::unique_ptr<Node>& n, AKI::I3d& parentPos);
+
 public:
 	EntitiesHandler(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
 					std::shared_ptr<Maps> chunkman, std::shared_ptr<ObjectHandler> obj, std::shared_ptr<AKI::Popup> pop);

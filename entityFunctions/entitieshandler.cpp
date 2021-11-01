@@ -83,20 +83,66 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 	std::shared_ptr<Node> source;
 	source = std::make_shared<Node>(chunkManager->getBlockFromWorldPos(entStartingPos),entStartingPos);
 
-
+	AKI::I3d newPos;
+	AKI::Block newBlock;
 	for(int y = entStartingPos.y - 1; y <= entStartingPos.y + 1; ++y) {
 		for(int x = entStartingPos.x - 1; x <= entStartingPos.x + 1; ++x) {
-			AKI::I3d newPos = {x,y,entStartingPos.z};
-			source->newChild(chunkManager->getBlockFromWorldPos(newPos),newPos);
+			newPos = {x,y,entStartingPos.z};
+			if(newPos == entStartingPos) {break;}
+			newBlock = chunkManager->getBlockFromWorldPos(newPos);
+			source->newChild(newBlock,newPos);
 		}
+	}
+
+	for(int i = 0; i <(int)source->getNumChildren(); ++i) {
+		addChildren(source->getChild(i),source->location);
+
 	}
 	aliveEnts[entIndex]->setSightNodeSource(source);
 }
 
+ void EntitiesHandler::addChildren(std::unique_ptr<Node>& n, AKI::I3d& parentPos) {
+	 if(n->block.infill != TileID::Air) {return;}
+	 AKI::I3d direction = parentPos - n->location;
+	 //
+	 //direction shows the {+1, -1} direction that the map is going
+	 //
+	int searchYStart = n->location.y - direction.y;
+	int searchYEnd	 = n->location.y + direction.y;
+	int searchXStart = n->location.x - direction.x;
+	int searchXEnd	 = n->location.x + direction.x;
+
+	//
+	//	This loop doesnt work!!!!
+	//
+	 for(int y = searchYStart; y <= searchYEnd; ++y) {
+		 for(int x = searchXStart; x <= searchXEnd; ++x) {
+			 if(parentPos == AKI::I3d(x,y,n->location.z)) {break;}
+			 if(n->location == AKI::I3d(x,y,n->location.z)) {break;}
+			 AKI::Block newBlock = chunkManager->getBlockFromWorldPos({x,y,n->location.z});
+			 if(newBlock.infill != TileID::Air) {
+				 n->newChild(newBlock,{x,y,n->location.z + 1});
+			 }
+			 if(newBlock.slab != TileID::Air) {
+				 n->newChild(newBlock,{x,y,n->location.z -1});
+			 }
+			 n->newChild(newBlock,{x,y,n->location.z});
+		 }
+	 }
+ }
 
 
 
 
+
+ /*
+  *		-----------------
+  *		| x	| x	| x	| x	| x	| x	|
+  *		| x	| x	| x	| x	| x	| x	|
+  *		| x	| x | 	| x	| x	| x	|
+  *		| x	| x	| x	| x	| x	| x	|
+  *		| x	| x	| x	| x	| x	| x	|
+  */
 
 
 

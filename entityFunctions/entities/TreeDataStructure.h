@@ -23,7 +23,7 @@ struct Node {
 	}
 	//do not call this unless you are sure i is within children
 	std::unique_ptr<Node>& getChild(int i) {
-		if(getNumChildren() > i) {throw std::invalid_argument("Tree Ref to child out of bounds");}
+		if(getNumChildren() < i) {throw std::invalid_argument("Tree Ref to child out of bounds");}
 		return children[i];
 	}
 	int getNumChildren() {return (int)children.size();}

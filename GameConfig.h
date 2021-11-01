@@ -65,6 +65,8 @@ struct I3d {
 	I3d  operator -  (const I3d& rhs) const { return I3d(this->x - rhs.x, this->y - rhs.y, this->z - rhs.z); }
 	I3d& operator += (const I3d& rhs) { this->x += rhs.x; this->y += rhs.y; this->z += rhs.z; return *this; }
 	I3d& operator -= (const I3d& rhs) { this->x -= rhs.x; this->y -= rhs.y; this->z -= rhs.z; return *this; }
+	bool operator == (const I3d& rhs) const {return (this->x == rhs.x && this->y == rhs.y && this->z == rhs.z);}
+	bool operator != (const I3d& rhs) const {return (this->x != rhs.x && this->y != rhs.y && this->z != rhs.z);}
 
 };
 
