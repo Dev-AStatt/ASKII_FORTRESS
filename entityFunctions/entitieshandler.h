@@ -6,7 +6,7 @@
 #include "objectFunctions/objecthandler.h"
 #include "mapFunctions/MapUtilTileIDList.h"
 #include "Popup.h"
-#include "entities/TreeDataStructure.h"
+#include "entityFunctions/TreeDataStructure.h"
 
 class EntitiesHandler
 {

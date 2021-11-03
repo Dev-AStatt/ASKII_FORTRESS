@@ -1,10 +1,10 @@
 #pragma once
 #include <random>
 #include "mapFunctions/MapUtilTileIDList.h"
-#include "entityFunctions/entities/EntDest.h"
+#include "entityFunctions/EntDest.h"
 #include "objectFunctions/objecthandler.h"
-#include "EntSight.h"
-#include "TreeDataStructure.h"
+#include "entityFunctions/EntSight.h"
+#include "entityFunctions/TreeDataStructure.h"
 
 ///
 /// \brief The Ent class currently is not used for anything in this project

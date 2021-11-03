@@ -10,8 +10,8 @@ SOURCES += \
     InfoDisplay.cpp \
     Main.cpp \
 	engine/graphicsengine.cpp \
+	entityFunctions/EntSight.cpp \
     entityFunctions/entities/Ent.cpp \
-	entityFunctions/entities/EntSight.cpp \
 	entityFunctions/entitieshandler.cpp \
 	libraries/olcPixelGameEngine.cpp \
     mapFunctions/MapUtilChunkGen.cpp \
@@ -28,10 +28,11 @@ HEADERS += \
     InspectionCursor.h \
     Popup.h \
 	engine/graphicsengine.h \
+	entityFunctions/EntDest.h \
+	entityFunctions/EntSight.h \
+	entityFunctions/TreeDataStructure.h \
 	entityFunctions/entities/Ent.h \
-    entityFunctions/entities/EntDest.h \
 	entityFunctions/entities/EntHuman.h \
-    entityFunctions/entities/EntSight.h \
     entityFunctions/entities/TreeDataStructure.h \
 	entityFunctions/entitieshandler.h \
 	libraries/olcPixelGameEngine.h \
