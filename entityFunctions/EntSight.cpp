@@ -39,7 +39,7 @@ std::pair<bool, AKI::I3d> EntSight::searchTreeChildren(std::unique_ptr<Node>& pa
 bool EntSight::watchYourStep(AKI::I3d nPos) {
 	AKI::I3d newPos = (sightTree->location + nPos);
 	//maybe build this into the I3d class
-	newPos = {newPos.x%16,newPos.y%16,newPos.z};
+	newPos = {newPos.x,newPos.y,newPos.z};
 
 	for(int i = 0; i < sightTree->getNumChildren(); ++i) {
 		if(sightTree->children[i]->location == newPos) {

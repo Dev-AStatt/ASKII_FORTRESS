@@ -25,9 +25,6 @@ public:
 	//will eat unique pointer and set ent sight data tree to it.
 	void setSightTree(std::unique_ptr<Node>& s) {sightTree = std::move(s);}
 
-	//we are going to try and overrite this function
-	bool isSlabInView(TileID::TileIDList tileLookingFor);
-
 	//return pair {if tile was found, loc of tile found}
 	std::pair<bool, AKI::I3d> searchTree(TileID::TileIDList tileLookingFor);
 

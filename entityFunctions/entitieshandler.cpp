@@ -85,10 +85,26 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 
 	AKI::I3d newPos;
 	AKI::Block newBlock;
-	for(int y = entStartingPos.y - 1; y <= entStartingPos.y + 1; ++y) {
-		for(int x = entStartingPos.x - 1; x <= entStartingPos.x + 1; ++x) {
+
+	int searchYStart = entStartingPos.y - 1;
+	int searchYEnd	 = entStartingPos.y + 1;
+	int searchXStart = entStartingPos.x - 1;
+	int searchXEnd	 = entStartingPos.x + 1;
+	//make sure this doesnt go off the map
+	if(searchYStart < 0) {searchYStart = 0;}
+	if(searchYEnd   < 0) {searchYEnd   = 0;}
+	if(searchXStart < 0) {searchXStart = 0;}
+	if(searchXEnd   < 0) {searchXEnd   = 0;}
+
+
+
+	for(int y = searchYStart; y <= searchYEnd; ++y) {
+		for(int x = searchXStart; x <= searchXEnd; ++x) {
 			newPos = {x,y,entStartingPos.z};
 			if(newPos == entStartingPos) {break;}
+			if(y >= 16) {
+				std::cout << "Break";
+			}
 			newBlock = chunkManager->getBlockFromWorldPos(newPos);
 			source->newChild(newBlock,newPos);
 		}

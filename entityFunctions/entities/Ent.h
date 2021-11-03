@@ -54,7 +54,7 @@ protected:
 
 	//Create vector of tiles that Ent Can interact with
 	void updateInteractableCoords();
-	//int entRand(int from = 0, int to = 10);
+
 	bool pathfinding();
 	//return true if anything edable is in view
 	bool searchForFood();
@@ -75,7 +75,6 @@ public:
 	int returnStepZ()						{return entZPosition;}
 	int returnViewDistance()				{return viewDistance;}
 	int getViewDistance()					{return viewDistance;}
-	//std::vector<olc::vi2d> getPosInView()	{return positionsXYInView;}
 	AKI::I3d& returnPos()					{return position;}
 	virtual bool updateSelf(int tick)		{if(tick>0) {return true;} return true;};
 

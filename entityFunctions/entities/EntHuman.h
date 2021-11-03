@@ -24,7 +24,6 @@ public:
 		sEntName			= n;
 		sight = std::make_unique<EntSight>(viewDistance,tileManager);
 
-
     }
 
 	virtual bool updateSelf(int tick) override {
