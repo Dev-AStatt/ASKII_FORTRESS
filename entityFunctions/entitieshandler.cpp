@@ -65,7 +65,7 @@ void EntitiesHandler::updateEntities(int tick) {
 
 void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 	std::vector<std::shared_ptr<Object>> tmp;
-	std::vector<AKI::I3d> vPos = aliveEnts[entIndex]->getCordsInView();
+	std::vector<AKI::I3d> vPos;;// = aliveEnts[entIndex]->getCordsInView();
 	//tmp = ObjHandler->fillVectWithObjPtrs(vPos,aliveEnts[entIndex]->returnStepZ());
 	tmp = ObjHandler->fillVectWithObjPtrs(vPos);
 	aliveEnts[entIndex]->giftObjectsInView(tmp);
@@ -80,8 +80,8 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 	//get the ent starting position
 	AKI::I3d entStartingPos = aliveEnts[entIndex]->returnPos();
 
-	std::shared_ptr<Node> source;
-	source = std::make_shared<Node>(chunkManager->getBlockFromWorldPos(entStartingPos),entStartingPos);
+	std::unique_ptr<Node> source;
+	source = std::make_unique<Node>(chunkManager->getBlockFromWorldPos(entStartingPos),entStartingPos);
 
 	AKI::I3d newPos;
 	AKI::Block newBlock;
@@ -107,10 +107,15 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 	 //
 	 //direction shows the {+1, -1} direction that the map is going
 	 //
-	int searchYStart = n->location.y - direction.y;
-	int searchYEnd	 = n->location.y + direction.y;
-	int searchXStart = n->location.x - direction.x;
-	int searchXEnd	 = n->location.x + direction.x;
+	int searchYStart = n->location.y - 1;
+	int searchYEnd	 = n->location.y + 1;
+	int searchXStart = n->location.x - 1;
+	int searchXEnd	 = n->location.x + 1;
+	//make sure this doesnt go off the map
+	if(searchYStart < 0) {searchYStart = 0;}
+	if(searchYEnd   < 0) {searchYEnd   = 0;}
+	if(searchXStart < 0) {searchXStart = 0;}
+	if(searchXEnd   < 0) {searchXEnd   = 0;}
 
 	//
 	//	This loop doesnt work!!!!
@@ -123,9 +128,9 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 			 if(newBlock.infill != TileID::Air) {
 				 n->newChild(newBlock,{x,y,n->location.z + 1});
 			 }
-			 if(newBlock.slab != TileID::Air) {
-				 n->newChild(newBlock,{x,y,n->location.z -1});
-			 }
+//			 if(newBlock.slab != TileID::Air) {
+//				 n->newChild(newBlock,{x,y,n->location.z -1});
+//			 }
 			 n->newChild(newBlock,{x,y,n->location.z});
 		 }
 	 }

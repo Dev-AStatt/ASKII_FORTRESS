@@ -11,6 +11,7 @@ SOURCES += \
     Main.cpp \
 	engine/graphicsengine.cpp \
     entityFunctions/entities/Ent.cpp \
+	entityFunctions/entities/EntSight.cpp \
 	entityFunctions/entitieshandler.cpp \
 	libraries/olcPixelGameEngine.cpp \
     mapFunctions/MapUtilChunkGen.cpp \

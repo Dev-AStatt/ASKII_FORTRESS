@@ -35,9 +35,7 @@ protected:
 	std::unique_ptr<EntSight> sight;
 	std::vector<int> vPriorities;
 
-
 	std::vector<AKI::I3d>	I3dInteractCoords;
-
 
 	std::vector<std::shared_ptr<Object>> objectPtrsInView;
 
@@ -53,8 +51,7 @@ protected:
 							std::shared_ptr<AKI::GameConfig> gc);
 	//Randomizer function with default inputs
 	int AKIRand(int from, int to);
-	//will construct a AKI::I3D of what is in view
-	void UpdateCoordinatesInView();
+
 	//Create vector of tiles that Ent Can interact with
 	void updateInteractableCoords();
 	//int entRand(int from = 0, int to = 10);
@@ -81,9 +78,9 @@ public:
 	//std::vector<olc::vi2d> getPosInView()	{return positionsXYInView;}
 	AKI::I3d& returnPos()					{return position;}
 	virtual bool updateSelf(int tick)		{if(tick>0) {return true;} return true;};
-	std::vector<AKI::I3d>& getCordsInView() {return sight->getCordsInView();}
-	std::shared_ptr<Node>& getNodeSource()	{return sight->sightTree;}
-	void setSightNodeSource(std::shared_ptr<Node> s) {sight->sightTree = s;}
+
+	std::unique_ptr<Node>& getNodeSource()	{return sight->getSightTree();}
+	void setSightNodeSource(std::unique_ptr<Node>& s) {sight->setSightTree(s);}
 
 	virtual void moveSelf(int x, int y, int z = 0);
 	//just translates a moveself with vi2d to moveself

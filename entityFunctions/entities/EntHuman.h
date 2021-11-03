@@ -23,7 +23,7 @@ public:
 		tint				= olc::WHITE;
 		sEntName			= n;
 		sight = std::make_unique<EntSight>(viewDistance,tileManager);
-		UpdateCoordinatesInView();
+
 
     }
 
