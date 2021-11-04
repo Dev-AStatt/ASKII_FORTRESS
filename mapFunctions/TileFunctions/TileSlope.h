@@ -27,6 +27,7 @@ public:
 		tint			= c;
 		mineable		= mine;
 		sDirection		= s;
+		solid = false;
 		constructDecal();
 	}
 };

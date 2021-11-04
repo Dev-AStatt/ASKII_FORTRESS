@@ -38,7 +38,6 @@ protected:
 	}
 	void constructBasics(std::shared_ptr<AKI::GraphicsEngine> ge) {
 		graphicsEngine = ge;
-
 		constructDecal();
 	}
 };

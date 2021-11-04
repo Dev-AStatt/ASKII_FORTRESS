@@ -144,9 +144,17 @@ AKI::Block Maps::getBlockFromWorldPos(AKI::I3d worldPos) {
 	//first convert the xyz world position that could be on any chunk into
 	//the single chunk we need to look at, and capture the index of vptrActiveChunks
 	int chunkIndex = returnVIndexOfChunk(worldPosToChunkXY({worldPos.x,worldPos.y}));
-	//get the slab ID int from that chunkIndex chunk using the world pos converted into single chunk xyz
 
-	return vptrActiveChunks[chunkIndex]->getBlockIDAt({worldPos.x % 16, worldPos.y & 16, worldPos.z});
+	AKI::I3d adjustedChunkPos = worldPos;
+	if(adjustedChunkPos.x >= 16) {
+		adjustedChunkPos.x = adjustedChunkPos.x % 16;
+	}
+
+	if(adjustedChunkPos.y >= 16) {
+		adjustedChunkPos.y = adjustedChunkPos.y % 16;
+	}
+
+	return vptrActiveChunks[chunkIndex]->getBlockIDAt(adjustedChunkPos);
 
 
 }

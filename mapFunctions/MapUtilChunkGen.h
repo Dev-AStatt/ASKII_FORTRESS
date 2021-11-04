@@ -41,6 +41,10 @@ private:
 		newChunkStruct.fillSingleSlab(12,2,0, TileID::Water);
 		newChunkStruct.fillSingleSlab(12,3,0, TileID::Water);
 
+
+		newChunkStruct.fillSingleSlab(11,2,8, TileID::Water);
+		//newChunkStruct.fillSingleSlab(11,3,14, TileID::Water);
+
 		//newChunkStruct.fillSingleSlab(11,idxy.y+1,idxy.x+1, TileID::Water);
 
 	}

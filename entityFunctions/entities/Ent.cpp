@@ -51,19 +51,6 @@ int Ent::AKIRand(int from, int to) {
 }
 
 
-void Ent::UpdateCoordinatesInView() {
-
-	//loop through coordinates in view in the XY plane
-	for(int y = notNegativeXY(position.y - viewDistance); y <= position.y + viewDistance; ++y) {
-		for(int x = notNegativeXY(position.x - viewDistance); x <= position.x + viewDistance; ++x) {
-
-			sight->addCoordsInView({x,y,position.z});
-		}
-	}
-	//update the coordinates that are interactable
-	updateInteractableCoords();
-}
-
 void Ent::updateInteractableCoords() {
 	I3dInteractCoords.clear();
 	//add directly above entity
@@ -87,12 +74,8 @@ void Ent::moveSelf(int x, int y ,int z) {
 	//check if tile going to walk on is "walkable"
 	if(sight->watchYourStep({x,y,z})) {
 		position += AKI::I3d(x,y,z);
-		std::string s = sEntName + " Moved to Pos: {" +
-						std::to_string(position.x) + "," +
-						std::to_string(position.y) + "," +
-						std::to_string(position.z) + "}";
-		graphicsEngine->addDebugString(s);
-		UpdateCoordinatesInView();
+
+
 	}
 }
 // O----------------------------------------------------O
@@ -119,15 +102,15 @@ bool Ent::pathfinding() {
 		return true;
 	}
 	if(vPriorities[0] == Memories::water) {
-		//search for tile returns if tile is even in view
-		if(!sight->isSlabInView(TileID::Water)) { return false;}
 
-		std::cout << sEntName << " Has Found Water" << '\n';
-
-		//set destination to new tile found
-		AKI::I3d tmp = sight->locateTile(TileID::Water,position);
-
-		Destination->setNewDest(tmp,Memories::water,TileID::Water);
+		auto searchResult = sight->searchTree(TileID::Water);
+		if(!searchResult.first) {return false;} //if search result found nothing break
+		//else
+		//debug lines
+		std::string s = sEntName + " Found Water";
+		graphicsEngine->addDebugString(s);
+		//
+		Destination->setNewDest(searchResult.second,Memories::water,TileID::Water);
 		//move tward tile
 		moveSelfI3d(Destination->directionToDest(position));
 		return true;
@@ -176,7 +159,7 @@ olc::vi2d Ent::locationOfFood() {
 	for(int i = 0; i < (int)objectPtrsInView.size(); ++i) {
 		if(objectPtrsInView[i]->isEdable()) {
 			tmp = {objectPtrsInView[i]->getXPos(),objectPtrsInView[i]->getYPos(),position.z};
-			if(sight->closerToEnt(closest,tmp,position)) {
+			if(true) {
 				closest = tmp;
 			}
 		}
