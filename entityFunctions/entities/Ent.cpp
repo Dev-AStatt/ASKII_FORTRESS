@@ -103,7 +103,7 @@ bool Ent::pathfinding() {
 	}
 	if(vPriorities[0] == Memories::water) {
 
-		auto searchResult = sight->searchTree(TileID::Water);
+		auto searchResult = sight->GetSlabInTree(TileID::Water);
 		if(!searchResult.first) {return false;} //if search result found nothing break
 		//else
 		//debug lines

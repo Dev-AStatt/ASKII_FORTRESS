@@ -102,9 +102,7 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 		for(int x = searchXStart; x <= searchXEnd; ++x) {
 			newPos = {x,y,entStartingPos.z};
 			if(newPos == entStartingPos) {break;}
-			if(y >= 16) {
-				std::cout << "Break";
-			}
+
 			newBlock = chunkManager->getBlockFromWorldPos(newPos);
 			source->newChild(newBlock,newPos);
 		}
