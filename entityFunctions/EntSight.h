@@ -16,6 +16,8 @@ private:
 
 	//return val {bool if tile was found, tile loc if found else 0,0,0} pass in referance to node to search children
 	std::pair<bool, AKI::I3d> searchTreeChildren(std::unique_ptr<Node>& parent, TileID::TileIDList tileLookingFor);
+
+
 public:
 
 

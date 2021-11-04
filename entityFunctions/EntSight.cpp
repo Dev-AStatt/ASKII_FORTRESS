@@ -13,24 +13,37 @@ std::pair<bool, AKI::I3d> EntSight::searchTree(TileID::TileIDList tileLookingFor
 	//search by layer
 	if(sightTree->block.slab == tileLookingFor) {return std::make_pair(true,sightTree->location);}
 
-	int currentDebth = 0;
-
-	auto searchResult = searchTreeChildren(sightTree,tileLookingFor);
-	if(searchResult.first) {return searchResult;}
-	else {++currentDebth;}
-
-	for(int i = 0; i < sightTree->getNumChildren(); ++i) {
-		searchResult = searchTreeChildren(sightTree->children[i],tileLookingFor);
-		if(searchResult.first) {return searchResult;}
-	}
+	return searchTreeChildren(sightTree,tileLookingFor);
 
 
-	return std::make_pair(false,AKI::I3d(0,0,0));
+
+
+	//return std::make_pair(false,AKI::I3d(0,0,0));
 }
 
-std::pair<bool, AKI::I3d> EntSight::searchTreeChildren(std::unique_ptr<Node>& parent, TileID::TileIDList tileLookingFor) {
-	for(int i = 0; i < parent->getNumChildren(); ++i) {
+/*
+ * void preorder(struct node *root) {
+   if (root != NULL) {
+	  cout<<root->data<<" ";
+	  preorder(root->left);
+	  preorder(root->right);
+   }
+}
+ *
+ *
+ * 	for(int i = 0; i < parent->getNumChildren(); ++i) {
 		if(parent->children[i]->block.slab == tileLookingFor) {return std::make_pair(true,parent->children[i]->location);}
+	}
+	return std::make_pair(false,AKI::I3d(0,0,0));
+ *
+ *
+ * */
+
+std::pair<bool, AKI::I3d> EntSight::searchTreeChildren(std::unique_ptr<Node>& parent, TileID::TileIDList tileLookingFor) {
+	if(parent == NULL) { return std::make_pair(false,AKI::I3d(0,0,0)); }
+	if(parent->block.slab == tileLookingFor) {return std::make_pair(true,parent->location); }
+	for(int i = 0; i < sightTree->getNumChildren(); ++i) {
+		searchTreeChildren(parent->getChild(i),tileLookingFor);
 	}
 	return std::make_pair(false,AKI::I3d(0,0,0));
 }
