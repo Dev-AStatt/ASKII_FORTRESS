@@ -13,39 +13,28 @@ std::pair<bool, AKI::I3d> EntSight::searchTree(TileID::TileIDList tileLookingFor
 	//search by layer
 	if(sightTree->block.slab == tileLookingFor) {return std::make_pair(true,sightTree->location);}
 
-	return searchTreeChildren(sightTree,tileLookingFor);
+	std::vector<std::unique_ptr<TreeSearchResult>> searchResults;
 
+	searchTreeChildren(sightTree,searchResults,tileLookingFor);
 
-
-
-	//return std::make_pair(false,AKI::I3d(0,0,0));
+	if(searchResults.size() == 1) {
+		return std::make_pair(searchResults[0]->useable,searchResults[0]->location); }
+	if(searchResults.size() == 0) { return std::make_pair(false,AKI::I3d(0,0,0));}
+	else {
+		//make a function that returns the closest one of vector
+		 return std::make_pair(searchResults[0]->useable,searchResults[0]->location);
+	}
 }
 
-/*
- * void preorder(struct node *root) {
-   if (root != NULL) {
-	  cout<<root->data<<" ";
-	  preorder(root->left);
-	  preorder(root->right);
-   }
-}
- *
- *
- * 	for(int i = 0; i < parent->getNumChildren(); ++i) {
-		if(parent->children[i]->block.slab == tileLookingFor) {return std::make_pair(true,parent->children[i]->location);}
-	}
-	return std::make_pair(false,AKI::I3d(0,0,0));
- *
- *
- * */
+// a depth count can be added to the treeSearchResult vector to keep tract of what depth each was found
+void EntSight::searchTreeChildren(std::unique_ptr<Node>& parent, std::vector<std::unique_ptr<TreeSearchResult> > &searchResult, TileID::TileIDList tileLookingFor) {
+	if(parent != NULL) {
+		if(parent->block.slab == tileLookingFor) {searchResult.emplace_back(std::make_unique<TreeSearchResult>(true,parent->location)); }
 
-std::pair<bool, AKI::I3d> EntSight::searchTreeChildren(std::unique_ptr<Node>& parent, TileID::TileIDList tileLookingFor) {
-	if(parent == NULL) { return std::make_pair(false,AKI::I3d(0,0,0)); }
-	if(parent->block.slab == tileLookingFor) {return std::make_pair(true,parent->location); }
-	for(int i = 0; i < sightTree->getNumChildren(); ++i) {
-		searchTreeChildren(parent->getChild(i),tileLookingFor);
+		for(int i = 0; i < parent->getNumChildren(); ++i) {
+			searchTreeChildren(parent->getChild(i),searchResult,tileLookingFor);
+		}
 	}
-	return std::make_pair(false,AKI::I3d(0,0,0));
 }
 
 //takes in the unit vector directions wanting to move. Ex: {-1, 0, 0}

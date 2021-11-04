@@ -5,8 +5,18 @@
 #include "TreeDataStructure.h"
 
 
+
+
+
 class EntSight {
 private:
+
+	struct TreeSearchResult {
+		bool useable = false;
+		AKI::I3d location;
+		TreeSearchResult(bool use, AKI::I3d& loc) {useable = use; location = loc;}
+	};
+
 	int viewDistance = 0;
 	std::shared_ptr<TileID::TileManager> tileManager;
 
@@ -14,8 +24,10 @@ private:
 
 	std::unique_ptr<Node> sightTree;
 
-	//return val {bool if tile was found, tile loc if found else 0,0,0} pass in referance to node to search children
-	std::pair<bool, AKI::I3d> searchTreeChildren(std::unique_ptr<Node>& parent, TileID::TileIDList tileLookingFor);
+
+	void searchTreeChildren(std::unique_ptr<Node>& parent,
+							std::vector<std::unique_ptr<TreeSearchResult>>& searchResults,
+							TileID::TileIDList tileLookingFor);
 
 
 public:
