@@ -2,9 +2,6 @@
 #include "Ent.h"
 
 class EntHuman : public Ent {
-private:
-
-
 public:
     EntHuman() {}
 	EntHuman(std::shared_ptr<AKI::GraphicsEngine> ge,
@@ -15,7 +12,7 @@ public:
 		decalSourcePos		= { 0,4 };
 
 		position			= {posXY.x, posXY.y, posZ};
-		viewDistance		= 3;
+		viewDistance		= 5;
 		thirst				= 100;
 		thirstBurnRate		= 2;
 		hunger				= 100;
@@ -51,7 +48,7 @@ public:
 	virtual void assessPriorities() override {
 		vPriorities.clear();
 		if(thirst < hunger) {
-			if(thirst < 70) {
+			if(thirst < 80) {
 				vPriorities.emplace_back(Memories::water);
 			}
 			if(hunger < 70) {

@@ -45,10 +45,8 @@ void EntitiesHandler::updateEntities(int tick) {
 	for(int i = 0; i < (int)aliveEnts.size(); ++i) {
 		//give view of map
 		updateSight(i);
-
 		//give view of Objects
 		passItemPtrToEnt(i);
-
 		//update Ent
 		aliveEnts[i]->updateSelf(tick);
 
@@ -82,44 +80,19 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 
 	std::unique_ptr<Node> source;
 	source = std::make_unique<Node>(chunkManager->getBlockFromWorldPos(entStartingPos),entStartingPos);
+	std::vector<AKI::I3d> alreadyIndexedLocs;
+	alreadyIndexedLocs.emplace_back(source->location);
 
-	AKI::I3d newPos;
-	AKI::Block newBlock;
+	//call recursive funcation to fill children to specified debth by view distance
+	addChildren(source,alreadyIndexedLocs,1,aliveEnts[entIndex]->getViewDistance());
 
-	int searchYStart = entStartingPos.y - 1;
-	int searchYEnd	 = entStartingPos.y + 1;
-	int searchXStart = entStartingPos.x - 1;
-	int searchXEnd	 = entStartingPos.x + 1;
-	//make sure this doesnt go off the map
-	if(searchYStart < 0) {searchYStart = 0;}
-	if(searchYEnd   < 0) {searchYEnd   = 0;}
-	if(searchXStart < 0) {searchXStart = 0;}
-	if(searchXEnd   < 0) {searchXEnd   = 0;}
-
-
-
-	for(int y = searchYStart; y <= searchYEnd; ++y) {
-		for(int x = searchXStart; x <= searchXEnd; ++x) {
-			newPos = {x,y,entStartingPos.z};
-			if(newPos == entStartingPos) {break;}
-			if(y >= 16) {
-				std::cout << "Break";
-			}
-			newBlock = chunkManager->getBlockFromWorldPos(newPos);
-			source->newChild(newBlock,newPos);
-		}
-	}
-
-	for(int i = 0; i <(int)source->getNumChildren(); ++i) {
-		addChildren(source->getChild(i),source->location);
-
-	}
 	aliveEnts[entIndex]->setSightNodeSource(source);
 }
 
- void EntitiesHandler::addChildren(std::unique_ptr<Node>& n, AKI::I3d& parentPos) {
+ void EntitiesHandler::addChildren(std::unique_ptr<Node>& n, std::vector<AKI::I3d>& alreadyIndexed, int currentDepth, int maxDepth) {
+	 if(currentDepth > maxDepth) {return;}
 	 if(n->block.infill != TileID::Air) {return;}
-	 AKI::I3d direction = parentPos - n->location;
+
 	 //
 	 //direction shows the {+1, -1} direction that the map is going
 	 //
@@ -133,23 +106,31 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 	if(searchXStart < 0) {searchXStart = 0;}
 	if(searchXEnd   < 0) {searchXEnd   = 0;}
 
+	AKI::I3d newPos;
 	//
-	//	This loop doesnt work!!!!
+	//loop for sourounding tiles and add children for tiles not in alreadyIndexed vector
 	//
-	 for(int y = searchYStart; y <= searchYEnd; ++y) {
-		 for(int x = searchXStart; x <= searchXEnd; ++x) {
-			 if(parentPos == AKI::I3d(x,y,n->location.z)) {break;}
-			 if(n->location == AKI::I3d(x,y,n->location.z)) {break;}
-			 AKI::Block newBlock = chunkManager->getBlockFromWorldPos({x,y,n->location.z});
-			 if(newBlock.infill != TileID::Air) {
-				 n->newChild(newBlock,{x,y,n->location.z + 1});
-			 }
-//			 if(newBlock.slab != TileID::Air) {
-//				 n->newChild(newBlock,{x,y,n->location.z -1});
-//			 }
-			 n->newChild(newBlock,{x,y,n->location.z});
+	for(int y = searchYStart; y <= searchYEnd; ++y) {
+		for(int x = searchXStart; x <= searchXEnd; ++x) {
+			if(n->location == AKI::I3d(x,y,n->location.z)) {break;}		//make sure we dont try and add the parent pos
+			newPos = AKI::I3d(x,y,n->location.z);
+			AKI::Block newBlock = chunkManager->getBlockFromWorldPos(newPos);
+			if(newBlock.infill != TileID::Air) {						//if the infill of a tile is not air, we want to look above it
+				newPos = newPos.I3d_ZOffset(1);
+			}
+			//if new pos is not included in vector alreadyIndexed		  cool lamda function!
+			if(std::none_of(alreadyIndexed.cbegin(),alreadyIndexed.cend(),[newPos](AKI::I3d i){return i == newPos;})) {
+				n->newChild(newBlock,{x,y,n->location.z});
+				alreadyIndexed.emplace_back(newPos);
+			}
 		 }
 	 }
+	//
+	//recursivly call self to get children
+	//
+	for(int i = 0; i < (int)n->getNumChildren(); ++i) {
+		addChildren(n->getChild(i), alreadyIndexed,++currentDepth,maxDepth);
+	}
  }
 
 
