@@ -15,7 +15,7 @@ public:
 	bool alive;
     Ent() {};
 	Ent(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
-		std::shared_ptr<TileID::TileManager> tm, std::string n);
+		std::shared_ptr<Tiles::TileManager> tm, std::string n);
 
 	std::string returnName() const 				{return sEntName;}
 	int returnStepZ() const 					{return entZPosition;}
@@ -49,7 +49,7 @@ protected:
 	int hungerBurnRate;
 	olc::Pixel tint;
 
-	std::shared_ptr<TileID::TileManager>tileManager;
+	std::shared_ptr<Tiles::TileManager>tileManager;
 	std::unique_ptr<Memories::EntDest>	Destination;
 	std::shared_ptr<AKI::GameConfig> gameConfig;
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
@@ -65,7 +65,7 @@ protected:
 	// O----------------------------------------------------O
 
 	//Basics that need to be loaded for every Ent and inheritors
-	void constructEntBasics(std::shared_ptr<TileID::TileManager> tm,
+	void constructEntBasics(std::shared_ptr<Tiles::TileManager> tm,
 							std::shared_ptr<AKI::GraphicsEngine> ge,
 							std::shared_ptr<AKI::GameConfig> gc);
 	//Randomizer function with default inputs

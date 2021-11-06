@@ -19,9 +19,9 @@ private:
 //	is the infill of stuff that fills the space between slabs.
 //
 	ChunkDataStruct FullChunkIDs;
-	std::vector<std::unique_ptr<Tile>> vptrTiles;
+	std::vector<std::unique_ptr<Tiles::Tile>> vptrTiles;
 
-	std::shared_ptr<TileID::TileManager> tileManager;
+	std::shared_ptr<Tiles::TileManager> tileManager;
 	std::shared_ptr<AKI::GameConfig> gameConfig;
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 
@@ -36,7 +36,7 @@ private:
 public:
     //Creating New Chunk, will call chunk generator for new
 	cChunk(uint64_t id, ChunkDataStruct &passedInChunk, std::shared_ptr<AKI::GameConfig> gconf,
-		   std::shared_ptr<AKI::GraphicsEngine> graph, std::shared_ptr<TileID::TileManager> tm);
+		   std::shared_ptr<AKI::GraphicsEngine> graph, std::shared_ptr<Tiles::TileManager> tm);
 
 
 
@@ -58,9 +58,9 @@ public:
 	void DrawChunk(int zLayer, olc::vi2d& moveViewOffset);
 
 	//takes input of tile and position and edits the chunk slab
-	void SlabReplacement(TileID::TileIDList newTile, int x, int y, int z);
+	void SlabReplacement(Tiles::IDList newTile, int x, int y, int z);
 	//takes input of tile and position and edits the chunk Infill
-	void InfillReplacement(TileID::TileIDList newTile, int x, int y, int z);
+	void InfillReplacement(Tiles::IDList newTile, int x, int y, int z);
     std::string compileChunkToString(int i);
 
 

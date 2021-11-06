@@ -1,7 +1,7 @@
 #include "Ent.h"
 
 Ent::Ent(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
-		 std::shared_ptr<TileID::TileManager> tm, std::string n) {
+		 std::shared_ptr<Tiles::TileManager> tm, std::string n) {
 	constructEntBasics(tm,ge,gc);
 	//These lines should be overwritten by inheriting classes
 	decalSourcePos		= { 15,3 };
@@ -14,7 +14,7 @@ Ent::Ent(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfi
 	sight = std::make_unique<EntSight>(viewDistance,tileManager);
 }
 
-void Ent::constructEntBasics(std::shared_ptr<TileID::TileManager> tm,
+void Ent::constructEntBasics(std::shared_ptr<Tiles::TileManager> tm,
 							 std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc) {
 	gameConfig = gc;
 	graphicsEngine = ge;
@@ -99,14 +99,14 @@ bool Ent::pathfinding() {
 	}
 	if(vPriorities[0] == Memories::water) {
 
-		auto searchResult = sight->GetSlabInTree(TileID::Water);
+		auto searchResult = sight->GetSlabInTree(Tiles::Water);
 		if(!searchResult.first) {return false;} //if search result found nothing break
 		//else
 		//debug lines
 		std::string s = sEntName + " Found Water";
 		graphicsEngine->addDebugString(s);
 		//
-		Destination->setNewDest(searchResult.second,Memories::water,TileID::Water);
+		Destination->setNewDest(searchResult.second,Memories::water,Tiles::Water);
 		//move tward tile
 		moveSelfI3d(Destination->directionToDest(position));
 		return true;

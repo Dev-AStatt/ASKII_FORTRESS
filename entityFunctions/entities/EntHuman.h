@@ -6,7 +6,7 @@ public:
     EntHuman() {}
 	EntHuman(std::shared_ptr<AKI::GraphicsEngine> ge,
 			 std::shared_ptr<AKI::GameConfig> gc,
-			 std::shared_ptr<TileID::TileManager> tm,
+			 std::shared_ptr<Tiles::TileManager> tm,
 			 olc::vi2d& posXY, int posZ, std::string n) {
 		constructEntBasics(tm,ge,gc);
 		decalSourcePos		= { 0,4 };

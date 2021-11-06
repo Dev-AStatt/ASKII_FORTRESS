@@ -7,7 +7,7 @@ EntitiesHandler::EntitiesHandler(std::shared_ptr<AKI::GraphicsEngine> ge, std::s
 	chunkManager = chunkman;
 	ObjHandler = obj;
 	popup = pop;
-	tileManager = std::make_shared<TileID::TileManager>	(gameConfig,graphicsEngine);
+	tileManager = std::make_shared<Tiles::TileManager>	(gameConfig,graphicsEngine);
 
 }
 
@@ -91,7 +91,7 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 
  void EntitiesHandler::addChildren(std::unique_ptr<Node>& n, std::vector<AKI::I3d>& alreadyIndexed, int currentDepth, int maxDepth) {
 	 if(currentDepth > maxDepth) {return;}
-	 if(n->block.infill != TileID::Air) {return;}
+	 if(n->block.infill != Tiles::Air) {return;}
 
 	 //
 	 //direction shows the {+1, -1} direction that the map is going
@@ -115,7 +115,7 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 			if(n->location == AKI::I3d(x,y,n->location.z)) {break;}		//make sure we dont try and add the parent pos
 			newPos = AKI::I3d(x,y,n->location.z);
 			AKI::Block newBlock = chunkManager->getBlockFromWorldPos(newPos);
-			if(newBlock.infill != TileID::Air) {						//if the infill of a tile is not air, we want to look above it
+			if(newBlock.infill != Tiles::Air) {						//if the infill of a tile is not air, we want to look above it
 				newPos = newPos.I3d_ZOffset(1);
 			}
 			//if new pos is not included in vector alreadyIndexed		  cool lamda function!

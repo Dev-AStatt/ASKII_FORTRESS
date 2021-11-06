@@ -2,7 +2,7 @@
 
 
 cChunk::cChunk(uint64_t id, ChunkDataStruct& passedInChunk, std::shared_ptr<AKI::GameConfig> gconf,
-			   std::shared_ptr<AKI::GraphicsEngine> graph, std::shared_ptr<TileID::TileManager> tm) {
+			   std::shared_ptr<AKI::GraphicsEngine> graph, std::shared_ptr<Tiles::TileManager> tm) {
 
 	FullChunkIDs = passedInChunk;
 	ChunkID = id;
@@ -44,14 +44,11 @@ void cChunk::decryptIDtoYX() {
 void cChunk::DrawChunk(int zLayer, olc::vi2d& moveViewOffset) {
 	for (int y = 0; y < 16; ++y) {
 		for (int x = 0; x < 16; ++x) {
-			auto& t = tileManager->vptrTiles[getSlabIDAt(zLayer, y, x)]; //if getSlabID returns -1 your intruble.
-			if (t) {							//the + 1 on the X, Y is to add space for the header
-				vTileFinalPosition = {x + (int)(chunkPositionX * 16) + 1 + moveViewOffset.x,(y + (int)(chunkPositionY * 16) + 1) + moveViewOffset.y };
-				//make sure adjusted position is on screen
-				if (checkIfOnScreen(vTileFinalPosition)) {
-					t->DrawSelf(vTileFinalPosition);
-				}
-			}
+			int idOfTile = getSlabIDAt(zLayer,y,x);		//get id of tile
+			if(idOfTile == -1) {break;}
+			//get final position based on chunk position and view offset
+			vTileFinalPosition = {x + (int)(chunkPositionX * 16) + 1 + moveViewOffset.x,(y + (int)(chunkPositionY * 16) + 1) + moveViewOffset.y };
+			tileManager->drawTile(vTileFinalPosition,idOfTile);
 		}
 	}
 }
@@ -69,11 +66,11 @@ bool cChunk::checkIfOnScreen(olc::vi2d& newPos) {
 }
 
 //call chunk gen passing the current chunk and return it with edits
-void cChunk::SlabReplacement(TileID::TileIDList newTile, int x, int y, int z) {
+void cChunk::SlabReplacement(Tiles::IDList newTile, int x, int y, int z) {
 	FullChunkIDs.fillSingleSlab(z,y,x,newTile);
 }
 
-void cChunk::InfillReplacement(TileID::TileIDList newTile, int x, int y, int z) {
+void cChunk::InfillReplacement(Tiles::IDList newTile, int x, int y, int z) {
 	FullChunkIDs.fillSingleInfill(z,y,x,newTile);
 }
 

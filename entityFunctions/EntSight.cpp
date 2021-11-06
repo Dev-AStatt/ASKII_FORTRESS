@@ -1,6 +1,6 @@
 #include "EntSight.h"
 
-EntSight::EntSight(int vd, std::shared_ptr<TileID::TileManager> tm) {
+EntSight::EntSight(int vd, std::shared_ptr<Tiles::TileManager> tm) {
 	   tileManager = tm;
 	   if(vd > 0 && vd < 100) {
 		   viewDistance = vd;
@@ -9,7 +9,7 @@ EntSight::EntSight(int vd, std::shared_ptr<TileID::TileManager> tm) {
 	   }
 }
 
-std::pair<bool, AKI::I3d> EntSight::GetSlabInTree(TileID::TileIDList tileLookingFor) {
+std::pair<bool, AKI::I3d> EntSight::GetSlabInTree(Tiles::IDList tileLookingFor) {
 	//start by looking at our own feet. this saves time if it ever works.
 	if(sightTree->block.slab == tileLookingFor) {return std::make_pair(true,sightTree->location);}
 	//set up a vector of valid tiles that we are looking for.
@@ -30,7 +30,7 @@ std::pair<bool, AKI::I3d> EntSight::GetSlabInTree(TileID::TileIDList tileLooking
 
 // a depth count can be added to the treeSearchResult vector to keep tract of what depth each was found
 // this will loop over and over checking down one branch of a tree at a time adding in any tiles it finds
-void EntSight::searchTreeChildren(std::unique_ptr<Node>& parent, std::vector<std::pair<bool,AKI::I3d>>& searchResults, TileID::TileIDList tileLookingFor) {
+void EntSight::searchTreeChildren(std::unique_ptr<Node>& parent, std::vector<std::pair<bool,AKI::I3d>>& searchResults, Tiles::IDList tileLookingFor) {
 	if(parent != NULL) {
 		if(parent->block.slab == tileLookingFor) {searchResults.emplace_back(std::make_pair(true,parent->location)); }
 		for(int i = 0; i < parent->getNumChildren(); ++i) {
@@ -39,7 +39,7 @@ void EntSight::searchTreeChildren(std::unique_ptr<Node>& parent, std::vector<std
 		}
 	}
 }
-
+//
 //takes in the unit vector directions wanting to move. Ex: {-1, 0, 0}
 bool EntSight::watchYourStep(const AKI::I3d nPos) const {
 	AKI::I3d newPos = (sightTree->location + nPos);

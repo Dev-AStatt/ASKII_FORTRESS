@@ -15,7 +15,7 @@ private:
 	std::shared_ptr<Maps> chunkManager;
 	std::shared_ptr<ObjectHandler> ObjHandler;
     std::vector<std::unique_ptr<Ent>> aliveEnts;
-	std::shared_ptr<TileID::TileManager> tileManager;
+	std::shared_ptr<Tiles::TileManager> tileManager;
 	std::shared_ptr<AKI::GameConfig> gameConfig;
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 	std::shared_ptr<AKI::Popup> popup;

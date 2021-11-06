@@ -5,7 +5,7 @@ Maps::Maps(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameCon
 	graphicsEngine = ge;
 	gameConfig = gc;
 	//create the two functions maps needs
-	tileManager = std::make_shared<TileID::TileManager>	(gameConfig,graphicsEngine);
+	tileManager = std::make_shared<Tiles::TileManager>	(gameConfig,graphicsEngine);
 	ChunkGen	= std::make_shared<MapUtilChunkGen>		(graphicsEngine,gameConfig,tileManager);
 }
 
@@ -70,7 +70,7 @@ void Maps::flipTileOnMap(olc::vi2d& insplocXY) {
                 chunkToPoint = c;
             }
         }
-		vptrActiveChunks[chunkToPoint]->SlabReplacement(TileID::Water,tileX,tileY,activeZLayer);
+		vptrActiveChunks[chunkToPoint]->SlabReplacement(Tiles::Water,tileX,tileY,activeZLayer);
     }
 }
 

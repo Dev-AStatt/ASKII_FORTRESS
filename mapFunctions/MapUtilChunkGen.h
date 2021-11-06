@@ -10,7 +10,7 @@ private:
 	//the two of these are needed to give to cChunk
 	std::shared_ptr<AKI::GraphicsEngine>	graphicsEngine;
 	std::shared_ptr<AKI::GameConfig>		gameConfig;
-	std::shared_ptr<TileID::TileManager>	tileManager;
+	std::shared_ptr<Tiles::TileManager>	tileManager;
 
 	ChunkDataStruct newChunkStruct;
 	std::vector<std::shared_ptr<cChunk>> vptrActiveChunks;
@@ -19,30 +19,30 @@ private:
 	void CreateDebugWorld() {
 		for (int z = 0; z < 11; ++z) {
 			//FillChunkZLayer(z, TileID::Stone);
-			newChunkStruct.fillZLayerBlocks(z,TileID::Stone);
+			newChunkStruct.fillZLayerBlocks(z,Tiles::Stone);
 		}
 
-		newChunkStruct.fillXColBlocks(11,0,TileID::Dirt);
-		newChunkStruct.fillXColBlocks(11,1,TileID::Dirt);
-		newChunkStruct.fillXColSlabs(12,0,TileID::Grass);
-		newChunkStruct.fillXColSlabs(12,1,TileID::Grass);
-		newChunkStruct.fillXColBlocks(11,2,TileID::SlopeSouth);
+		newChunkStruct.fillXColBlocks(11,0,Tiles::Dirt);
+		newChunkStruct.fillXColBlocks(11,1,Tiles::Dirt);
+		newChunkStruct.fillXColSlabs(12,0,Tiles::Grass);
+		newChunkStruct.fillXColSlabs(12,1,Tiles::Grass);
+		newChunkStruct.fillXColBlocks(11,2,Tiles::SlopeSouth);
 		for(int i = 3; i <= 12; ++i) {
-			newChunkStruct.fillXColSlabs(11,i,TileID::Grass);
+			newChunkStruct.fillXColSlabs(11,i,Tiles::Grass);
 		}
-		newChunkStruct.fillXColBlocks(11,13,TileID::SlopeNorth);
-		newChunkStruct.fillXColBlocks(11,14,TileID::Dirt);
-		newChunkStruct.fillXColBlocks(11,15,TileID::Dirt);
-		newChunkStruct.fillXColSlabs(12,14,TileID::Grass);
-		newChunkStruct.fillXColSlabs(12,15,TileID::Grass);
+		newChunkStruct.fillXColBlocks(11,13,Tiles::SlopeNorth);
+		newChunkStruct.fillXColBlocks(11,14,Tiles::Dirt);
+		newChunkStruct.fillXColBlocks(11,15,Tiles::Dirt);
+		newChunkStruct.fillXColSlabs(12,14,Tiles::Grass);
+		newChunkStruct.fillXColSlabs(12,15,Tiles::Grass);
 
-		newChunkStruct.fillSingleSlab(12,2,15, TileID::Water);
-		newChunkStruct.fillSingleSlab(12,3,15, TileID::Water);
-		newChunkStruct.fillSingleSlab(12,2,0, TileID::Water);
-		newChunkStruct.fillSingleSlab(12,3,0, TileID::Water);
+		newChunkStruct.fillSingleSlab(12,2,15, Tiles::Water);
+		newChunkStruct.fillSingleSlab(12,3,15, Tiles::Water);
+		newChunkStruct.fillSingleSlab(12,2,0, Tiles::Water);
+		newChunkStruct.fillSingleSlab(12,3,0, Tiles::Water);
 
 
-		newChunkStruct.fillSingleSlab(11,2,8, TileID::Water);
+		newChunkStruct.fillSingleSlab(11,2,8, Tiles::Water);
 		//newChunkStruct.fillSingleSlab(11,3,14, TileID::Water);
 
 		//newChunkStruct.fillSingleSlab(11,idxy.y+1,idxy.x+1, TileID::Water);
@@ -67,7 +67,7 @@ private:
 	}
 
 public:
-	MapUtilChunkGen(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc, std::shared_ptr<TileID::TileManager> tm) {
+	MapUtilChunkGen(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc, std::shared_ptr<Tiles::TileManager> tm) {
 		graphicsEngine = ge;
 		gameConfig = gc;
 		tileManager = tm;
