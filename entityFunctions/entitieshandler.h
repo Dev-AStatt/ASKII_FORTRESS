@@ -33,7 +33,7 @@ public:
     void newGameEntities();
 	void drawEntities(int activeZLayer,olc::vi2d& viewOffset);
     void updateEntities(int tick);
-	void passItemPtrToEnt(int entIndex);
+
 	void updateSight(int entIndex);
 };
 

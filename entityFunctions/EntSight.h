@@ -3,10 +3,11 @@
 #include "GameConfig.h"
 #include "objectFunctions/objecthandler.h"
 #include "TreeDataStructure.h"
+#include "entityFunctions/EntDest.h"
 
 class EntSight {
 public:
-	EntSight(int vd, std::shared_ptr<Tiles::TileManager> tm);
+	EntSight(int vd, std::shared_ptr<Tiles::TileManager> tm,std::shared_ptr<Memories::EntMemory>& mem);
 
 	//returns referance to the sight tree data structure
 	std::unique_ptr<Node>& getSightTree() {return sightTree;}
@@ -21,17 +22,26 @@ public:
 	//will return true if op1 is closer or equal to option 2 from pos
 	bool isCloser(AKI::I3d& pos, AKI::I3d& op1, AKI::I3d& op2) const;
 
+	std::pair<bool, AKI::I3d> getFoodLocInTree();
+
+
 private:
 	int viewDistance = 0;
 	std::shared_ptr<Tiles::TileManager> tileManager;
 	std::vector<std::shared_ptr<Object>> objectPtrsInView;
 	std::vector<AKI::I3d> interactCoords;
 	std::unique_ptr<Node> sightTree;
+	std::shared_ptr<Memories::EntMemory> entMemory;
+
 
 	//search tree is the recursive function that will call itself and add
 	//tiles it finds into the passed in vector searchResults.
 	void searchTreeChildren(std::unique_ptr<Node>& parent,
 							std::vector<std::pair<bool,AKI::I3d>>& searchResults,
 							Tiles::IDList tileLookingFor);
+	void searchTreeChildrenForFood(std::unique_ptr<Node>& parent,
+							std::vector<std::pair<bool,AKI::I3d>>& searchResults);
+
 	void updateInteractableCoords();
+	std::pair<bool,AKI::I3d> consolidateSearchResults(std::vector<std::pair<bool,AKI::I3d>>& vect) const;
 };

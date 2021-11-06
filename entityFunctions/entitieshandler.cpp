@@ -45,8 +45,7 @@ void EntitiesHandler::updateEntities(int tick) {
 	for(int i = 0; i < (int)aliveEnts.size(); ++i) {
 		//give view of map
 		updateSight(i);
-		//give view of Objects
-		passItemPtrToEnt(i);
+
 		//update Ent
 		aliveEnts[i]->updateSelf(tick);
 
@@ -61,14 +60,7 @@ void EntitiesHandler::updateEntities(int tick) {
      }
 }
 
-void EntitiesHandler::passItemPtrToEnt(int entIndex) {
-	std::vector<std::shared_ptr<Object>> tmp;
-	std::vector<AKI::I3d> vPos;;// = aliveEnts[entIndex]->getCordsInView();
-	//tmp = ObjHandler->fillVectWithObjPtrs(vPos,aliveEnts[entIndex]->returnStepZ());
-	tmp = ObjHandler->fillVectWithObjPtrs(vPos);
-	aliveEnts[entIndex]->giftObjectsInView(tmp);
 
-}
 
 
  void EntitiesHandler::updateSight(int entIndex) {
@@ -77,11 +69,16 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 
 	//get the ent starting position
 	AKI::I3d entStartingPos = aliveEnts[entIndex]->returnPos();
-
-	std::unique_ptr<Node> source;
-	source = std::make_unique<Node>(chunkManager->getBlockFromWorldPos(entStartingPos),entStartingPos);
 	std::vector<AKI::I3d> alreadyIndexedLocs;
+	std::unique_ptr<Node> source;
+	//
+	// We have to fill the source node by iteslef using each call individually, then
+	// we can use the recursive function for all the others.
+	//
+	std::shared_ptr<Object> obj = ObjHandler->getObjPtrAt(entStartingPos);
+	source = std::make_unique<Node>(chunkManager->getBlockFromWorldPos(entStartingPos),entStartingPos,obj);
 	alreadyIndexedLocs.emplace_back(source->location);
+
 
 	//call recursive funcation to fill children to specified debth by view distance
 	addChildren(source,alreadyIndexedLocs,1,aliveEnts[entIndex]->getViewDistance());
@@ -120,7 +117,11 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 			}
 			//if new pos is not included in vector alreadyIndexed		  cool lamda function!
 			if(std::none_of(alreadyIndexed.cbegin(),alreadyIndexed.cend(),[newPos](AKI::I3d i){return i == newPos;})) {
-				n->newChild(newBlock,{x,y,n->location.z});
+				std::shared_ptr<Object> obj = ObjHandler->getObjPtrAt(n->location);
+				if(obj != nullptr) {
+					std::cout<<"breakpoint" << '\n';
+				}
+				n->newChild(newBlock,{x,y,n->location.z},obj);
 				alreadyIndexed.emplace_back(newPos);
 			}
 		 }

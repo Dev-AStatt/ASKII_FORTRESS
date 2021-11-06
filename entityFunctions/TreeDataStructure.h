@@ -3,19 +3,23 @@
 #include <vector>
 #include <memory>
 #include <GameConfig.h>
+#include <objectFunctions/Object.h>
 
 struct Node {
 	AKI::Block block;
 	AKI::I3d location;
+	std::shared_ptr<Object> object = nullptr;
 	std::vector<std::unique_ptr<Node>> children;
 
-	Node(AKI::Block b, AKI::I3d pos) {
+
+	Node(AKI::Block b, AKI::I3d pos, std::shared_ptr<Object>& obj) {
 		this->block = b;
 		this->location = pos;
+		this->object = obj;
 	}
-	void newChild(AKI::Block b, AKI::I3d pos) {
-		this->children.emplace_back(std::make_unique<Node>(b,pos));
-		//this->children.emplace_back(new Node(b,pos));
+	void newChild(AKI::Block b, AKI::I3d pos, std::shared_ptr<Object>& obj) {
+		this->children.emplace_back(std::make_unique<Node>(b,pos,obj));
+
 	}
 	bool hasChildren() {
 		if(children.size() > 0) {return true;}

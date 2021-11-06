@@ -8,7 +8,7 @@ public:
 			 std::shared_ptr<AKI::GameConfig> gc,
 			 std::shared_ptr<Tiles::TileManager> tm,
 			 olc::vi2d& posXY, int posZ, std::string n) {
-		constructEntBasics(tm,ge,gc);
+
 		decalSourcePos		= { 0,4 };
 
 		position			= {posXY.x, posXY.y, posZ};
@@ -19,9 +19,8 @@ public:
 		hungerBurnRate		= 1;
 		tint				= olc::WHITE;
 		sEntName			= n;
-		sight = std::make_unique<EntSight>(viewDistance,tileManager);
-
-    }
+		constructEntBasics(tm,ge,gc);
+	}
 
 	virtual bool updateSelf(int tick) override {
 		if (tick % 10 == 0 && alive) {
@@ -48,7 +47,7 @@ public:
 	virtual void assessPriorities() override {
 		vPriorities.clear();
 		if(thirst < hunger) {
-			if(thirst < 80) {
+			if(thirst < 70) {
 				vPriorities.emplace_back(Memories::water);
 			}
 			if(hunger < 70) {

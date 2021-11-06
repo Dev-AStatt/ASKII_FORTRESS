@@ -32,8 +32,8 @@ void ObjectHandler::drawObjects(int activeZLayer, olc::vi2d &viewOffset)  {
 }
 
 bool ObjectHandler::visable(AKI::I3d pos, int activeZLayer,olc::vi2d viewOffset) {
-	mapTL = gameConfig->getMapTL();
-	mapBR = gameConfig->getMapBR();
+	olc::vi2d mapTL = gameConfig->getMapTL();
+	olc::vi2d  mapBR = gameConfig->getMapBR();
 	if(pos.z == activeZLayer) {
 		if (pos.x >= mapTL.x - viewOffset.x && pos.x <= mapBR.x - viewOffset.x) {
 			if (pos.y >= mapTL.y - viewOffset.y && pos.y <= mapBR.y - viewOffset.y) {
@@ -46,7 +46,7 @@ bool ObjectHandler::visable(AKI::I3d pos, int activeZLayer,olc::vi2d viewOffset)
 	else return false;
 }
 
-int ObjectHandler::ItemIDAtPosition(AKI::I3d pos) {
+int ObjectHandler::ItemIDAtPosition(AKI::I3d pos) const {
 	for(int i = 0; i < (int)vObjects.size(); ++i) {
 		if(vObjects[i]->getXPos() == pos.x && vObjects[i]->getYPos() == pos.y && vObjects[i]->getZPos() == pos.z) {
 			return vObjects[i]->getID();
@@ -62,7 +62,6 @@ int ObjectHandler::ItemIDAtPosition(AKI::I3d pos) {
 std::vector<std::shared_ptr<Object>> ObjectHandler::fillVectWithObjPtrs(std::vector<AKI::I3d>& vectPos) {
 	std::vector<std::shared_ptr<Object>> tmp;
 	for(int i = 0; i < (int)vectPos.size(); ++i) {
-		//if(ItemIDAtPosition(vectPosXY[i],z) != -1) {
 		if(ItemIDAtPosition({vectPos[i].x,vectPos[i].y,vectPos[i].z}) != -1) {
 			std::shared_ptr<Object> check = getObjPtrAt({vectPos[i].x,vectPos[i].y,vectPos[i].z});
 			if(check != nullptr) {
@@ -73,7 +72,8 @@ std::vector<std::shared_ptr<Object>> ObjectHandler::fillVectWithObjPtrs(std::vec
 	return tmp;
 }
 
-std::shared_ptr<Object> ObjectHandler::getObjPtrAt(AKI::I3d pos) {
+
+std::shared_ptr<Object> ObjectHandler::getObjPtrAt(AKI::I3d pos) const {
 	if(isObjPtrAt(pos)) {
 		for(int i = 0; i < (int)vObjects.size(); ++i) {
 			if(vObjects[i]->getXPos() == pos.x && vObjects[i]->getYPos() == pos.y && vObjects[i]->getZPos() == pos.z) {
@@ -84,7 +84,7 @@ std::shared_ptr<Object> ObjectHandler::getObjPtrAt(AKI::I3d pos) {
 	return nullptr;
 }
 
-bool ObjectHandler::isObjPtrAt(AKI::I3d pos) {
+bool ObjectHandler::isObjPtrAt(AKI::I3d pos) const {
 	for(int i = 0; i < (int)vObjects.size(); ++i) {
 		if(vObjects[i]->getXPos() == pos.x && vObjects[i]->getYPos() == pos.y && vObjects[i]->getZPos() == pos.z) {
 			return true;

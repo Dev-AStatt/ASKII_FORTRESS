@@ -73,4 +73,44 @@ public:
 	}
 };
 
+struct MemoryNode {
+	AKI::I3d position;
+	priorities priority;
+	int id;
+	MemoryNode(AKI::I3d& pos,priorities p, int i) {
+		position = pos;
+		priority = p;
+		id = i;
+	}
+};
+
+
+
+
+class EntMemory {
+public:
+	void addMemory(AKI::I3d& pos,priorities p, int i) {memoriesTable.emplace_back(MemoryNode(pos,p,i));}
+	std::vector<MemoryNode> rememberVector(priorities p) {
+		std::vector<MemoryNode> validNodes;
+		std::vector<MemoryNode>::iterator it = std::find_if(memoriesTable.begin(),memoriesTable.end(),[p](MemoryNode i) {return i.priority == p;});
+
+		while(it != memoriesTable.end()) {
+			validNodes.emplace_back(*it);
+			it = std::find_if(++it,memoriesTable.end(),[p](MemoryNode i) {return i.priority == p;});
+		}
+		return validNodes;
+	}
+
+private:
+	std::vector<MemoryNode> memoriesTable;
+	bool test(int one,int two) {
+		if(one == two) {return true;}
+		return false;
+	}
+};
+
+
+
+
+
 }

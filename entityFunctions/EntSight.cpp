@@ -1,13 +1,18 @@
 #include "EntSight.h"
 
-EntSight::EntSight(int vd, std::shared_ptr<Tiles::TileManager> tm) {
+EntSight::EntSight(int vd, std::shared_ptr<Tiles::TileManager> tm, std::shared_ptr<Memories::EntMemory> &mem) {
 	   tileManager = tm;
+	   entMemory = mem;
 	   if(vd > 0 && vd < 100) {
 		   viewDistance = vd;
 	   }else {
 		   std::cout << "Why did someone pass a broken view distance" << '\n';
 	   }
 }
+
+// O----------------------------------------------------O
+// | Functions for looking for Slabs and Infill			|
+// O----------------------------------------------------O
 
 std::pair<bool, AKI::I3d> EntSight::GetSlabInTree(Tiles::IDList tileLookingFor) {
 	//start by looking at our own feet. this saves time if it ever works.
@@ -18,14 +23,8 @@ std::pair<bool, AKI::I3d> EntSight::GetSlabInTree(Tiles::IDList tileLookingFor) 
 	//call recursive function and pass in search Results that will get filled.
 	searchTreeChildren(sightTree,searchResults,tileLookingFor);
 
-	//look at vector and see if any results came back. if not return false
-	if(searchResults.size() == 1) {
-		return std::make_pair(searchResults[0].first,searchResults[0].second); }
-	if(searchResults.size() == 0) { return std::make_pair(false,AKI::I3d(0,0,0));}
-	else {
-		//make a function that returns the closest one of vector
-		 return std::make_pair(searchResults[0].first,searchResults[0].second);
-	}
+	//send results to be sorted and return closest
+	return consolidateSearchResults(searchResults);
 }
 
 // a depth count can be added to the treeSearchResult vector to keep tract of what depth each was found
@@ -39,7 +38,62 @@ void EntSight::searchTreeChildren(std::unique_ptr<Node>& parent, std::vector<std
 		}
 	}
 }
+
+
+// O----------------------------------------------------O
+// | Functions for looking for Objects					|
+// O----------------------------------------------------O
+
+
+std::pair<bool, AKI::I3d> EntSight::getFoodLocInTree() {
+	//look at feet to see if standing on food
+	if(sightTree->object != nullptr) {
+		if(sightTree->object->isEdable()) {
+			return std::make_pair(true, sightTree->location);
+		}
+	}
+	std::vector<std::pair<bool,AKI::I3d>> searchResults;
+	searchTreeChildrenForFood(sightTree,searchResults);
+
+	return consolidateSearchResults(searchResults);
+}
+
+
+void EntSight::searchTreeChildrenForFood(std::unique_ptr<Node> &parent, std::vector<std::pair<bool, AKI::I3d> > &searchResults) {
+	if(parent == NULL) {return;}
+	if(parent->object != nullptr) {
+		if(parent->object->isEdable()) {
+			searchResults.emplace_back(std::make_pair(true,parent->location));
+		}
+	}
+	for(int i = 0; i < parent->getNumChildren(); ++i) {
+		searchTreeChildrenForFood(parent->getChild(i),searchResults);
+	}
+}
+
+
+
+
+
+
+// O----------------------------------------------------O
+// | Utilities											|
+// O----------------------------------------------------O
 //
+
+
+std::pair<bool, AKI::I3d> EntSight::consolidateSearchResults(std::vector<std::pair<bool, AKI::I3d> > &vect) const {
+	if(vect.size() == 1) {
+		return std::make_pair(vect[0].first,vect[0].second); }
+	if(vect.size() == 0) { return std::make_pair(false,AKI::I3d(0,0,0));}
+	else {
+		//make a function that returns the closest one of vector
+		 return std::make_pair(vect[0].first,vect[0].second);
+	}
+}
+
+
+
 //takes in the unit vector directions wanting to move. Ex: {-1, 0, 0}
 bool EntSight::watchYourStep(const AKI::I3d nPos) const {
 	AKI::I3d newPos = (sightTree->location + nPos);

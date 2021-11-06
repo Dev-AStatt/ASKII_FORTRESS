@@ -2,7 +2,7 @@
 
 Ent::Ent(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,
 		 std::shared_ptr<Tiles::TileManager> tm, std::string n) {
-	constructEntBasics(tm,ge,gc);
+
 	//These lines should be overwritten by inheriting classes
 	decalSourcePos		= { 15,3 };
 	entZPosition		= 0;
@@ -11,7 +11,7 @@ Ent::Ent(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfi
 	thirst				= 100;
 	tint				= olc::WHITE;
 	sEntName			= n;
-	sight = std::make_unique<EntSight>(viewDistance,tileManager);
+	constructEntBasics(tm,ge,gc);
 }
 
 void Ent::constructEntBasics(std::shared_ptr<Tiles::TileManager> tm,
@@ -20,6 +20,8 @@ void Ent::constructEntBasics(std::shared_ptr<Tiles::TileManager> tm,
 	graphicsEngine = ge;
 	tileManager = tm;
 	Destination = std::make_unique<Memories::EntDest>();
+	entMemory = std::make_shared<Memories::EntMemory>();
+	sight = std::make_unique<EntSight>(viewDistance,tileManager,entMemory);
 	alive = true;
 
 }
@@ -82,9 +84,11 @@ bool Ent::pathfinding() {
 			switch (Destination->getPriority()) {
 			case Memories::water:
 				drink();
+				entMemory->addMemory(position,Memories::water,Tiles::Water);
 				break;
 			case Memories::food:
 				eat();
+				entMemory->addMemory(position,Memories::food,0);
 				break;
 			default:
 				std::cout << "we fell out of switch in Ent Pathfinding" << '\n';
@@ -98,74 +102,42 @@ bool Ent::pathfinding() {
 		return true;
 	}
 	if(vPriorities[0] == Memories::water) {
-
-		auto searchResult = sight->GetSlabInTree(Tiles::Water);
-		if(!searchResult.first) {return false;} //if search result found nothing break
-		//else
-		//debug lines
-		std::string s = sEntName + " Found Water";
-		graphicsEngine->addDebugString(s);
-		//
-		Destination->setNewDest(searchResult.second,Memories::water,Tiles::Water);
-		//move tward tile
-		moveSelfI3d(Destination->directionToDest(position));
-		return true;
+		auto vRemember = entMemory->rememberVector(Memories::water);
+		if(vRemember.size() > 0) {
+			Destination->setNewDest(vRemember[0].position,vRemember[0].priority,vRemember[0].id);
+		} else {
+			auto searchResult = sight->GetSlabInTree(Tiles::Water);
+			if(!searchResult.first) {return false;} //if search result found nothing break
+			//else
+			//debug lines
+			std::string s = sEntName + " Found Water";
+			graphicsEngine->addDebugString(s);
+			//
+			Destination->setNewDest(searchResult.second,Memories::water,Tiles::Water);
+			//move tward tile
+			moveSelfI3d(Destination->directionToDest(position));
+			return true;
+		}
 	}
 	if(vPriorities[0] == Memories::food) {
-		//check to see if there is anything edable in view
-		if(!searchForFood()) { return false;}
-		std::cout << sEntName << " Has Found Food" << '\n';
-		//get location of food
-		olc::vi2d tmp = locationOfFood();
-		Destination->setNewDest({tmp.x,tmp.y,position.z},Memories::food,foodIDAt(tmp));	//set destindation of food
-		moveSelfI3d(Destination->directionToDest(position));					//Go To Food
-		return true;
-	}
-	return false;
-}
-
-
-int Ent::foodIDAt(olc::vi2d XY) {
-	for(int i = 0; i < (int)objectPtrsInView.size(); ++i) {
-		if(objectPtrsInView[i]->getXPos() == XY.x &&objectPtrsInView[i]->getYPos() == XY.y) {
-			return objectPtrsInView[i]->getID();
-		}
-	}
-	return -1;
-}
-
-bool Ent::searchForFood() {
-	if((int)objectPtrsInView.size() > 0) {
-		for(int i = 0; i < (int)objectPtrsInView.size(); ++i) {
-			if(objectPtrsInView[i]->isEdable()) {
-				return true;
-			}
+		auto vRemember = entMemory->rememberVector(Memories::food);
+		if(vRemember.size() > 0) {
+			Destination->setNewDest(vRemember[0].position,vRemember[0].priority,vRemember[0].id);
+		} else {
+			//pair, first is a bool for found,
+			auto searchResult = sight->getFoodLocInTree();
+			if(!searchResult.first) {return false;} //if search finds nothing break
+			std::string s = sEntName + " Found Food";
+			graphicsEngine->addDebugString(s);
+			//get location of food
+			auto tmp = searchResult.second;
+			Destination->setNewDest({tmp.x,tmp.y,position.z},Memories::food,0);	//set destindation of food
+			moveSelfI3d(Destination->directionToDest(position));					//Go To Food
+			return true;
 		}
 	}
 	return false;
 }
-
-olc::vi2d Ent::locationOfFood() {
-	AKI::I3d closest, tmp;
-	for(int i = 0; i < (int)objectPtrsInView.size(); ++i) {
-		if(objectPtrsInView[i]->isEdable()) {
-			closest = {objectPtrsInView[i]->getXPos(),objectPtrsInView[i]->getYPos(),position.z};
-		}
-	}
-	for(int i = 0; i < (int)objectPtrsInView.size(); ++i) {
-		if(objectPtrsInView[i]->isEdable()) {
-			tmp = {objectPtrsInView[i]->getXPos(),objectPtrsInView[i]->getYPos(),position.z};
-			if(true) {
-				closest = tmp;
-			}
-		}
-	}
-	std::cout << sEntName << " Found Food At: " << "{" << std::to_string(closest.x)<< ", " << std::to_string(closest.y) << "}" << '\n';
-	return {closest.x,closest.y};
-}
-
-
-
 
 
 

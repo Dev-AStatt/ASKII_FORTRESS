@@ -32,7 +32,7 @@ public:
 	void moveSelfI3d(AKI::I3d XYZ)	{moveSelf(XYZ.x,XYZ.y,XYZ.z);}
 
 	void DrawSelf(int activeZLayer, olc::vi2d& viewOffset) const;
-	void giftObjectsInView(std::vector<std::shared_ptr<Object>> vPSight) {objectPtrsInView = vPSight;}
+	//void giftObjectsInView(std::vector<std::shared_ptr<Object>> vPSight) {objectPtrsInView = vPSight;}
 	//looks at current needs and redefines priorities
 	virtual void assessPriorities(){};
 
@@ -55,10 +55,7 @@ protected:
 	std::shared_ptr<AKI::GraphicsEngine> graphicsEngine;
 	std::unique_ptr<EntSight> sight;
 	std::vector<int> vPriorities;
-
-	std::vector<std::shared_ptr<Object>> objectPtrsInView;
-
-
+	std::shared_ptr<Memories::EntMemory> entMemory;
 
 	// O----------------------------------------------------O
 	// | Private Functions							        |
