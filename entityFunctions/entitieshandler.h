@@ -23,7 +23,7 @@ private:
     //functions
 	bool olcWithinBounds(AKI::I3d checkpos, olc::vi2d& viewOffset);
 
-	void addChildren(std::unique_ptr<Node>& n,std::vector<AKI::I3d>& alreadyIndexed,int currentDebth, int maxDebth);
+	void addChildren(std::unique_ptr<Node>& n,std::vector<AKI::I3d>& alreadyIndexed,int currentDepth, int maxDepth);
 
 public:
 	EntitiesHandler(std::shared_ptr<AKI::GraphicsEngine> ge, std::shared_ptr<AKI::GameConfig> gc,

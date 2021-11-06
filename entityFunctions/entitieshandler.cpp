@@ -89,8 +89,8 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 	aliveEnts[entIndex]->setSightNodeSource(source);
 }
 
- void EntitiesHandler::addChildren(std::unique_ptr<Node>& n, std::vector<AKI::I3d>& alreadyIndexed, int currentDebth, int maxDebth) {
-	 if(currentDebth > maxDebth) {return;}
+ void EntitiesHandler::addChildren(std::unique_ptr<Node>& n, std::vector<AKI::I3d>& alreadyIndexed, int currentDepth, int maxDepth) {
+	 if(currentDepth > maxDepth) {return;}
 	 if(n->block.infill != TileID::Air) {return;}
 
 	 //
@@ -129,7 +129,7 @@ void EntitiesHandler::passItemPtrToEnt(int entIndex) {
 	//recursivly call self to get children
 	//
 	for(int i = 0; i < (int)n->getNumChildren(); ++i) {
-		addChildren(n->getChild(i), alreadyIndexed,++currentDebth,maxDebth);
+		addChildren(n->getChild(i), alreadyIndexed,++currentDepth,maxDepth);
 	}
  }
 
