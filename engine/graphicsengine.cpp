@@ -24,7 +24,7 @@ void GraphicsEngine::drawString(olc::vi2d pos,std::string str, olc::Pixel col,ol
 	pge->DrawStringDecal(pos * gameConfig->getPackSize() + offset, str, col);
 }
 
-void GraphicsEngine::drawTile(olc::vi2d tilePos, olc::vi2d& decalPos, olc::Pixel col) {
+void GraphicsEngine::drawTile(olc::vi2d tilePos, olc::vi2d decalPos, olc::Pixel col) const {
 	pge->DrawPartialDecal(tilePos * gameConfig->getPackSize(),
 						  gameConfig->decTile.get(),
 						  decalPos*gameConfig->getPackSize(),

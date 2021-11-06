@@ -41,7 +41,7 @@ void EntSight::searchTreeChildren(std::unique_ptr<Node>& parent, std::vector<std
 }
 
 //takes in the unit vector directions wanting to move. Ex: {-1, 0, 0}
-bool EntSight::watchYourStep(const AKI::I3d nPos) {
+bool EntSight::watchYourStep(const AKI::I3d nPos) const {
 	AKI::I3d newPos = (sightTree->location + nPos);
 	//maybe build this into the I3d class
 	newPos = {newPos.x,newPos.y,newPos.z};
@@ -57,6 +57,38 @@ bool EntSight::watchYourStep(const AKI::I3d nPos) {
 	return false;
 
 }
+
+bool EntSight::isCloser(AKI::I3d& pos, AKI::I3d &op1, AKI::I3d &op2) const {
+	AKI::I3d distance1 = pos - op1;
+	AKI::I3d distance2 = pos - op2;
+	distance1.I3d_Abs();
+	distance2.I3d_Abs();
+	int distance1Sum = distance1.x + distance1.y + distance1.z;
+	int distance2Sum = distance2.x + distance2.y + distance2.z;
+
+	if(distance1Sum <= distance2Sum) {
+		return true;
+	} else return false;
+}
+
+
+void EntSight::updateInteractableCoords() {
+	interactCoords.clear();
+	//add directly above entity
+
+	//this is kinda a hacky way to do this as getting the location of the
+	//sight tree source is supposed to be the coordinate of the ent.
+	interactCoords.emplace_back(sightTree->location.I3d_ZOffset(1));
+	//add 1 space around and the space itself
+	for(int y = (sightTree->location.y - 1); y <= sightTree->location.y + 1; ++y) {
+		for(int x = (sightTree->location.x - 1); x <= sightTree->location.x + 1; ++x) {
+			interactCoords.emplace_back(AKI::I3d(x,y,sightTree->location.z));
+		}
+	}
+	//add directly below Entity
+	interactCoords.emplace_back(sightTree->location.I3d_ZOffset(-1));
+}
+
 
 
 

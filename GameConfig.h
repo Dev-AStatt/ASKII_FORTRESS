@@ -60,6 +60,7 @@ struct I3d {
 	I3d I3d_XOffset(int i) {return I3d((this->x + i),this->y,this->z);}
 	I3d I3d_YOffset(int i) {return I3d(this->x,(this->y + i),this->z);}
 	I3d I3d_ZOffset(int i) {return I3d(this->x,this->y,(this->z + i));}
+	I3d I3d_Abs() {return I3d(std::abs(this->x),std::abs(this->y),std::abs(this->z));}
 
 	I3d  operator +  (const I3d& rhs) const { return I3d(this->x + rhs.x, this->y + rhs.y, this->z + rhs.z); }
 	I3d  operator -  (const I3d& rhs) const { return I3d(this->x - rhs.x, this->y - rhs.y, this->z - rhs.z); }

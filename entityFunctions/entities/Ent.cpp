@@ -28,7 +28,7 @@ void Ent::constructEntBasics(std::shared_ptr<TileID::TileManager> tm,
 // | Drawing of Entity Code						        |
 // O----------------------------------------------------O
 
-void Ent::DrawSelf(int activeZLayer, olc::vi2d& viewOffset) {
+void Ent::DrawSelf(int activeZLayer, olc::vi2d& viewOffset) const {
 	if(activeZLayer == position.z) {
 		olc::vi2d entFinalPos = {position.x + viewOffset.x,position.y + viewOffset.y };
 		//the ent pos gets a + 1x1 to adjust for the header bar to match up
@@ -43,27 +43,13 @@ void Ent::DrawSelf(int activeZLayer, olc::vi2d& viewOffset) {
 // | Utilities of Entity Code					        |
 // O----------------------------------------------------O
 
-int Ent::AKIRand(int from, int to) {
+int Ent::AKIRand(int from, int to) const {
 	std::random_device rd; // obtain a random number from hardware
 	std::mt19937 gen(rd()); // seed the generator
 	std::uniform_int_distribution<> distr(from, to); // define the range
 	return distr(gen);
 }
 
-
-void Ent::updateInteractableCoords() {
-	I3dInteractCoords.clear();
-	//add directly above entity
-	I3dInteractCoords.emplace_back(position.I3d_ZOffset(1));
-	//add 1 space around and the space itself
-	for(int y = notNegativeXY(position.y - 1); y <= position.y + 1; ++y) {
-		for(int x = notNegativeXY(position.x - 1); x <= position.x + 1; ++x) {
-			I3dInteractCoords.emplace_back(AKI::I3d(x,y,position.z));
-		}
-	}
-	//add directly below Entity
-	I3dInteractCoords.emplace_back(position.I3d_ZOffset(-1));
-}
 
 // O----------------------------------------------------O
 // | Movement of Entity Code					        |
@@ -74,8 +60,6 @@ void Ent::moveSelf(int x, int y ,int z) {
 	//check if tile going to walk on is "walkable"
 	if(sight->watchYourStep({x,y,z})) {
 		position += AKI::I3d(x,y,z);
-
-
 	}
 }
 // O----------------------------------------------------O
@@ -94,7 +78,19 @@ bool Ent::pathfinding() {
 	//look if already has a destination with the same prioirity
 	if(Destination->getPriority() == vPriorities[0]) {
 		if(Destination->arivedAtDest(position)) {
-			std::cout << sEntName << " Has Arived At Destination" << '\n';
+			//std::cout << sEntName << " Has Arived At Destination" << '\n';
+			switch (Destination->getPriority()) {
+			case Memories::water:
+				drink();
+				break;
+			case Memories::food:
+				eat();
+				break;
+			default:
+				std::cout << "we fell out of switch in Ent Pathfinding" << '\n';
+				break;
+			}
+
 		} else {
 			//std::cout << sEntName << " Is Following A Destination" << '\n';
 			moveSelfI3d(Destination->directionToDest(position));
