@@ -34,6 +34,9 @@ public:
 			}
 			thirst = thirst - thirstBurnRate;
 			hunger = hunger - hungerBurnRate;
+			if(thirst< 40) {
+				std::cout << "break";
+			}
         }
 		if (thirst <=0) {
 			alive = false;

@@ -6,18 +6,7 @@ namespace AKI {
 // O--------------------------------------------------------O
 // | Graphics Engine will move to hold all drawing rutines	|
 // O--------------------------------------------------------O
-
-
-
 class GraphicsEngine {
-private:
-	uint32_t tick = 0;
-	olc::PixelGameEngine* pge;
-	std::shared_ptr<GameConfig> gameConfig;
-
-	int debugCount = 0;
-	std::vector<std::string> debugStrings;
-
 public:
 	GraphicsEngine() {}
 	GraphicsEngine(std::shared_ptr<GameConfig> ge, olc::PixelGameEngine* p);
@@ -35,6 +24,17 @@ public:
 	void drawTile(olc::vi2d tilePos, olc::vi2d decalPos, olc::Pixel col = olc::WHITE) const;
 
 	void addDebugString(std::string str);
+
+	bool isTileInMapView(olc::vi2d& tilePos) const;
+
+private:
+	uint32_t tick = 0;
+	olc::PixelGameEngine* pge;
+	std::shared_ptr<GameConfig> gameConfig;
+
+	int debugCount = 0;
+	std::vector<std::string> debugStrings;
+
 };
 
 

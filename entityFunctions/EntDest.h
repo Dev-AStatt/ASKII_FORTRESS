@@ -19,7 +19,7 @@ private:
 	int destinationX;
 	int destinationY;
 	int destinationZ;
-	bool validDest;
+	mutable bool validDest;
 	int tilePriorityID;
 	int objPriorityID;
 	int currentPrioirty;
@@ -28,11 +28,13 @@ public:
 	int getX()	const			{return destinationX;}
 	int getY()	const			{return destinationY;}
 	int getZ()	const			{return destinationZ;}
+	AKI::I3d getAKI() const		{return AKI::I3d(destinationX,destinationY,destinationZ);}
 	int getTilePriorityID() const	{return tilePriorityID;}
 	int getObjPriorityID()	const	{return objPriorityID;}
 	bool getValidDest()		const	{return validDest;}
 	int getPriority()		const	{return currentPrioirty;}
 
+	void nullifyDest()	{validDest = false;}
 	void setXYZ(AKI::I3d& n)	{destinationX = n.x;
 								 destinationY = n.y;
 								 destinationZ = n.z;}
@@ -59,17 +61,14 @@ public:
 		}
 		return {dX,dY,dZ};
 	}
-	bool arivedAtDest(AKI::I3d& currentPos) const {
-		if(currentPos.z ==destinationZ) {
-			for(int y = currentPos.y - 1; y <= currentPos.y + 1; ++y) {
-				for(int x = currentPos.x - 1; x <= currentPos.x + 1; ++x) {
-					if(destinationX == x && destinationY == y) {
-						return true;
-					}
-				}
-			}
+	//ariving at dest {return true} will clear valid dest
+	bool arivedAtDestV(std::vector<AKI::I3d> interactablePos) const {
+		AKI::I3d currentdest = getAKI();
+		if(std::none_of(interactablePos.cbegin(),interactablePos.cend(),[currentdest](AKI::I3d i){return i == currentdest;})) {
+			return false;
 		}
-		return false;
+		validDest = false;
+		return true;
 	}
 };
 
@@ -89,7 +88,17 @@ struct MemoryNode {
 
 class EntMemory {
 public:
-	void addMemory(AKI::I3d& pos,priorities p, int i) {memoriesTable.emplace_back(MemoryNode(pos,p,i));}
+	void addMemory(AKI::I3d& pos,priorities p, int i) {
+		bool flag = true;
+		for(int i = 0; i < (int)memoriesTable.size(); ++i) {
+			if(memoriesTable[i].position == pos && memoriesTable[i].priority == p) {
+				flag = false;
+			}
+		}
+		if(flag) {
+			memoriesTable.emplace_back(MemoryNode(pos,p,i));
+		}
+	}
 	std::vector<MemoryNode> rememberVector(priorities p) {
 		std::vector<MemoryNode> validNodes;
 		std::vector<MemoryNode>::iterator it = std::find_if(memoriesTable.begin(),memoriesTable.end(),[p](MemoryNode i) {return i.priority == p;});

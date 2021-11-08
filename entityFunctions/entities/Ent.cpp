@@ -78,16 +78,21 @@ bool Ent::pathfinding() {
 	if((int)vPriorities.size() <= 0) { return false;}
 
 	//look if already has a destination with the same prioirity
-	if(Destination->getPriority() == vPriorities[0]) {
-		if(Destination->arivedAtDest(position)) {
+	if(Destination->getPriority() == vPriorities[0] && Destination->getValidDest()) {
+		if(Destination->arivedAtDestV(sight->getInteactionCoords())) {
 			//std::cout << sEntName << " Has Arived At Destination" << '\n';
+			std::string s = sEntName;
 			switch (Destination->getPriority()) {
 			case Memories::water:
 				drink();
+				s = s + "drank Water";
+				graphicsEngine->addDebugString(s);
 				entMemory->addMemory(position,Memories::water,Tiles::Water);
 				break;
 			case Memories::food:
 				eat();
+				s = s + "Ate Food";
+				graphicsEngine->addDebugString(s);
 				entMemory->addMemory(position,Memories::food,0);
 				break;
 			default:
@@ -109,10 +114,7 @@ bool Ent::pathfinding() {
 			auto searchResult = sight->GetSlabInTree(Tiles::Water);
 			if(!searchResult.first) {return false;} //if search result found nothing break
 			//else
-			//debug lines
-			std::string s = sEntName + " Found Water";
-			graphicsEngine->addDebugString(s);
-			//
+
 			Destination->setNewDest(searchResult.second,Memories::water,Tiles::Water);
 			//move tward tile
 			moveSelfI3d(Destination->directionToDest(position));
@@ -127,8 +129,6 @@ bool Ent::pathfinding() {
 			//pair, first is a bool for found,
 			auto searchResult = sight->getFoodLocInTree();
 			if(!searchResult.first) {return false;} //if search finds nothing break
-			std::string s = sEntName + " Found Food";
-			graphicsEngine->addDebugString(s);
 			//get location of food
 			auto tmp = searchResult.second;
 			Destination->setNewDest({tmp.x,tmp.y,position.z},Memories::food,0);	//set destindation of food

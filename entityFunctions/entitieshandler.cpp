@@ -42,6 +42,7 @@ void EntitiesHandler::newGameEntities() {
 
 
 void EntitiesHandler::updateEntities(int tick) {
+	if(tick % 10 != 0) {return;}
 	for(int i = 0; i < (int)aliveEnts.size(); ++i) {
 		//give view of map
 		updateSight(i);
@@ -118,9 +119,7 @@ void EntitiesHandler::updateEntities(int tick) {
 			//if new pos is not included in vector alreadyIndexed		  cool lamda function!
 			if(std::none_of(alreadyIndexed.cbegin(),alreadyIndexed.cend(),[newPos](AKI::I3d i){return i == newPos;})) {
 				std::shared_ptr<Object> obj = ObjHandler->getObjPtrAt(n->location);
-				if(obj != nullptr) {
-					std::cout<<"breakpoint" << '\n';
-				}
+				//add new child
 				n->newChild(newBlock,{x,y,n->location.z},obj);
 				alreadyIndexed.emplace_back(newPos);
 			}

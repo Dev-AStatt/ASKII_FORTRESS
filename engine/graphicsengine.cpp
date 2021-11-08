@@ -25,6 +25,7 @@ void GraphicsEngine::drawString(olc::vi2d pos,std::string str, olc::Pixel col,ol
 }
 
 void GraphicsEngine::drawTile(olc::vi2d tilePos, olc::vi2d decalPos, olc::Pixel col) const {
+	if(!isTileInMapView(tilePos)) {return;}
 	pge->DrawPartialDecal(tilePos * gameConfig->getPackSize(),
 						  gameConfig->decTile.get(),
 						  decalPos*gameConfig->getPackSize(),
@@ -39,6 +40,13 @@ void GraphicsEngine::addDebugString(std::string str) {
 	}
 
 	debugStrings.emplace_back(str);
+}
+
+bool GraphicsEngine::isTileInMapView(olc::vi2d &tilePos) const {
+	if(gameConfig->getMapTL() < tilePos && gameConfig->getMapBR() > tilePos) {
+		return true;
+	}
+	return false;
 }
 
 }
